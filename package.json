@@ -1,0 +1,23 @@
+{
+  "name": "xrain777.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XRain777/XRain777.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XRain777/XRain777.github.io/issues"
+  },
+  "homepage": "https://github.com/XRain777/XRain777.github.io#readme",
+  "devDependencies": {
+    "vuepress": "^2.0.0-beta.48"
+  }
+}
