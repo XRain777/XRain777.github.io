@@ -1,4 +1,4 @@
-# Index page
+# Главная страница
 
-- [About me](about.md)
-- [Contacts](contacts.md)
+- [Обо мне](about.md)
+- [Проекты](projects.md)
