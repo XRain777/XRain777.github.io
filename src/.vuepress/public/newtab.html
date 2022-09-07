@@ -76,11 +76,33 @@
             </div>
         </div>
         <script type="text/javascript">
+            const timeStringOptionsHourMinute = { hour: '2-digit', minute: '2-digit' };
+            const timeStringOptionsHourMinuteSeconds = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            function setTimeStyle(timeWithSeconds) {
+              document.getElementById("time").style.fontSize = timeWithSeconds ? "5em" : "8.2em";
+            }
+            function getTimeWithSeconds() {
+              let timeWithSeconds = window.localStorage.getItem("timeWithSeconds") === "1";             
+              return timeWithSeconds;
+            }
+            function setTimeWithSeconds(value) {
+              window.localStorage.setItem("timeWithSeconds", value ? "1" : "0");
+            }
+            
+            let timeWithSeconds = getTimeWithSeconds();
+            setTimeStyle(timeWithSeconds);
+
             function updateDateTime() {
               let today = new Date();
               let date = today.toLocaleDateString("ru-RU");
               let weekday = today.toLocaleDateString("ru-RU", { weekday: 'long' });
-              let time = today.toLocaleTimeString("ru-RU");
+              let timeStringOptions = null;
+              if (timeWithSeconds) {
+                timeStringOptions = timeStringOptionsHourMinuteSeconds;
+              } else {
+                timeStringOptions = timeStringOptionsHourMinute;
+              }
+              let time = today.toLocaleTimeString("ru-RU", timeStringOptions);
               document.getElementById('date').innerHTML = `${date}<br>${weekday}`;
               document.getElementById('time').innerHTML = time;
             };
@@ -89,7 +111,7 @@
         </script>
         <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
         <script type="text/javascript">
-            hotkeys('alt+0,alt+1,alt+2,ctrl+alt+2,alt+3,r', function (event, handler){
+            hotkeys('alt+0,alt+1,alt+2,ctrl+alt+2,alt+3,r,s', function (event, handler){
               event.preventDefault();
               switch (handler.key) {
                 case 'alt+0':
@@ -107,6 +129,12 @@
                   break;
                 case 'r':
                   window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+                  break;
+                case 's':
+                  timeWithSeconds = !timeWithSeconds;
+                  setTimeWithSeconds(timeWithSeconds);
+                  setTimeStyle(timeWithSeconds);
+                  updateDateTime();
                   break;
                 default: console.log('event leak: ', event);
               }
