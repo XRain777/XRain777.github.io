@@ -170,6 +170,16 @@
             inputOverlay.style.display = 'none';
             numberInput.value = '';
         });
+
+        hotkeys('s', function() {
+          if (inputOverlay.style.display !== '' && inputOverlay.style.display !== 'none') {
+            return;
+          }
+          timeWithSeconds = !timeWithSeconds;
+          setTimeWithSeconds(timeWithSeconds);
+          setTimeStyle(timeWithSeconds);
+          updateDateTime();
+        }) 
     </script>
 </body>
 </html>
