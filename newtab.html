@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: #474b4e;
+            color: #ededed;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        #main {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #clock {
+            height: 480px;
+            width: 640px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #time {
+            font-size: 5em;
+        }
+
+        #date {
+            font-size: 3.9em;
+            text-align: center;
+        }
+
+        #inputOverlay {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 10px;
+            font-size: 0.8em;
+            font-family: monospace;
+        }
+
+        #inputOverlay input {
+            background: transparent;
+            color: #fff;
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div id="clock">
+            <div id="time"></div>
+            <div id="date"></div>
+        </div>
+    </div>
+    <div id="inputOverlay">
+        <span>:</span><input id="numberInput" type="text" placeholder="Enter command and press Enter" />
+    </div>
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script>
+        const timeStringOptionsHourMinute = { hour: '2-digit', minute: '2-digit' };
+        const timeStringOptionsHourMinuteSeconds = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const inputOverlay = document.getElementById('inputOverlay');
+        const numberInput = document.getElementById('numberInput');
+
+        function setTimeStyle(timeWithSeconds) {
+            document.getElementById("time").style.fontSize = timeWithSeconds ? "5em" : "8.2em";
+        }
+
+        function getTimeWithSeconds() {
+            return window.localStorage.getItem("timeWithSeconds") === "1";
+        }
+
+        function setTimeWithSeconds(value) {
+            window.localStorage.setItem("timeWithSeconds", value ? "1" : "0");
+        }
+
+        let redirectBaseURL = window.localStorage.getItem("redirectBaseURL") || "http://example.com/";
+
+        function setRedirectBaseURL(url) {
+            window.localStorage.setItem("redirectBaseURL", url);
+            redirectBaseURL = url;
+        }
+
+        let timeWithSeconds = getTimeWithSeconds();
+        setTimeStyle(timeWithSeconds);
+
+        function updateDateTime() {
+            let today = new Date();
+            let date = today.toLocaleDateString("ru-RU");
+            let weekday = today.toLocaleDateString("ru-RU", { weekday: 'long' });
+            let timeStringOptions = timeWithSeconds ? timeStringOptionsHourMinuteSeconds : timeStringOptionsHourMinute;
+            let time = today.toLocaleTimeString("ru-RU", timeStringOptions);
+            document.getElementById('date').innerHTML = `${date}<br>${weekday}`;
+            document.getElementById('time').innerHTML = time;
+        }
+
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        hotkeys('g,1,2,3,4,5,6,7,8,9,0,num_1,num_2,num_3,num_4,num_5,num_6,num_7,num_8,num_9,num_0', function () {
+            inputOverlay.style.display = 'flex';
+            numberInput.focus();
+            numberInput.value = '';
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === ':') {
+                inputOverlay.style.display = 'flex';
+                numberInput.value = '';
+                numberInput.focus();
+                event.preventDefault(); // Prevent default behavior of the `:` key
+            }
+        });
+
+        numberInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                const inputValue = numberInput.value.trim();
+
+                // Match "g {number}" format or standalone number
+                const match = inputValue.match(/^g\s*(\d+)|^\d+$/);
+                if (match) {
+                    const number = match[1] || inputValue;
+                    window.location.href = `${redirectBaseURL}${number}`;
+                } else if (inputValue.startsWith("set ")) {
+                    const newURL = inputValue.substring(4).trim();
+                    if (newURL) {
+                        setRedirectBaseURL(newURL);
+                        alert(`Base URL updated to: ${newURL}`);
+                    }
+                }
+
+                inputOverlay.style.display = 'none';
+                numberInput.value = '';
+            } else if (event.key === 'Escape') {
+                inputOverlay.style.display = 'none';
+                numberInput.value = '';
+            }
+        });
+
+        hotkeys('esc', function () {
+            inputOverlay.style.display = 'none';
+            numberInput.value = '';
+        });
+
+        hotkeys('s', function() {
+          if (inputOverlay.style.display !== '' && inputOverlay.style.display !== 'none') {
+            return;
+          }
+          timeWithSeconds = !timeWithSeconds;
+          setTimeWithSeconds(timeWithSeconds);
+          setTimeStyle(timeWithSeconds);
+          updateDateTime();
+        }) 
+    </script>
+</body>
+</html>

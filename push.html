@@ -1,0 +1,39 @@
+<html>
+<body>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-analytics.js";
+  import { getMessaging } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-messaging.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCu931cgyrdlnC_iGpXvmjkei4T-nc5TI",
+    authDomain: "push-smn.firebaseapp.com",
+    projectId: "push-smn",
+    storageBucket: "push-smn.appspot.com",
+    messagingSenderId: "681132348454",
+    appId: "1:681132348454:web:a0e6e25096cc5a2dc882e7",
+    measurementId: "G-VZCZGNG5FB"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const messaging = getMessaging(app);
+  messaging.getToken({vapidKey: "BNsZhO8sQEw-gFx7_3U1bFlWlwYNthUHepfWiINFCgKv1fh5ZYXjYrS3qDPHrP3Ppp25bkPz03800iCpLR9DXpI"}).then((currentToken) => {
+  if (currentToken) {
+    console.log(currentToken);
+  } else {
+    console.log('No registration token available. Request permission to generate one.');
+    Notification.requestPermission();
+  }
+}).catch((err) => {
+  console.log('An error occurred while retrieving token. ', err);
+});;
+</script>
+</body>
+</html>
