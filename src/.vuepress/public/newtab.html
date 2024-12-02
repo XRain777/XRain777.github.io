@@ -1,144 +1,175 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            New Tab
-        </title>
-        <!-- Yandex.Metrika counter -->
-        <script type="text/javascript" >
-            (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                            m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-            ym(89316890, "init", {
-                            clickmap:true,
-                            trackLinks:true,
-                            accurateTrackBounce:true,
-                            webvisor:true
-                        });
-        </script>
-        <noscript><div><img src="https://mc.yandex.ru/watch/89316890" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-        <!-- /Yandex.Metrika counter -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap" rel="stylesheet">
-        <style type="text/css">
-          * {
+<head>
+    <meta charset="utf-8" />
+    <title>New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap" rel="stylesheet">
+    <style>
+        * {
             margin: 0;
             padding: 0;
             border: 0;
-          }
+        }
 
-          html, body: {
+        html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
-          }
+        }
 
-          body {
+        body {
             background: #474b4e;
             color: #ededed;
-          }
+            font-family: 'Ubuntu', sans-serif;
+        }
 
-          #main { 
+        #main {
             width: 100vw;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Ubuntu', sans-serif;
-          }
+        }
 
-          #clock {
+        #clock {
             height: 480px;
             width: 640px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-          }
+        }
 
-          #time {
+        #time {
             font-size: 5em;
-          }
+        }
 
-          #date {
-            font-size: 3.9em;  /* подобрано на глаз для соответствия ширине div#time */
+        #date {
+            font-size: 3.9em;
             text-align: center;
-          }
-        </style>        
-    </head>
-    <body>
-        <div id="main">
-            <div id="clock">
-                <div id="time"></div>
-                <div id="date"></div>
-            </div>
-        </div>
-        <script type="text/javascript">
-            const timeStringOptionsHourMinute = { hour: '2-digit', minute: '2-digit' };
-            const timeStringOptionsHourMinuteSeconds = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            function setTimeStyle(timeWithSeconds) {
-              document.getElementById("time").style.fontSize = timeWithSeconds ? "5em" : "8.2em";
-            }
-            function getTimeWithSeconds() {
-              let timeWithSeconds = window.localStorage.getItem("timeWithSeconds") === "1";             
-              return timeWithSeconds;
-            }
-            function setTimeWithSeconds(value) {
-              window.localStorage.setItem("timeWithSeconds", value ? "1" : "0");
-            }
-            
-            let timeWithSeconds = getTimeWithSeconds();
-            setTimeStyle(timeWithSeconds);
+        }
 
-            function updateDateTime() {
-              let today = new Date();
-              let date = today.toLocaleDateString("ru-RU");
-              let weekday = today.toLocaleDateString("ru-RU", { weekday: 'long' });
-              let timeStringOptions = null;
-              if (timeWithSeconds) {
-                timeStringOptions = timeStringOptionsHourMinuteSeconds;
-              } else {
-                timeStringOptions = timeStringOptionsHourMinute;
-              }
-              let time = today.toLocaleTimeString("ru-RU", timeStringOptions);
-              document.getElementById('date').innerHTML = `${date}<br>${weekday}`;
-              document.getElementById('time').innerHTML = time;
-            };
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
-        </script>
-        <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
-        <script type="text/javascript">
-            hotkeys('alt+0,alt+1,alt+2,ctrl+alt+2,alt+3,r,s', function (event, handler){
-              event.preventDefault();
-              switch (handler.key) {
-                case 'alt+0':
-                case 'alt+1':
-                  window.location.href = "https://xrain.ru";
-                  break;
-                case 'alt+2':
-                  window.location.href = "https://google.com";
-                  break;
-                case 'ctrl+alt+2':
-                  window.location.href = "https://ya.ru";
-                  break;
-                case 'alt+3':
-                  window.location.href = "https://github.com/XRain777";
-                  break;
-                case 'r':
-                  window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-                  break;
-                case 's':
-                  timeWithSeconds = !timeWithSeconds;
-                  setTimeWithSeconds(timeWithSeconds);
-                  setTimeStyle(timeWithSeconds);
-                  updateDateTime();
-                  break;
-                default: console.log('event leak: ', event);
-              }
-            });
-        </script>
-    </body>
+        #inputOverlay {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 10px;
+            font-size: 0.8em;
+            font-family: monospace;
+        }
+
+        #inputOverlay input {
+            background: transparent;
+            color: #fff;
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div id="clock">
+            <div id="time"></div>
+            <div id="date"></div>
+        </div>
+    </div>
+    <div id="inputOverlay">
+        <span>:</span><input id="numberInput" type="text" placeholder="Enter command and press Enter" />
+    </div>
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script>
+        const timeStringOptionsHourMinute = { hour: '2-digit', minute: '2-digit' };
+        const timeStringOptionsHourMinuteSeconds = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        const inputOverlay = document.getElementById('inputOverlay');
+        const numberInput = document.getElementById('numberInput');
+
+        function setTimeStyle(timeWithSeconds) {
+            document.getElementById("time").style.fontSize = timeWithSeconds ? "5em" : "8.2em";
+        }
+
+        function getTimeWithSeconds() {
+            return window.localStorage.getItem("timeWithSeconds") === "1";
+        }
+
+        function setTimeWithSeconds(value) {
+            window.localStorage.setItem("timeWithSeconds", value ? "1" : "0");
+        }
+
+        let redirectBaseURL = window.localStorage.getItem("redirectBaseURL") || "http://example.com/";
+
+        function setRedirectBaseURL(url) {
+            window.localStorage.setItem("redirectBaseURL", url);
+            redirectBaseURL = url;
+        }
+
+        let timeWithSeconds = getTimeWithSeconds();
+        setTimeStyle(timeWithSeconds);
+
+        function updateDateTime() {
+            let today = new Date();
+            let date = today.toLocaleDateString("ru-RU");
+            let weekday = today.toLocaleDateString("ru-RU", { weekday: 'long' });
+            let timeStringOptions = timeWithSeconds ? timeStringOptionsHourMinuteSeconds : timeStringOptionsHourMinute;
+            let time = today.toLocaleTimeString("ru-RU", timeStringOptions);
+            document.getElementById('date').innerHTML = `${date}<br>${weekday}`;
+            document.getElementById('time').innerHTML = time;
+        }
+
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        hotkeys('g', function () {
+            inputOverlay.style.display = 'flex';
+            numberInput.focus();
+            numberInput.value = '';
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === ':') {
+                inputOverlay.style.display = 'flex';
+                numberInput.value = '';
+                numberInput.focus();
+                event.preventDefault(); // Prevent default behavior of the `:` key
+            }
+        });
+
+        numberInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                const inputValue = numberInput.value.trim();
+
+                // Match "g {number}" format or standalone number
+                const match = inputValue.match(/^g\s*(\d+)|^\d+$/);
+                if (match) {
+                    const number = match[1] || inputValue;
+                    window.location.href = `${redirectBaseURL}${number}`;
+                } else if (inputValue.startsWith("set ")) {
+                    const newURL = inputValue.substring(4).trim();
+                    if (newURL) {
+                        setRedirectBaseURL(newURL);
+                        alert(`Base URL updated to: ${newURL}`);
+                    }
+                }
+
+                inputOverlay.style.display = 'none';
+                numberInput.value = '';
+            } else if (event.key === 'Escape') {
+                inputOverlay.style.display = 'none';
+                numberInput.value = '';
+            }
+        });
+
+        hotkeys('esc', function () {
+            inputOverlay.style.display = 'none';
+            numberInput.value = '';
+        });
+    </script>
+</body>
 </html>
