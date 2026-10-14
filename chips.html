@@ -150,13 +150,13 @@ const firebaseConfig = {
 
 /* Номиналы фишек: значение, цвет, цвет полос, цвет надписи */
 const CHIPS=[
-  {v:250000,c:"#c3363a",s:"#f4e9d8",t:"#fff",l:"250K"},
-  {v:100000,c:"#1c1d22",s:"#e0b453",t:"#fff",l:"100K"},
+  {v:250000,c:"#1c1d22",s:"#e0b453",t:"#fff",l:"250K"},
+  {v:100000,c:"#c3363a",s:"#f4e9d8",t:"#fff",l:"100K"},
   {v:25000, c:"#2e8f5a",s:"#f4e9d8",t:"#fff",l:"25K"},
-  {v:5000,  c:"#d0582a",s:"#f4e9d8",t:"#fff",l:"5K"},
+  {v:5000,  c:"#2f6fb8",s:"#f4e9d8",t:"#fff",l:"5K"},
   {v:1000,  c:"#e3b33d",s:"#3a2a08",t:"#2a1d05",l:"1K"},
-  {v:500,   c:"#7b3fb5",s:"#f4e9d8",t:"#fff",l:"500"},
-  {v:100,   c:"#f2efe6",s:"#2f6fb8",t:"#1b1d1f",l:"100"},
+  {v:500,   c:"#e2779f",s:"#fff4f8",t:"#3a0f20",l:"500"},
+  {v:100,   c:"#f2efe6",s:"#8a8f99",t:"#1b1d1f",l:"100"},
 ];
 const UNIT=100;
 const DEFAULT_STACK=10000, DEFAULT_MINUTES=10;
@@ -208,7 +208,7 @@ function breakdown(amount){
 function chipHtml(v,d,withLabel=true){
   const c=chipOf(v);
   if(!c) return `<span class="pc" style="--d:${d}px;--c:#555;--s:#999;--t:#fff"><span></span></span>`;
-  return `<span class="pc" style="--d:${d}px;--c:${c.c};--s:${c.s};--t:${c.t}"><span>${withLabel?c.l:""}</span></span>`;
+  return `<span class="pc" style="--d:${d}px;--c:${c.c};--s:${c.s};--t:${c.t}${c.l.length>3?`;font-size:${(d*.27).toFixed(1)}px`:""}"><span>${withLabel?c.l:""}</span></span>`;
 }
 function pileHtml(v,n,d){
   const layers=Math.max(1,Math.min(n,5)), step=Math.max(3,Math.round(d/10));
@@ -220,6 +220,58 @@ function stacksHtml(amount,d){
   const b=breakdown(amount);
   if(!b.length) return `<span class="hint">нет фишек</span>`;
   return `<div class="stacks${d<34?" sm":""}">${b.map(x=>x.v?`<div class="stk">${pileHtml(x.v,x.n,d)}</div>`:`<div class="stk"><span class="cnt">+${x.n}</span></div>`).join("")}</div>`;
+}
+
+
+/* ---------- chip sounds (synthesised, no files) ---------- */
+let actx=null, soundOn=ls.get("pk_sound")!=="off";
+function audio(){
+  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}
+  if(actx.state==="suspended") actx.resume().catch(()=>{});
+  return actx;
+}
+// one clay-chip "tick": a very short band-passed noise burst with a hard decay
+function tickAt(ctx,t,freq,gain){
+  const len=Math.floor(ctx.sampleRate*0.03), buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,6);
+  const src=ctx.createBufferSource();src.buffer=buf;
+  const bp=ctx.createBiquadFilter();bp.type="bandpass";bp.frequency.value=freq;bp.Q.value=3.5;
+  const hp=ctx.createBiquadFilter();hp.type="highpass";hp.frequency.value=1200;
+  const g=ctx.createGain();g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.06);
+  src.connect(bp).connect(hp).connect(g).connect(ctx.destination);src.start(t);
+}
+// chip dropped on the pile: a main click and a smaller bounce
+function chipClick(value){
+  if(!soundOn) return; const ctx=audio(); if(!ctx) return;
+  const t=ctx.currentTime+0.005, base=3200+Math.random()*900-(value>=5000?500:0);
+  tickAt(ctx,t,base,0.9);
+  tickAt(ctx,t+0.035+Math.random()*0.02,base*1.25,0.35);
+  if(Math.random()<0.5) tickAt(ctx,t+0.075+Math.random()*0.02,base*1.1,0.15);
+}
+// chips raked back: a quick riffle of clicks
+function chipRiffle(n){
+  if(!soundOn) return; const ctx=audio(); if(!ctx) return;
+  const k=Math.max(3,Math.min(10,n*2)), t=ctx.currentTime+0.005;
+  for(let i=0;i<k;i++) tickAt(ctx,t+i*0.028+Math.random()*0.01,2800+Math.random()*1400,0.5*(1-i/k)+0.15);
+}
+
+// knuckles on the felt: two low, soft thuds
+function thudAt(ctx,t,gain){
+  const o=ctx.createOscillator();o.type="sine";
+  o.frequency.setValueAtTime(190,t);o.frequency.exponentialRampToValueAtTime(70,t+0.09);
+  const og=ctx.createGain();og.gain.setValueAtTime(0.0001,t);og.gain.exponentialRampToValueAtTime(gain,t+0.004);og.gain.exponentialRampToValueAtTime(0.001,t+0.14);
+  o.connect(og).connect(ctx.destination);o.start(t);o.stop(t+0.16);
+  const len=Math.floor(ctx.sampleRate*0.04), buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);
+  const src=ctx.createBufferSource();src.buffer=buf;
+  const lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=900;
+  const ng=ctx.createGain();ng.gain.value=gain*0.6;
+  src.connect(lp).connect(ng).connect(ctx.destination);src.start(t);
+}
+function knock(){
+  if(!soundOn) return; const ctx=audio(); if(!ctx) return;
+  const t=ctx.currentTime+0.005;
+  thudAt(ctx,t,0.9);thudAt(ctx,t+0.17,0.75);
 }
 
 /* ---------- levels ---------- */
@@ -666,7 +718,7 @@ function roomHtml(){
   }
   const potAll=s.pot+betsOnTable;
   return `
-  <div class="top"><button class="small" id="back">← К началу</button><div class="hint">${esc(s.title)} · <span class="code">${esc(s.code)}</span></div></div>
+  <div class="top"><button class="small" id="back">← К началу</button><div class="row" style="gap:10px"><div class="hint">${esc(s.title)} · <span class="code">${esc(s.code)}</span></div><button class="small" id="sound" aria-pressed="${soundOn}" aria-label="Звук фишек">${soundOn?"🔊 Звук":"🔇 Без звука"}</button></div></div>
   ${clockHtml(s,me)}
   <div class="table">
     <span class="lbl">${s.phase==="waiting"?(s.hand?`После раздачи №${s.hand}`:"Банк"):`Раздача №${s.hand} · банк`}</span>
@@ -686,6 +738,7 @@ function roomHtml(){
 function bindRoom(){
   const on=(id,f)=>{const el=document.getElementById(id);if(el)el.onclick=f};
   on("back",leaveView);
+  on("sound",()=>{soundOn=!soundOn;ls.set("pk_sound",soundOn?"on":"off");if(soundOn)chipClick(1000);render()});
   on("deal",()=>run(roomCode,s=>{if(s.phase!=="waiting")return null;startHand(s);return s}));
   on("rebuy",()=>run(roomCode,s=>{const p=s.players.find(q=>q.id===myId);if(!p||p.stack>0||s.phase!=="waiting")return null;p.stack=s.startBalance;log(s,`<b>${esc(p.name)}</b> докупается на ${fmt(s.startBalance)}.`);return s}));
   on("award",()=>{const ids=[...winnersSel];run(roomCode,s=>{award(s,ids);return s})});
@@ -733,16 +786,17 @@ function renderRail(){
     </div>`;
   rail.hidden=false;document.body.classList.add("railOpen");
   document.documentElement.style.setProperty("--railH",(rail.offsetHeight+20)+"px");
-  document.querySelectorAll("[data-chip]").forEach(b=>b.onclick=()=>{staged.push(+b.dataset.chip);renderRail()});
-  const bz=$("#betZone");if(bz)bz.onclick=()=>{staged=[];renderRail()};
+  document.querySelectorAll("[data-chip]").forEach(b=>b.onclick=()=>{chipClick(+b.dataset.chip);staged.push(+b.dataset.chip);renderRail()});
+  const bz=$("#betZone");if(bz)bz.onclick=()=>{chipRiffle(staged.length);staged=[];renderRail()};
   const hand=s.hand,street=s.street,turn=s.turn;
   const go=(type,amt)=>run(roomCode,st=>{
     if(st.phase!=="betting"||st.hand!==hand||st.street!==street||st.turn!==turn||P(st,st.turn).id!==myId) throw new Error("Ход уже сменился.");
     act(st,type,amt);return st;
   });
   const on=(id,f)=>{const el=document.getElementById(id);if(el)el.onclick=f};
-  on("aFold",()=>go("fold"));on("aCheck",()=>go("check"));on("aCall",()=>go("call"));
-  on("aConfirm",()=>{if(A.ok)go(A.type,A.amount)});
+  on("aFold",()=>go("fold"));on("aCheck",()=>{knock();go("check")});
+  on("aConfirm",()=>{if(A.ok){if(A.type==="check")knock();else chipRiffle(Math.max(2,staged.length));go(A.type,A.amount)}});
+  on("aCall",()=>{chipRiffle(3);go("call")});
 }
 
 /* ---- clock tick: updates only the timer, never the whole page ---- */
