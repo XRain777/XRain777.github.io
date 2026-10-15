@@ -535,8 +535,115 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 @keyframes turnr{from{opacity:.3;translate:24px 0}} @keyframes turnl{from{opacity:.3;translate:-24px 0}}
 .ctl.broken .ctl-in *{pointer-events:none!important}
 .acts.one{grid-template-columns:1fr!important}
-.acts.one button{background:var(--danger);box-shadow:0 4px 0 #8e1f2b;font-size:clamp(13px,5cqw + 4px,19px);letter-spacing:.02em}
+.acts.one button{font-size:clamp(13px,4cqw + 4px,17px);letter-spacing:.02em}
 .ctl.span2{grid-column:span 2}
+.meter.run{position:relative}
+.hud-note{position:absolute;left:50%;top:50%;width:max-content;max-width:100%;z-index:5;transform:translate(-50%,-10%);pointer-events:none;white-space:nowrap;
+  background:color-mix(in srgb,var(--danger) 72%,transparent);color:#fff;font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.03em;
+  padding:4px 10px;border-radius:99px;backdrop-filter:blur(2px);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hud-note.flash{animation:hudnote 1.5s ease-out forwards}
+@keyframes hudnote{0%{opacity:0;transform:translate(-50%,10%) scale(.85)}12%{opacity:1;transform:translate(-50%,-10%) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-30%)}}
+.task-layer{position:fixed;inset:0;z-index:22;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--void) 82%,transparent);backdrop-filter:blur(4px);
+  padding:max(14px,env(safe-area-inset-top,0px)) 12px max(14px,env(safe-area-inset-bottom,0px));touch-action:none}
+.task-card{width:min(440px,100%);max-height:100%;overflow:hidden;background:var(--hull);border:2px solid var(--tabby);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 18px 40px rgba(0,0,0,.5);animation:unl .3s both}
+.task-top{display:flex;justify-content:space-between;align-items:center}
+.task-sec{font-family:var(--display);font-size:13px;color:var(--tabby);font-variant-numeric:tabular-nums}
+.task-title{font-family:var(--display);font-size:clamp(16px,4.6vw,20px);font-weight:900;line-height:1.2;color:var(--cream)}
+.task-timer{height:8px;border-radius:99px;background:var(--void);overflow:hidden}
+.task-timer i{display:block;height:100%;width:100%;background:var(--tabby);border-radius:99px}
+.task-timer i.urgent{background:var(--danger)}
+.task-msg{min-height:1.3em;font-weight:800;color:var(--mint);text-align:center}
+.task-msg.bad{color:var(--danger)}
+.task-body{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.tshake{animation:shake .4s}
+.task-wait{position:fixed;left:0;right:0;bottom:0;z-index:21;display:flex;align-items:flex-start;justify-content:center;padding:16px;background:color-mix(in srgb,var(--void) 72%,transparent);backdrop-filter:blur(2px)}
+.tw-card{display:flex;gap:12px;align-items:center;background:var(--hull);border:1px solid var(--edge);border-radius:16px;padding:14px 16px;max-width:380px}
+.tw-cat{font-size:40px;line-height:1;animation:twbob 1.2s ease-in-out infinite alternate}
+@keyframes twbob{from{transform:rotate(-8deg)}to{transform:rotate(8deg) translateY(-3px)}}
+.tw-card div{display:flex;flex-direction:column;gap:2px}
+.tw-card b{color:var(--tabby);font-family:var(--display);font-size:15px}
+.tw-card span{font-weight:800}
+.tw-card small{color:var(--dim)}
+/* phone */
+.ph-sticker{align-self:center;background:#fff59a;color:#3a2405;transform:rotate(-2deg);padding:8px 14px;border-radius:4px;box-shadow:0 4px 10px rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;font-weight:800}
+.ph-sticker b{font-family:var(--display);font-size:22px;letter-spacing:.06em}
+.ph-disp{background:var(--void);border:1px solid var(--edge);border-radius:12px;padding:10px;text-align:center;font-family:var(--display);font-size:24px;letter-spacing:.08em;min-height:52px;font-variant-numeric:tabular-nums}
+.ph-disp.empty{font-family:var(--body);font-size:15px;letter-spacing:0;color:var(--dim);font-weight:700;display:grid;place-items:center}
+.ph-disp.talk{font-family:var(--body);letter-spacing:0;font-size:18px;font-weight:800}
+.ph-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ph-keys button{height:48px;border-radius:14px;background:var(--plate);border:1px solid var(--edge);font-family:var(--display);font-size:20px;font-weight:700}
+.ph-keys button:active{background:var(--tabby);color:var(--ink)}
+.ph-keys .ph-call{background:#2fbf6b;border-color:#2fbf6b;font-size:22px}
+.ph-keys .ph-del{font-size:18px;color:var(--dim)}
+.ph-kus{height:88px;border:0;border-radius:18px;background:var(--danger);color:#fff;font-family:var(--display);font-size:34px;font-weight:900;box-shadow:0 6px 0 #8e1f2b;animation:unl .3s both}
+.ph-kus:active{transform:translateY(4px);box-shadow:0 2px 0 #8e1f2b}
+/* tv */
+.tv{align-self:center;width:min(280px,90%);aspect-ratio:16/10;background:#222;border:10px solid #3a3550;border-radius:16px;box-shadow:inset 0 0 0 2px #000,0 8px 18px rgba(0,0,0,.4);overflow:hidden}
+.tv-scr{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:radial-gradient(circle at 50% 40%,#4a6fa5,#1c2b45);color:#fff}
+.tv-scr.flick{animation:flick2 .25s}
+@keyframes flick2{0%{filter:brightness(3) contrast(.4)}100%{filter:none}}
+.tv-ic{font-size:48px;line-height:1}
+.tv-nm{font-family:var(--display);font-size:20px}
+.tv-no{opacity:.7;font-weight:700}
+.tv-remote{align-self:center;display:flex;align-items:center;gap:14px;background:#2b2540;border:1px solid var(--edge);border-radius:20px;padding:10px 14px}
+.tv-btn{width:76px;height:56px;border-radius:14px;border:0;background:var(--tabby);color:var(--ink);font-size:26px;font-weight:900;box-shadow:0 4px 0 #7d3d0e}
+.tv-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #7d3d0e}
+.tv-brand{font-family:var(--display);font-size:10px;color:var(--dim);letter-spacing:.1em}
+/* table */
+.table{position:relative;height:190px;display:flex;flex-direction:column;justify-content:flex-end;overflow:visible}
+.table-top{position:relative;z-index:1;height:96px;background:linear-gradient(#a8743f,#8a5a2b);border-radius:12px;box-shadow:0 8px 0 #5e3a17;display:flex;align-items:flex-end;justify-content:space-around;padding:0 6px 10px}
+.table-legs{height:60px;margin:0 30px;background:linear-gradient(90deg,#5e3a17 0 14px,transparent 14px calc(100% - 14px),#5e3a17 calc(100% - 14px))}
+.t-item{display:flex;flex-direction:column;align-items:center;gap:0;margin-bottom:28px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;transition:transform .15s}
+.t-item.drag{transition:none}
+.t-item .t-e{font-size:40px;line-height:1;filter:drop-shadow(0 4px 2px rgba(0,0,0,.35))}
+.t-item small{font-weight:800;font-size:11px;color:#ffe9c8;margin-top:2px}
+.t-item.vase small{color:#fff59a}
+.t-item.off-r{animation:offr .6s forwards} .t-item.off-l{animation:offl .6s forwards}
+@keyframes offr{to{transform:translate(140px,170px) rotate(220deg);opacity:0}} @keyframes offl{to{transform:translate(-140px,170px) rotate(-220deg);opacity:0}}
+/* fridge */
+.fridge{position:relative;align-self:center;width:min(300px,96%);height:250px;background:#e8ecf2;border-radius:18px;border:4px solid #c9cfda;padding:10px;overflow:hidden}
+.fr-shelves{height:100%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:8px;background:linear-gradient(transparent calc(50% - 2px),#b9c3d3 calc(50% - 2px) calc(50% + 2px),transparent calc(50% + 2px))}
+.fr-item{border:0;background:rgba(255,255,255,.6);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#2b2540}
+.fr-item span{font-size:34px;line-height:1}
+.fr-item small{font-weight:800;font-size:12px}
+.fr-item.got{background:var(--mint)}
+.fr-door{position:absolute;inset:0;z-index:2;background:linear-gradient(110deg,#f4f6fa,#d7dce6);border-radius:14px;transform-origin:left center;touch-action:none;cursor:grab;display:flex;align-items:center;justify-content:flex-end;padding-right:16px;transition:transform .15s}
+.fr-door.open{transform:perspective(600px) rotateY(-100deg)!important;pointer-events:none;transition:transform .35s}
+.fr-handle{width:10px;height:70px;border-radius:5px;background:#9aa4b6;box-shadow:inset 0 2px 0 rgba(255,255,255,.6)}
+.fr-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-weight:900;color:#6f7a8f;font-size:16px}
+/* laptop */
+.lt-scr{background:#0f1a2a;border:6px solid #3a3550;border-radius:12px 12px 4px 4px;padding:16px 8px;display:flex;justify-content:center}
+.lt-slots{display:flex;gap:6px}
+.lt-slot{width:38px;height:48px;border-radius:8px;border:2px dashed #3b5a85;display:grid;place-items:center;font-family:var(--display);font-size:24px;font-weight:900;color:#3b5a85}
+.lt-slot.on{border-style:solid;border-color:var(--mint);color:var(--mint)}
+.lt-kb{background:#2b2540;border-radius:4px 4px 14px 14px;padding:8px 4px;display:flex;flex-direction:column;gap:5px}
+.lt-row{display:flex;justify-content:center;gap:3px}
+.lt-key{flex:0 1 30px;min-width:0;height:40px;border-radius:7px;border:0;background:#e9e4f5;color:#2b2540;font-weight:900;font-size:14px;box-shadow:0 3px 0 #9a91b5;padding:0}
+.lt-key:active{transform:translateY(2px);box-shadow:0 1px 0 #9a91b5;background:var(--tabby)}
+/* boxes */
+.bx-room{position:relative;height:250px;border-radius:14px;background:linear-gradient(transparent 70%,#3b2f63 70%);touch-action:none}
+.bx-row{position:absolute;left:0;right:0;bottom:24px;display:flex;justify-content:space-around;align-items:flex-end}
+.bx{position:relative;background:linear-gradient(#d4a25e,#b8823f);border:2px solid #8a5a2b;border-radius:3px;display:flex;align-items:flex-end;justify-content:center}
+.bx-s{width:46px;height:34px} .bx-m{width:76px;height:54px} .bx-l{width:124px;height:86px}
+.bx-flap{position:absolute;top:-10px;width:50%;height:12px;background:#c99350;border:2px solid #8a5a2b}
+.bx-flap.l{left:-2px;transform:rotate(-18deg);transform-origin:right bottom} .bx-flap.r{right:-2px;transform:rotate(18deg);transform-origin:left bottom}
+.bx-cat{position:absolute;left:50%;top:40px;transform:translate(-50%,-50%);font-size:52px;line-height:1;width:68px;text-align:center;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;filter:drop-shadow(0 4px 3px rgba(0,0,0,.4));transition:left .25s,top .25s}
+.bx-cat.drag{transition:none;cursor:grabbing;font-size:58px}
+.bx-cat.in{position:absolute;left:50%;top:auto;bottom:6px;transform:translateX(-50%);font-size:44px;transition:none}
+.bastet{position:fixed;inset:0;z-index:26;pointer-events:none;overflow:hidden;animation:bsfade 2.2s ease-in-out forwards;
+  background:radial-gradient(circle at 50% 45%,rgba(255,215,110,.55),rgba(160,100,20,.55) 45%,rgba(40,20,5,.75))}
+@keyframes bsfade{0%{opacity:0}12%{opacity:1}80%{opacity:1}100%{opacity:0}}
+.bs-rays{position:absolute;left:50%;top:45%;width:180vmax;height:180vmax;margin:-90vmax 0 0 -90vmax;background:repeating-conic-gradient(rgba(255,230,140,.35) 0 6deg,transparent 6deg 18deg);animation:spin 6s linear infinite}
+.bs-sun{position:absolute;left:50%;top:22%;transform:translateX(-50%);font-size:56px;filter:drop-shadow(0 0 18px #ffd36b)}
+.bs-cat{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);font-size:clamp(110px,36vw,170px);line-height:1;filter:drop-shadow(0 0 24px #ffd36b) drop-shadow(0 6px 6px rgba(0,0,0,.5));animation:bsrise 2.2s ease-out}
+@keyframes bsrise{0%{transform:translate(-50%,-20%) scale(.6);opacity:0}25%{transform:translate(-50%,-50%) scale(1.1);opacity:1}40%{transform:translate(-50%,-50%) scale(1)}}
+.bs-pyr{position:absolute;left:0;right:0;bottom:10%;display:flex;justify-content:center;align-items:flex-end;gap:6px}
+.bs-pyr span{font-size:70px;line-height:1;filter:sepia(1) saturate(3) hue-rotate(-15deg) drop-shadow(0 4px 4px rgba(0,0,0,.4))}
+.bs-pyr span:nth-child(2){font-size:100px}
+.bs-t{position:absolute;left:0;right:0;top:66%;text-align:center;font-family:var(--display);font-weight:900;font-size:clamp(26px,8vw,40px);color:#ffe9a8;text-shadow:0 3px 0 #7a4a0a,0 0 20px #ffb347;letter-spacing:.04em}
+.bs-sand{position:absolute;inset:0}
+.bs-sand i{position:absolute;top:-10px;width:4px;height:4px;border-radius:50%;background:#f3d18a;animation:bssand 1.4s linear infinite}
+@keyframes bssand{to{transform:translate(-40px,105vh)}}
 </style>
 </head>
 <body>
@@ -624,7 +731,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
         <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
       </ol>
     </details>
-    <p class="muted" style="text-align:center;font-size:12px">Версия 17.2 · 15:20</p>
+    <p class="muted" style="text-align:center;font-size:12px">Версия 18.2 · 16:30</p>
   </section>
 
   <!-- SETTINGS -->
@@ -675,7 +782,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   <section id="scr-game" class="scr" hidden>
     <div class="hud">
       <div class="meter sector"><div class="k">Сектор</div><b id="h-round">1</b></div>
-      <div class="meter run"><div class="k"><span>Взрыв</span><em class="gapw"><span id="h-gap">отрыв 50</span> <b id="h-combo" class="combo"></b></em><span>Прыжок</span></div>
+      <div class="meter run"><div class="hud-note" id="hud-note" aria-live="polite" hidden></div><div class="k"><span>Взрыв</span><em class="gapw"><span id="h-gap">отрыв 50</span> <b id="h-combo" class="combo"></b></em><span>Прыжок</span></div>
         <div class="track" id="track"><div class="fire" id="h-fire"></div><div class="portal">🌀</div><div class="trail" id="h-trail" aria-hidden="true"></div><div class="ship" id="h-ship" aria-label="Позиция корабля">🚀</div></div>
       </div>
       <div class="hud-menu">
@@ -802,7 +909,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 <div class="leak-layer" id="leak-layer" hidden>
   <div class="laser-banner leak-banner">Протечка! Не трогай экран</div>
   <div class="drops" id="drops" aria-hidden="true"></div>
-  <div class="leak-n" id="leak-n">3</div>
+  <div class="leak-n" id="leak-n">2</div>
   <p class="leak-msg" id="leak-msg">Замри и не трогай экран!</p>
 </div>
 <div class="mic-layer" id="mic-layer" hidden>
@@ -812,6 +919,16 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   <div class="xp mic-prog"><i id="mic-fill"></i></div>
   <p class="flea-hint" id="mic-hint">Мяукай громче!</p>
 </div>
+<div class="task-layer" id="task-layer" hidden>
+  <div class="task-card">
+    <div class="task-top"><span class="lbl">Личное дело</span><b class="task-sec" id="task-sec"></b></div>
+    <h3 class="task-title" id="task-title"></h3>
+    <div class="task-timer"><i id="task-timer"></i></div>
+    <div class="task-body" id="task-body"></div>
+    <p class="task-msg" id="task-msg" role="status"></p>
+  </div>
+</div>
+<div class="task-wait" id="task-wait" hidden><div class="tw-card"><span class="tw-cat" id="tw-cat">😼</span><div><b id="tw-name"></b><span id="tw-what"></span><small>Весь корабль ждёт, таймеры стоят</small></div></div></div>
 <button class="laser" id="laser" hidden aria-label="Поймать лазерную точку"></button>
 <div class="toast" id="toast" hidden></div>
 
@@ -841,6 +958,31 @@ const MODES={
 let gameMode='normal';
 try{ const m=localStorage.getItem('koto-mode'); if(MODES[m]) gameMode=m; }catch(e){}
 const HOLDS=['Игрушка в зубах','Дверь от собаки','Хвост пистолетом','Замереть','Мурчать'];
+// ---- personal tasks: one crew member at a time gets a full-screen chore while the whole ship waits
+const BASTET={n:'Бастет',ic:'🐈‍⬛',o:['Поклоняться']};
+const TASK_TYPES=['phone','tv','table','fridge','keys','boxes'];
+const TV_CH=[['Спорт','⚽'],['Новости','📰'],['Природа','🐦'],['Музыка','🎵']];
+const TABLE_ITEMS=[['🥛','кружка'],['📱','телефон'],['🖊️','ручка'],['🔑','ключи'],['🧦','носок'],['📚','книга'],['🕶️','очки'],['🧸','мишка'],['🍪','печенье']];
+const FRIDGE_ITEMS=[['🥛','Сметана'],['🌭','Колбаса'],['🐟','Рыба'],['🧀','Сыр'],['🍗','Курица'],['🥚','Яйца'],['🧈','Масло'],['🥓','Бекон'],['🍤','Креветки'],['🥩','Мясо']];
+const KEY_WORDS=['МЯУ','ЫЫЫ','КУСЬ','ЕДА','МУР','ФЫР','ДАЙ','СПАТЬ'];
+function makeTask(ty,opt){
+  opt=opt||{};
+  if(ty==='phone'){
+    const who=pick([['ветеринару','Ветеринар','звонит ветеринару'],['в рыбный магазин','Рыбный магазин','звонит в рыбный магазин'],['в магазин штор','Магазин штор','звонит в магазин штор'],['кусь','Сосед снизу','кусает соседа по телефону']]);
+    const kus=opt.kus!=null?!!opt.kus:who[0]==='кусь', w=kus?['кусь','Сосед снизу','кусает соседа по телефону']:who;
+    let num=''; for(let i=0;i<6;i++) num+=Math.floor(Math.random()*10);
+    return {title:kus?'Кусь по телефону: позвони соседу снизу и сделай КУСЬ':'Позвони '+w[0],wait:w[2],sec:15,label:w[1],num,kus};
+  }
+  if(ty==='tv'){ const t=Math.floor(Math.random()*4); let st; do{ st=Math.floor(Math.random()*4); }while(st===t);
+    return {title:'Переключи телевизор на «'+TV_CH[t][0]+'»',wait:'переключает телевизор',sec:10,t,st}; }
+  if(ty==='table'){ const it=shuffle(TABLE_ITEMS.slice()).slice(0,4), vase=Math.floor(Math.random()*5); it.splice(vase,0,['🏺','ваза']);
+    return {title:'Смахни всё со стола, кроме вазы',wait:'смахивает вещи со стола',sec:11,it}; }
+  if(ty==='fridge'){ const it=shuffle(FRIDGE_ITEMS.slice()).slice(0,6), t=Math.floor(Math.random()*6);
+    return {title:'Достань из холодильника: '+it[t][1],wait:'лезет в холодильник',sec:12,it,t}; }
+  if(ty==='keys'){ const w=pick(KEY_WORDS); return {title:'Напечатай на ноутбуке «'+w+'»',wait:'печатает на ноутбуке',sec:14,w}; }
+  // boxes: one too small, one just right, one far too big
+  return {title:'Залезь в самую маленькую коробку, в которую поместишься',wait:'выбирает коробку',sec:11,ord:shuffle(['s','m','l'])};
+}
 // tester mode (nickname "Тестер"): every mechanic in turn, no timers, no explosion.
 // ctl = test panel, on = indexes of controls that get orders, ok(base) = passed? (this = Host)
 const T_BTN={t:'b',n:'Мурчатель'}, T_TGL={t:'t',n:'Зевательный компенсатор'}, T_ACT={t:'a',n:'Лапка-манипулятор',o:['Погладить','Почесать']}, T_DIAL={t:'d',n:'Тунцовый реактор',o:['Тунец','Курица','Лосось']};
@@ -854,9 +996,10 @@ const TSTEPS=[
   {n:'Ползунок',h:'Сдвинь ползунок на число и отпусти палец, 2 раза.',ctl:[{t:'r',n:'Шерсть на одежде',m:7},T_BTN],on:[0],ok:okOrders(2)},
   {n:'Кнопки-действия',h:'Нажми действие из приказа, 2 раза.',ctl:[T_ACT,T_BTN],on:[0],ok:okOrders(2)},
   {n:'Цветок',h:'Погрызи или урони цветок по приказу, 2 раза.',ctl:[{t:'a',n:'Фикус',o:['Погрызть','Уронить']},T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Пасхалка: Бастет',h:'Нажми «Поклоняться»: должен быть египетский эффект и музыка.',ctl:[{t:'a',n:'Бастет',o:['Поклоняться']},T_BTN],on:[0],ok:okOrders(1)},
   {n:'Одиночная кнопка',h:'Панель с одной кнопкой: нажми её по приказу, 2 раза.',ctl:[{t:'a',n:'Злая рука',o:['КУСЬ']},{t:'a',n:'Окно',o:['Смотреть']}],on:[0,1],ok:okOrders(2)},
   {n:'Вылизывание',h:'Вылижи то, что сказано, 2 раза.',ctl:[{t:'a',n:'Вылизывание',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',w:1},T_BTN,T_TGL],on:[0],ok:okOrders(2)},
-  {n:'Удержание',h:'Держи кнопку, пока кольцо не заполнится. Отпустишь раньше — не засчитается, но и не ошибка.',ctl:[{t:'h',n:'Дверь от собаки',hd:2},T_TGL],on:[0],ok:okOrders(2)},
+  {n:'Удержание',h:'Держи кнопку, пока кольцо не заполнится. Отпустишь раньше — не засчитается, но и не ошибка.',ctl:[{t:'h',n:'Дверь от собаки',hd:1.5},T_TGL],on:[0],ok:okOrders(2)},
   {n:'Двойной тап',h:'Нажми кнопку «×2» дважды быстро. Одно нажатие ничего не делает.',ctl:[{t:'x',n:'Гравимурр'},T_TGL],on:[0],ok:okOrders(2)},
   {n:'Лишнее нажатие',h:'Приказа нет. Нажми любую кнопку: должно появиться предупреждение о лишнем действии.',ctl:[T_BTN,T_TGL],on:[],ok:function(b){ return (this.wrc.me||0)>b.wr; }},
   {n:'Комбо',h:'Выполни 5 приказов подряд без ошибок.',ctl:T_FOUR,on:[0,1,2,3],ok:function(){ return this.combo>=5; }},
@@ -866,11 +1009,18 @@ const TSTEPS=[
   {n:'Отпавшая панель',h:'Поверни панель по стрелке, пока не защёлкнется.',ctl:T_FOUR,go:function(){ this.dbgCmd('break'); },ok:function(){ return this.T.fixOk; }},
   {n:'Кот на пультах',h:'Через секунду кот перепутает приборы. Потом выполни 2 приказа.',ctl:T_FOUR,on:[0,1,2,3],go:function(now){ this.T.at=now+1500; },later:function(){ this.fun.shuf++; this.shufflePanels(); this.instr={}; this.T.sb=this.okc.me||0; },ok:function(){ return this.T.sb!=null&&(this.okc.me||0)-this.T.sb>=2; }},
   {n:'Лоток',h:'Закопай лоток: проводи пальцем сверху вниз.',go:function(){ this.lit={k:++this.litK,n:3,until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.lit>b.lit; }},
-  {n:'Протечка',h:'3 секунды не трогай экран. Можно специально тронуть и проверить, что засчиталось касание.',go:function(now){ this.leak={k:++this.leakK,at:now,until:now+3000,hit:{}}; },ok:function(b){ return this.fun.leaks>b.leaks; }},
+  {n:'Протечка',h:'2 секунды не трогай экран. Можно специально тронуть и проверить, что засчиталось касание.',go:function(now){ this.leak={k:++this.leakK,at:now,until:now+2000,hit:{}}; },ok:function(b){ return this.fun.leaks>b.leaks; }},
   {n:'Блохи',h:'Потряси телефон или поводи пальцем влево-вправо.',go:function(){ this.flea={k:++this.fleaK,n:6,until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.flea>b.flea; }},
   {n:'Невесомость',h:'Пульт перевернётся. Выполни 2 приказа вверх ногами.',ctl:T_FOUR,on:[0,1,2,3],go:function(){ this.dbgCmd('flip'); },ok:okOrders(2)},
   {n:'Зеркальный пульт',h:'Пульт отразится слева направо. Выполни 2 приказа.',ctl:T_FOUR,on:[0,1,2,3],go:function(){ this.dbgCmd('mirror'); },ok:okOrders(2)},
   {n:'Мяуканье в микрофон',h:'Мяукни погромче или тапни по коту 8 раз.',go:function(){ this.mic={k:++this.micK,until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.mic>b.mic; }},
+  {n:'Личное дело: телефон',h:'Набери номер со стикера и нажми зелёную трубку.',go:function(){ this.startTask('phone',{kus:false}); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: кусь по телефону',h:'Дозвонись соседу и сделай КУСЬ.',go:function(){ this.startTask('phone',{kus:true}); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: телевизор',h:'Листай каналы кнопками ◀ ▶ до нужного.',go:function(){ this.startTask('tv'); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: стол',h:'Смахни пальцем вбок всё, кроме вазы. Можно специально уронить вазу и проверить провал.',go:function(){ this.startTask('table'); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: холодильник',h:'Открой дверцу, потянув влево, и возьми нужный продукт.',go:function(){ this.startTask('fridge'); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: ноутбук',h:'Напечатай слово по буквам.',go:function(){ this.startTask('keys'); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: коробки',h:'Перетащи кота в самую маленькую коробку, куда он влезет.',go:function(){ this.startTask('boxes'); },ok:function(b){ return this.fun.task>b.task; }},
   {n:'Иконки',h:'Приборы показаны эмодзи. Выполни 2 приказа.',ctl:[{t:'b',n:'Мышиный трекер',ic:'🐭'},{t:'t',n:'Кошачья мята',ic:'🪴'},{t:'a',n:'Вылизывание',ic:'👅',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',txi:'👅 {o}',w:1}],on:[0,1,2],ok:okOrders(2)},
   {n:'Иконки в режимах',h:'Варианты переключателя тоже эмодзи. Выполни 2 приказа.',ctl:[{t:'d',n:'Миска с невесомостью',o:['🐟','🍗','🦃','🥛']},T_BTN],on:[0],ok:okOrders(2)},
   {n:'Пауза',h:'Открой меню ⋯, поставь паузу и продолжи полёт.',ok:function(){ return this.T.resumed; }}
@@ -1024,7 +1174,7 @@ renderProg();
 
 
 /* ---------- screens ---------- */
-function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); if(name!=='set') mtStop(); ['menu','set','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); stopFlea(); stopMic(); unflip(); $('leak-layer').hidden=true; $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
+function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); if(name!=='set') mtStop(); ['menu','set','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); stopFlea(); stopMic(); unflip(); $('leak-layer').hidden=true; if(typeof closeTask==='function') closeTask(); $('task-wait').hidden=true; $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
 let wakeLock=null;
 function keepAwake(){ try{ if(navigator.wakeLock&&!wakeLock) navigator.wakeLock.request('screen').then(l=>{ wakeLock=l; l.addEventListener('release',()=>wakeLock=null); }).catch(()=>{}); }catch(e){} }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&V.screen==='game') keepAwake(); });
@@ -1046,7 +1196,7 @@ class Host{
     this.mode=MODES[opts.mode]?opts.mode:'normal'; this.M=MODES[this.mode];
     this.lastRes={}; this.panVer=0; this.leak=null; this.leakK=0; this.mic=null; this.micK=0; this.leakTouch={};
     this.round=Math.max(0,(opts.start||1)-1); this.pos=50; this.fire=0; this.lastT=Date.now(); this.stats={ok:0,bad:0};
-    this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.fun={drop:0,chew:0,lick:0,vac:0,dot:0,shout:0,lit:0,flea:0,leak:0,leaks:0,mic:0,shuf:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.lit=null; this.litK=0; this.flea=null; this.fleaK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
+    this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.taskK=0; this.taskTurn=0; this.task=null; this.tres=null; this.fun={task:0,taskBad:0,drop:0,chew:0,lick:0,vac:0,dot:0,shout:0,lit:0,flea:0,leak:0,leaks:0,mic:0,shuf:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.lit=null; this.litK=0; this.flea=null; this.fleaK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
     this.dead=false; this.startR=this.round+1;
     if(this.dbg) this.dbgInit(); else this.nextRound();
     this.iv=setInterval(()=>this.step(),150);
@@ -1061,7 +1211,7 @@ class Host{
     const n=this.pl.length;
     this.goal=Math.round(4+2*n+this.round);
     this.dur=Math.max(6500,15000-1200*(this.round-1))*this.M.dur;
-    this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.flea=null; this.leak=null; this.mic=null;
+    this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.flea=null; this.leak=null; this.mic=null; this.task=null; this.taskAt=Infinity;
     this.pos=50; this.fire=0;
     this.stepU=50/Math.max(4,Math.round(this.goal*.7));
     this.creep=Math.min(1.6,.5+.08*this.round)*this.M.creep*(n===1?.75:1);
@@ -1088,12 +1238,13 @@ class Host{
         if(t==='b'&&this.round>=2){ const q=Math.random(); if(q<.3&&hk<holds.length) t='h'; else if(q<.55) t='x'; }
         const c={id:this.round+'_'+k, n:t==='r'?rnames[rk++]:names[k%names.length], t, owner:p.id}; k++;
         if(t==='r'||t==='s'){ const hi=Math.min(7,3+Math.floor(this.round/2)), lo=Math.max(2,hi-3); c.m=lo+Math.floor(Math.random()*(hi-lo+1)); }
-        if(t==='h'){ c.n=holds[hk++]; c.hd=pick([2,2,3]); }
+        if(t==='h'){ c.n=holds[hk++]; c.hd=pick([1,1.5,1.5,2]); }
         if(t==='d') c.o=pick(Math.random()<optP?DIAL_ICONS:DIALS).slice();
         if(ik<icons.length&&Math.random()<iconP) c.ic=icons[ik++];
         if(t==='a'){
           const wideNow=arr.filter(x=>'sdr'.includes(x.t)||x.w).length;
           let ch=ck<chores.length&&Math.random()<.4?chores[ck]:null;
+          if(this.bastetR!==this.round&&Math.random()<.07){ ch=BASTET; ck--; this.bastetR=this.round; }
           if(ch&&ch.o.length>2&&wideNow>=Math.floor(per/2)) ch=null;
           if(ch){ ck++; c.n=ch.n; c.o=ch.o.slice(); delete c.ic; if(ch.tx) c.tx=ch.tx; if(ch.ic&&Math.random()<iconP){ c.ic=ch.ic; if(ch.txi) c.txi=ch.txi; } if(ch.o.length>2) c.w=1; }
           else c.o=pick(ACTS).slice();
@@ -1144,7 +1295,7 @@ class Host{
     const L=c.ic||('«'+c.n+'»'), O=o=>isEmoji(o)?o:'«'+o+'»', N=c.ic||c.n;
     let parts;
     if(c.t==='b'){ target='press'; text='Нажми '+L; parts=['Нажми',N,'']; }
-    else if(c.t==='h'){ target='press'; text='Держи '+L+' '+c.hd+' сек'; parts=['Держи',N,c.hd+' сек']; }
+    else if(c.t==='h'){ target='press'; const hs=String(c.hd).replace('.',','); text='Держи '+L+' '+hs+' сек'; parts=['Держи',N,hs+' сек']; }
     else if(c.t==='x'){ target='press'; text='Дважды нажми '+L; parts=['Дважды нажми',N,'']; }
     else if(c.t==='a'){ target=Math.floor(Math.random()*c.o.length); const tpl=c.ic&&c.txi?c.txi:c.tx; text=tpl?tpl.replace('{o}',c.o[target].toLowerCase()):c.o[target]+' '+L;
       parts=c.tx?[c.ic&&c.txi?c.ic:'Вылижи',c.o[target],'']:[c.o[target],N,'']; }
@@ -1162,6 +1313,7 @@ class Host{
   }
   apply(pid,cid,v){
     const c=this.ctrl[cid]; if(!c||c.owner!==pid||this.phase!=='play') return;
+    if(c.n==='Бастет') this.fun.bastet=(this.fun.bastet||0)+1;
     let val;
     if(c.t==='b'||c.t==='h'||c.t==='x') val='press';
     else if(c.t==='a'){ if(!Number.isInteger(v)||v<0||v>=c.o.length) return; val=v; }
@@ -1196,7 +1348,7 @@ class Host{
     this.checkCaught();
   }
   checkCaught(){
-    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.flea=null; this.leak=null; this.mic=null; this.finish(); }
+    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.flea=null; this.leak=null; this.mic=null; this.task=null; this.finish(); }
   }
   finish(){
     const st=this.stats, f=this.fun, secs=Math.round((Date.now()-this.t0)/1000), mins=Math.max(1,Math.round(secs/60));
@@ -1215,6 +1367,8 @@ class Host{
     if(f.leak) real.push(['Протечек пережито с сухими лапами',String(f.leak)]);
     if(f.mic) real.push(['Мяуканий в микрофон',String(f.mic*this.pl.length)]);
     if(f.shuf) real.push(['Прогулок кота по пультам',String(f.shuf)]);
+    if(f.task) real.push(['Личных дел сделано',String(f.task)]);
+    if(f.bastet) real.unshift(['Поклонений Бастет',f.bastet+' 🙏']);
     if(f.shout) real.push(['Мяуканий в эфире',String(f.shout)]);
     const n1=R(2,4)*mins+R(0,3), n2=R(40,400), n3=R(3,30)*mins, n4=R(1,9), n5=R(2,12);
     const fake=[
@@ -1248,6 +1402,10 @@ class Host{
       this.emit(); return;
     }
     if(this.phase!=='play') return;
+    if(this.task){
+      if(a.type==='task'&&pid===this.task.p&&a.k===this.task.k) this.endTask(!!a.ok);
+      this.emit(); return;
+    }
     if(this.leak){
       // touching the screen during a leak pushes the ship back; everything else is ignored until it ends
       if(a.type==='leak'&&!this.leak.hit[pid]){ this.leak.hit[pid]=true; this.leakTouch[pid]=(this.leakTouch[pid]||0)+1; const p=this.player(pid); this.addFeed(null,(p?p.name:'Кто-то')+' полез в лужу, корабль отбросило!'); this.damage(this.M.wrong*2); }
@@ -1268,7 +1426,8 @@ class Host{
     for(const n of ['nextDot','nextHair','nextVac','nextLit','nextFlea','nextLeak','nextMic','nextShuf']) this[n]=sh(this[n]);
     for(const k in this.pending) this.pending[k]=sh(this.pending[k]);
     for(const k in this.instr){ const i=this.instr[k]; if(!i) continue; i.start=sh(i.start); i.shoutAt=sh(i.shoutAt); i.botAt=sh(i.botAt); }
-    for(const ev of [this.dot,this.vac,this.lit,this.flea,this.mic,this.leak]){ if(!ev) continue; ev.until=sh(ev.until); if(ev.at) ev.at=sh(ev.at); for(const k in ev.bt) ev.bt[k]=sh(ev.bt[k]); }
+    this.taskAt=sh(this.taskAt);
+    for(const ev of [this.dot,this.vac,this.lit,this.flea,this.mic,this.leak,this.task]){ if(!ev) continue; ev.until=sh(ev.until); if(ev.at) ev.at=sh(ev.at); for(const k in ev.bt) ev.bt[k]=sh(ev.bt[k]); }
   }
   setPause(on){
     if(on===!!this.paused) return;
@@ -1297,10 +1456,17 @@ class Host{
         this.nextLeak=this.round>=8?soon(this.nextLeak,4000,9000):Infinity;
         this.nextFlea=this.round>=9?soon(this.nextFlea,3000,8000):Infinity;
         this.nextMic=this.round>=11?soon(this.nextMic,3000,8000):Infinity;
+        this.taskAt=this.round>=5?now+rnd(5000,14000):Infinity;
       }
       this.emit(); return;
     }
-    // water leak: the whole ship freezes for 3 seconds, nobody may touch the screen
+    // personal task: the whole ship waits for one crew member
+    if(this.task){
+      if(now>=this.task.until) this.endTask(false);
+      else { this.emit(); return; }
+      if(this.phase!=='play'){ this.emit(); return; }
+    }
+    // water leak: the whole ship freezes for 2 seconds, nobody may touch the screen
     if(this.leak){
       if(now>=this.leak.until){
         const L=this.leak; this.leak=null; this.shiftAll(now-L.at); this.lastT=now; this.fun.leaks++;
@@ -1309,8 +1475,8 @@ class Host{
       } else { this.emit(); return; }
     }
     const dt=Math.min(1,(now-this.lastT)/1000); this.lastT=now;
-    // while everyone deals with a shared hazard (laser, vacuum, litter, fleas, mic) order timers stand still
-    this.tp=!!(this.dot||this.vac||this.lit||this.flea||this.mic);
+    // while everyone deals with a shared hazard (vacuum, litter, fleas, mic) order timers stand still; the quick laser dot doesn't stop them
+    this.tp=!!(this.vac||this.lit||this.flea||this.mic);
     if(this.tp){ const ms=dt*1000;
       for(const k in this.instr){ const i=this.instr[k]; if(!i) continue; i.start+=ms;
         if(typeof i.shoutAt==='number'&&isFinite(i.shoutAt)) i.shoutAt+=ms; if(typeof i.botAt==='number'&&isFinite(i.botAt)) i.botAt+=ms; }
@@ -1399,9 +1565,14 @@ class Host{
     // water leak (starts only when no other shared event is on)
     if(now>=this.nextLeak&&this.busy()) this.nextLeak=now+rnd(4000,8000);
     if(now>=this.nextLeak){
-      this.leak={k:++this.leakK,at:now,until:now+3000,hit:{}}; this.nextLeak=Infinity;
+      this.leak={k:++this.leakK,at:now,until:now+2000,hit:{}}; this.nextLeak=Infinity;
       this.addFeed(null,'Протечка! Никто не трогает экран');
       this.emit(); return;
+    }
+    // personal task, once per sector, when no shared hazard is on
+    if(now>=this.taskAt){
+      if(this.busy()) this.taskAt=now+2000;
+      else { this.taskAt=Infinity; this.startTask(); this.emit(); return; }
     }
     // the cat walks over everyone's panels
     if(now>=this.nextShuf){ this.fun.shuf++; this.shufflePanels(); this.nextShuf=now+rnd(22000,36000); }
@@ -1412,6 +1583,22 @@ class Host{
       this.nextHair=now+rnd(16000,32000);
     }
     this.emit();
+  }
+  startTask(ty,opt){
+    const humans=this.pl.filter(p=>!p.bot); if(!humans.length) return;
+    const p=humans[this.taskTurn%humans.length]; this.taskTurn++;          // crew members take turns
+    ty=ty||pick(TASK_TYPES.filter(x=>x!==this.lastTaskTy)); this.lastTaskTy=ty;
+    const d=makeTask(ty,opt), now=Date.now();
+    this.task={k:++this.taskK,p:p.id,ty,d,at:now,until:this.dbg?Infinity:now+d.sec*1000};
+  }
+  endTask(ok){
+    const T=this.task; if(!T) return; const now=Date.now();
+    this.task=null; this.shiftAll(now-T.at); this.lastT=now;
+    this.tres={k:T.k,ok:ok?1:0,p:T.p};
+    const p=this.player(T.p), nm=p?p.name:'Кто-то';
+    if(ok){ this.fun.task++; this.addFeed(null,nm+' справился с личным делом!');
+      if(!this.dbg){ this.pos=Math.min(100,this.pos+this.stepU*1.5); if(this.pos>=100) this.nextRound(); } }
+    else { this.fun.taskBad++; this.addFeed(null,nm+' не справился с личным делом'); if(!this.dbg) this.damage(this.M.fail); }
   }
   /* ---------- tester mode: no time, every mechanic one after another ---------- */
   dbgInit(){
@@ -1438,9 +1625,9 @@ class Host{
     const now=Date.now();
     if(i<0) i=0;
     if(i>=TSTEPS.length){ this.phase='over'; this.instr={}; this.finish(); return; }
-    this.dot=this.vac=this.lit=this.flea=this.mic=this.leak=this.hair=null; this.combo=0;
+    this.dot=this.vac=this.lit=this.flea=this.mic=this.leak=this.hair=this.task=null; this.combo=0;
     Object.assign(this.T,{i,doneAt:0,oi:0,at:0,sb:null,wet:false,fixOk:false,hairOk:false,sawPause:false,resumed:false,cmd:null,
-      base:{ok:this.okc.me||0,wr:this.wrc.me||0,dot:this.fun.dot,vac:this.fun.vac,lit:this.fun.lit,flea:this.fun.flea,mic:this.fun.mic,leaks:this.fun.leaks}});
+      base:{task:this.fun.task,ok:this.okc.me||0,wr:this.wrc.me||0,dot:this.fun.dot,vac:this.fun.vac,lit:this.fun.lit,flea:this.fun.flea,mic:this.fun.mic,leaks:this.fun.leaks}});
     const st=TSTEPS[i];
     this.dbgPanel(st.ctl||[{t:'b',n:'Мурчатель'},{t:'t',n:'Зевательный компенсатор'}]);
     if(st.go) st.go.call(this,now);
@@ -1450,12 +1637,13 @@ class Host{
     if(this.leak&&now>=this.leak.until){ const L=this.leak; this.leak=null; this.shiftAll(now-L.at); this.fun.leaks++; T.wet=Object.keys(L.hit).length>0; }
     for(const k of ['dot','vac','lit','flea','mic']){ const ev=this[k]; if(ev&&this.pl.every(p=>ev.hit[p.id])){ this[k]=null; this.fun[k]++; } }
     if(st.later&&T.at&&now>=T.at){ T.at=0; st.later.call(this,now); }
+    if(this.tres&&this.tres.k!==T.seenTres){ T.seenTres=this.tres.k; if(!this.tres.ok&&!this.task&&st.go&&/^Личное дело/.test(st.n)) st.go.call(this,now); }
     if(!T.doneAt&&!this.leak&&st.on&&st.on.length&&!this.instr.me) this.dbgOrder();
     if(!T.doneAt&&st.ok.call(this,T.base)){ T.doneAt=now; this.instr={}; this.addFeed(null,'Тест «'+st.n+'» пройден'); }
     if(T.doneAt&&now-T.doneAt>1400) this.dbgGo(T.i+1);
   }
   state(){
-    const real=this.paused?this.pausedAt:Date.now(), now=this.leak?Math.min(real,this.leak.at):real, ins={};
+    const real=this.paused?this.pausedAt:Date.now(), now=this.leak?Math.min(real,this.leak.at):this.task?Math.min(real,this.task.at):real, ins={};
     for(const pid in this.instr){ const i=this.instr[pid]; if(i) ins[pid]={x:i.text,p:i.parts,rem:Math.max(0,i.start+i.dur-now),dur:i.dur}; }
     return {
       ph:this.phase, r:this.round, pz:this.paused?1:0, bt:this.phase==='between'&&isFinite(this.until)?Math.max(0,this.until-now):0, btd:this.btDur||1, rd:Object.keys(this.ready||{}), pos:Math.round(this.pos*10)/10, fire:Math.round(this.fire*10)/10, pr:this.progress,
@@ -1464,6 +1652,8 @@ class Host{
       mic:this.mic?{k:this.mic.k,hit:Object.keys(this.mic.hit)}:null,
       md:this.mode, tr:this.trail,
       dbg:this.dbg?1:0, tst:this.dbg&&this.T?{i:this.T.i,n:TSTEPS.length,t:(TSTEPS[this.T.i]||{}).n||'',h:(TSTEPS[this.T.i]||{}).h||'',ok:this.T.doneAt?1:0,cmd:this.T.cmd||null}:null,
+      task:this.task?{k:this.task.k,p:this.task.p,ty:this.task.ty,d:this.task.d,rem:isFinite(this.task.until)?Math.max(0,this.task.until-real):-1,dur:this.task.d.sec*1000,n:(this.player(this.task.p)||{}).name||''}:null,
+      tres:this.tres,
       ins, v:this.val, lr:this.lastRes, tp:this.tp&&this.phase==='play'?1:0,
       dot:this.dot?{k:this.dot.k,x:this.dot.x,y:this.dot.y,hit:Object.keys(this.dot.hit)}:null,
       vac:this.vac?{k:this.vac.k,x:this.vac.x,y:this.vac.y,hit:Object.keys(this.vac.hit)}:null,
@@ -1478,8 +1668,8 @@ class Host{
 /* =========================================================
    VIEW — renders whatever state arrives (local or network)
    ========================================================= */
-const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{},litDone:{},fleaDone:{},micDone:{},leakDone:{},leakSeen:0,panV:0,nextFlip:0,flipUntil:0,orderSig:'',lastCb:0};
-function resetView(){ unflip(); stopMic(); $('leak-layer').hidden=true; Object.assign(V,{tstI:-1,tstOk:-1,tstCmd:0,panV:0,nextFlip:0,leakDone:{},leakSeen:0,micDone:{},panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},litDone:{},fleaDone:{},orderSig:''}); stopVac(); stopLit(); stopFlea(); $('panel').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
+const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{},litDone:{},fleaDone:{},micDone:{},leakDone:{},taskDone:{},leakSeen:0,panV:0,nextFlip:0,flipUntil:0,orderSig:'',lastCb:0};
+function resetView(){ unflip(); stopMic(); $('leak-layer').hidden=true; Object.assign(V,{taskDone:{},tresSeen:undefined,tstI:-1,tstOk:-1,tstCmd:0,panV:0,nextFlip:0,leakDone:{},leakSeen:0,micDone:{},panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},litDone:{},fleaDone:{},orderSig:''}); stopVac(); stopLit(); stopFlea(); $('panel').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
 
 V.onPanels=function(m){
   if(!m||m.pid!==V.myId||!Array.isArray(m.c)) return;
@@ -1511,12 +1701,12 @@ function buildPanel(){
     } else if(c.t==='h'){
       // hold: the ring fills while the finger stays down; letting go early does nothing
       d.appendChild(nm);
-      const b=document.createElement('button'); b.className='big hold'; b.setAttribute('aria-label','Удерживать '+c.n+' '+c.hd+' секунды');
-      const lab=document.createElement('span'); lab.className='blab'; lab.textContent=c.hd+' с'; b.appendChild(lab);
+      const b=document.createElement('button'); b.className='big hold'; const hs=String(c.hd).replace('.',','); b.setAttribute('aria-label','Удерживать '+c.n+' '+hs+' с');
+      const lab=document.createElement('span'); lab.className='blab'; lab.textContent=hs+' с'; b.appendChild(lab);
       const need=(c.hd||2)*1000; let t0=0, raf=0, pidr=null;
-      const stop=()=>{ cancelAnimationFrame(raf); t0=0; b.classList.remove('hit'); b.style.setProperty('--hp','0'); lab.textContent=c.hd+' с'; HOLDING.delete(stop); };
+      const stop=()=>{ cancelAnimationFrame(raf); t0=0; b.classList.remove('hit'); b.style.setProperty('--hp','0'); lab.textContent=hs+' с'; HOLDING.delete(stop); };
       const tick=()=>{ if(!t0) return; const p=Math.min(1,(performance.now()-t0)/need); b.style.setProperty('--hp',String(p));
-        lab.textContent=Math.max(0,Math.ceil((need-(performance.now()-t0))/1000))+' с';
+        lab.textContent=(Math.max(0,need-(performance.now()-t0))/1000).toFixed(1).replace('.',',');
         if(p>=1){ stop(); SFX.ok(); buzz(40); V.act({type:'press',cid:c.id}); return; }
         raf=requestAnimationFrame(tick); };
       b.addEventListener('pointerdown',e=>{ e.preventDefault(); if(t0) return; pidr=e.pointerId; try{b.setPointerCapture(pidr)}catch(_){} t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); buzz(10); tone(330,360,.12,'sine',.04); raf=requestAnimationFrame(tick); });
@@ -1556,7 +1746,7 @@ function buildPanel(){
       const g=document.createElement('div'); g.className='acts'+(c.o.length===1?' one':'');
       c.o.forEach((o,idx)=>{
         const b=document.createElement('button'); b.textContent=o; b.setAttribute('aria-label',o+' '+c.n);
-        b.addEventListener('click',()=>{ b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120); SFX.click(); buzz(14); V.act({type:'press',cid:c.id,v:idx}); });
+        b.addEventListener('click',()=>{ b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120); SFX.click(); buzz(14); if(c.n==='Бастет') bastet(); V.act({type:'press',cid:c.id,v:idx}); });
         g.appendChild(b);
       });
       d.appendChild(g);
@@ -1686,12 +1876,12 @@ V.onTick=function(s){
   } else if(s.ph!=='between') bt.hidden=true;
   $('pause').hidden=!s.pz;
   $('panel').classList.toggle('inspect',s.ph==='between');
-  if(V.lastRound!==s.r){ V.nextBreak=Date.now()+rnd(12000,24000); V.nextFlip=Date.now()+rnd(9000,18000); }
+  if(V.lastRound!==s.r){ V.nextBreak=Date.now()+rnd(12000,24000); V.nextFlip=Date.now()+rnd(16000,30000); }
   if(V.lastRound&&s.r>V.lastRound) confetti();
   V.lastRound=s.r;
-  if(s.pz||s.leak){ V.nextBreak=Math.max(V.nextBreak,Date.now()+4000); V.nextFlip=Math.max(V.nextFlip,Date.now()+4000); if(V.flipUntil) V.flipUntil=Math.max(V.flipUntil,Date.now()+3000); }
+  if(s.pz||s.leak||s.task){ V.nextBreak=Math.max(V.nextBreak,Date.now()+4000); V.nextFlip=Math.max(V.nextFlip,Date.now()+4000); if(V.flipUntil) V.flipUntil=Math.max(V.flipUntil,Date.now()+3000); }
   // zero gravity: the player's own panel turns upside down for a while
-  if(inGame&&!s.pz&&!s.leak&&s.ph==='play'&&s.r>=10&&!V.flipUntil&&V.nextFlip&&Date.now()>=V.nextFlip){ flipPanel(); V.nextFlip=Date.now()+rnd(18000,32000)/(1+.06*(s.r-9)); }
+  if(inGame&&!s.pz&&!s.leak&&s.ph==='play'&&s.r>=10&&!V.flipUntil&&V.nextFlip&&Date.now()>=V.nextFlip){ flipPanel(); V.nextFlip=Date.now()+rnd(40000,65000)/(1+.04*(s.r-10)); }
   if(V.flipUntil&&(Date.now()>=V.flipUntil||s.ph!=='play')) unflip();
   if(inGame&&!s.pz&&s.ph==='play'&&s.r>=5&&!V.broken&&V.nextBreak&&Date.now()>=V.nextBreak){ breakCtl(); V.nextBreak=Date.now()+rnd(16000,32000)/(1+.08*(s.r-2)); }
   // panel request
@@ -1710,7 +1900,7 @@ V.onTick=function(s){
   if(V.seenOk!==null&&ok>V.seenOk){ const o=$('order'); o.classList.remove('ok'); void o.offsetWidth; o.classList.add('ok'); SFX.ok(); fishPop(); }
   if(V.seenBad!==null&&bad>V.seenBad){ SFX.bad(); buzz(200) }
   const wr=(s.wr&&s.wr[V.myId])||0;
-  if(V.seenWr!=null&&wr>V.seenWr){ tone(160,120,.18,'square',.07); toast('Лишнее действие! Корабль отбросило к взрыву.'); }
+  if(V.seenWr!=null&&wr>V.seenWr){ tone(160,120,.18,'square',.07); hudNote('Лишнее нажатие!'); }
   V.seenOk=ok; V.seenBad=bad; V.seenWr=wr;
   // crew
   const csig=pl.map(p=>p.join('|')).join(';');
@@ -1743,6 +1933,17 @@ V.onTick=function(s){
   if(mq&&inGame&&!s.pz&&!(mq.hit||[]).includes(V.myId)&&!V.micDone[mq.k]){ if(MIC.k!==mq.k) startMic(mq); }
   else if(MIC.k!==null&&!(mq&&s.pz)) stopMic();
   $('mic-layer').hidden=MIC.k===null||!!s.pz;
+  // personal task
+  const tk=s.task;
+  if(tk&&inGame&&tk.p===V.myId&&!s.pz&&!V.taskDone[tk.k]){ if(TK.k!==tk.k) openTask(tk); }
+  else if(TK.k!==null&&!(tk&&tk.k===TK.k&&(s.pz||TK.done))) closeTask();
+  $('task-layer').hidden=TK.k===null||!!s.pz;
+  if(tk&&tk.p!==V.myId&&inGame&&!s.pz){
+    const w=$('task-wait'); w.hidden=false; const o=$('order').getBoundingClientRect(); w.style.top=Math.round(o.top)+'px';
+    const pp=(s.pl||[]).find(p=>p[0]===tk.p); $('tw-cat').textContent=pp?pp[2]:'😼'; $('tw-name').textContent=(tk.n||'Кто-то')+' ';
+    $('tw-what').textContent=(tk.d&&tk.d.wait)||'занят'; 
+  } else $('task-wait').hidden=true;
+  if(s.tres&&s.tres.k!==V.tresSeen){ const first=V.tresSeen===undefined; V.tresSeen=s.tres.k; if(!first&&s.tres.ok) popText('Рывок вперёд!'); }
   // water leak
   const lk=s.leak;
   if(lk&&inGame&&s.ph==='play'){
@@ -1825,7 +2026,7 @@ function breakCtl(){
   const loop=now=>{
     if(V.broken!==B) return;
     const dt=Math.min(.04,(now-B.last)/1000); B.last=now;
-    if(!B.drag&&!(V.s&&(V.s.pz||V.s.leak))){
+    if(!B.drag&&!(V.s&&(V.s.pz||V.s.leak||V.s.task))){
       // pendulum: gravity turns the centre of mass towards straight down
       B.om+=(K*Math.cos(com+B.th)-DAMP*B.om)*dt;
       if(Math.abs(B.om)<.25&&Math.random()<dt*.8) B.om+=rnd(-.9,.9);   // a draught on the ship keeps it swinging
@@ -1862,23 +2063,191 @@ function breakCtl(){
   paint(); B.raf=requestAnimationFrame(loop);
   tone(240,90,.35,'square',.08); buzz([60,40,60])
 }
+/* ---------- personal tasks (client side) ---------- */
+const TK={k:null,done:false,ty:null};
+function taskMsg(t,bad){ const m=$('task-msg'); m.textContent=t||''; m.className='task-msg'+(bad?' bad':''); }
+function taskShake(el){ (el||$('task-body')).classList.remove('tshake'); void (el||$('task-body')).offsetWidth; (el||$('task-body')).classList.add('tshake'); buzz(60); tone(180,120,.15,'square',.06); }
+function taskFinish(ok,msg){
+  if(TK.done||TK.k===null) return; TK.done=true; const k=TK.k;
+  taskMsg(msg||(ok?'Готово!':'Не вышло'),!ok);
+  if(ok){ SFX.ok(); buzz(40); } else { SFX.bad(); buzz(200); }
+  V.taskDone[k]=true;
+  setTimeout(()=>{ V.act({type:'task',k,ok:!!ok}); if(TK.k===k) closeTask(); },ok?450:700);
+}
+function closeTask(){ TK.k=null; TK.done=false; $('task-layer').hidden=true; $('task-body').textContent=''; }
+function el(tag,cls,txt){ const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
+function openTask(t){
+  cancelHolds(); TK.k=t.k; TK.done=false; TK.ty=t.ty;
+  const d=t.d||{}, body=$('task-body'); body.textContent=''; body.className='task-body tb-'+t.ty;
+  $('task-title').textContent=d.title||''; taskMsg('');
+  $('task-layer').hidden=false; tone(660,880,.12,'triangle',.08); buzz([30,40,30]);
+  ({phone:taskPhone,tv:taskTv,table:taskTable,fridge:taskFridge,keys:taskKeys,boxes:taskBoxes})[t.ty](d,body);
+}
+// phone: dial the number from the sticker, press the green handset
+function taskPhone(d,body){
+  const fmt=n=>n.replace(/^(\d{0,2})(\d{0,2})(\d{0,2}).*/,(m,a,b,c)=>[a,b,c].filter(Boolean).join('-'));
+  const st=el('div','ph-sticker'); st.appendChild(el('span','','📒 '+d.label)); st.appendChild(el('b','',fmt(d.num))); body.appendChild(st);
+  const disp=el('div','ph-disp',''); body.appendChild(disp);
+  const keys=el('div','ph-keys'); body.appendChild(keys);
+  let typed='';
+  const show=()=>{ disp.textContent=typed?fmt(typed):'Набери номер'; disp.classList.toggle('empty',!typed); };
+  ['1','2','3','4','5','6','7','8','9','⌫','0','📞'].forEach(k=>{
+    const b=el('button',k==='📞'?'ph-call':k==='⌫'?'ph-del':'',k); b.type='button';
+    b.addEventListener('click',()=>{
+      if(TK.done) return; buzz(10);
+      if(k==='⌫'){ typed=typed.slice(0,-1); show(); tone(500,400,.04,'square',.03); return; }
+      if(k==='📞'){
+        if(typed===d.num){
+          tone(440,440,.25,'sine',.06); setTimeout(()=>tone(440,440,.25,'sine',.06),400);
+          if(!d.kus){ taskFinish(true,'Дозвонился! Мяу-мяу, заказ принят'); return; }
+          keys.remove(); disp.textContent='— Алло? Кто это?'; disp.classList.remove('empty'); disp.classList.add('talk');
+          const kb=el('button','ph-kus','КУСЬ'); kb.type='button'; kb.addEventListener('click',()=>{ tone(900,300,.15,'square',.08); taskFinish(true,'Кусь удался! Сосед в шоке'); }); body.appendChild(kb);
+          return;
+        }
+        taskShake(disp); taskMsg('Не туда! Набери номер заново',true); typed=''; show(); return;
+      }
+      if(typed.length<6){ typed+=k; show(); tone(700+Number(k)*40,700+Number(k)*40,.06,'sine',.05); }
+      if(typed.length===6&&typed!==d.num) taskMsg('Проверь номер и жми трубку',false); else taskMsg('');
+    });
+    keys.appendChild(b);
+  });
+  show();
+}
+// TV: flick through channels until the right one is on
+function taskTv(d,body){
+  let ch=d.st;
+  const tv=el('div','tv'), scr=el('div','tv-scr'), ic=el('span','tv-ic'), nm=el('b','tv-nm'), no=el('small','tv-no');
+  scr.appendChild(ic); scr.appendChild(nm); scr.appendChild(no); tv.appendChild(scr); body.appendChild(tv);
+  const rc=el('div','tv-remote'); body.appendChild(rc);
+  const paint=()=>{ ic.textContent=TV_CH[ch][1]; nm.textContent=TV_CH[ch][0]; no.textContent='Канал '+(ch+1); scr.classList.remove('flick'); void scr.offsetWidth; scr.classList.add('flick'); };
+  const go=dir=>{ if(TK.done) return; ch=(ch+dir+4)%4; paint(); buzz(10); tone(300,600,.06,'square',.04);
+    if(ch===d.t){ TK.lock=true; setTimeout(()=>{ if(ch===d.t) taskFinish(true,ch===2?'Птички! Кот прилип к экрану':'Есть! То что нужно'); },450); } };
+  const prev=el('button','tv-btn','◀'), next=el('button','tv-btn','▶'); prev.type=next.type='button'; prev.setAttribute('aria-label','Предыдущий канал'); next.setAttribute('aria-label','Следующий канал');
+  prev.addEventListener('click',()=>go(-1)); next.addEventListener('click',()=>go(1));
+  rc.appendChild(prev); rc.appendChild(el('span','tv-brand','МУР-ТВ')); rc.appendChild(next);
+  paint();
+}
+// table: swipe everything off the table, but not the vase
+function taskTable(d,body){
+  const tb=el('div','table'), top=el('div','table-top'), legs=el('div','table-legs'); tb.appendChild(top); tb.appendChild(legs); body.appendChild(tb);
+  let left=d.it.filter(x=>x[1]!=='ваза').length;
+  d.it.forEach(([e,n])=>{
+    const it=el('div','t-item'+(n==='ваза'?' vase':'')); it.appendChild(el('span','t-e',e)); it.appendChild(el('small','',n)); top.appendChild(it);
+    let x0=null, id=null;
+    it.addEventListener('pointerdown',ev=>{ if(TK.done) return; ev.preventDefault(); x0=ev.clientX; id=ev.pointerId; try{it.setPointerCapture(id)}catch(_){} it.classList.add('drag'); });
+    it.addEventListener('pointermove',ev=>{ if(x0===null) return; const dx=ev.clientX-x0; it.style.transform='translateX('+dx+'px) rotate('+(dx/8)+'deg)';
+      if(Math.abs(dx)>64){ x0=null; it.classList.remove('drag'); it.classList.add(dx>0?'off-r':'off-l'); it.style.transform='';
+        if(n==='ваза'){ tone(1200,200,.5,'sawtooth',.1); taskFinish(false,'Дзынь! Ваза хозяина разбилась'); return; }
+        tone(400,150,.25,'triangle',.08); buzz(20); left--; if(left<=0) taskFinish(true,'Стол чист! Хозяин будет в восторге'); } });
+    const up=()=>{ if(x0===null) return; x0=null; it.classList.remove('drag'); it.style.transform=''; };
+    it.addEventListener('pointerup',up); it.addEventListener('pointercancel',up);
+  });
+}
+// fridge: pull the door open, then take the right product
+function taskFridge(d,body){
+  const fr=el('div','fridge'), sh=el('div','fr-shelves'), door=el('div','fr-door'); door.appendChild(el('i','fr-handle')); door.appendChild(el('small','fr-hint','← потяни'));
+  d.it.forEach(([e,n],i)=>{ const b=el('button','fr-item'); b.type='button'; b.appendChild(el('span','',e)); b.appendChild(el('small','',n));
+    b.addEventListener('click',()=>{ if(TK.done||!door.classList.contains('open')) return; buzz(12);
+      if(i===d.t){ tone(500,900,.15,'triangle',.08); b.classList.add('got'); taskFinish(true,'Ням! '+n+' добыт'+(/а$/.test(n)?'а':'')+'!'); }
+      else { taskShake(b); taskMsg('Не то! Нужно: '+d.it[d.t][1],true); } });
+    sh.appendChild(b); });
+  fr.appendChild(sh); fr.appendChild(door); body.appendChild(fr);
+  let x0=null;
+  door.addEventListener('pointerdown',ev=>{ if(TK.done||door.classList.contains('open')) return; ev.preventDefault(); x0=ev.clientX; try{door.setPointerCapture(ev.pointerId)}catch(_){} });
+  door.addEventListener('pointermove',ev=>{ if(x0===null) return; const dx=Math.min(0,ev.clientX-x0), w=fr.offsetWidth||200;
+    door.style.transform='perspective(600px) rotateY('+Math.max(-100,dx/w*160)+'deg)';
+    if(-dx>w*.38){ x0=null; door.style.transform=''; door.classList.add('open'); tone(200,120,.2,'sine',.08); buzz(20); } });
+  const up=()=>{ if(x0===null) return; x0=null; door.style.transform=''; };
+  door.addEventListener('pointerup',up); door.addEventListener('pointercancel',up);
+}
+// laptop: type the word letter by letter
+function taskKeys(d,body){
+  const scr=el('div','lt-scr'), slots=el('div','lt-slots'); scr.appendChild(slots); body.appendChild(scr);
+  let typed='';
+  const paint=()=>{ slots.textContent=''; for(let i=0;i<d.w.length;i++){ const c=el('span','lt-slot'+(i<typed.length?' on':''),i<typed.length?typed[i]:d.w[i]); slots.appendChild(c); } };
+  const kb=el('div','lt-kb'); body.appendChild(kb);
+  ['ЙЦУКЕНГШЩЗХ','ФЫВАПРОЛДЖЭ','ЯЧСМИТЬБЮ'].forEach(row=>{ const r=el('div','lt-row');
+    [...row].forEach(ch=>{ const b=el('button','lt-key',ch); b.type='button';
+      b.addEventListener('click',()=>{ if(TK.done) return; buzz(8); tone(1200,1100,.02,'square',.03);
+        if(ch===d.w[typed.length]){ typed+=ch; paint(); if(typed===d.w) taskFinish(true,'Отправлено начальнику: «'+d.w+'»'); }
+        else { typed=''; paint(); taskShake(slots); taskMsg('Опечатка! Печатай заново',true); } });
+      r.appendChild(b); });
+    kb.appendChild(r); });
+  paint();
+}
+// boxes: drag the cat into the smallest box it fits in
+function taskBoxes(d,body){
+  const room=el('div','bx-room'), row=el('div','bx-row'), cat=el('div','bx-cat','🐈'); body.appendChild(room); room.appendChild(row); room.appendChild(cat);
+  const boxes={};
+  d.ord.forEach(sz=>{ const b=el('div','bx bx-'+sz); b.appendChild(el('i','bx-flap l')); b.appendChild(el('i','bx-flap r')); row.appendChild(b); boxes[sz]=b; });
+  let drag=null;
+  const place=(x,y)=>{ cat.style.left=x+'px'; cat.style.top=y+'px'; };
+  const home=()=>{ cat.style.left=''; cat.style.top=''; cat.classList.remove('drag'); };
+  cat.addEventListener('pointerdown',ev=>{ if(TK.done) return; ev.preventDefault(); const r=room.getBoundingClientRect(); drag={rx:r.left,ry:r.top}; cat.classList.add('drag'); try{cat.setPointerCapture(ev.pointerId)}catch(_){} place(ev.clientX-r.left,ev.clientY-r.top); });
+  cat.addEventListener('pointermove',ev=>{ if(!drag) return; place(ev.clientX-drag.rx,ev.clientY-drag.ry); });
+  const drop=ev=>{
+    if(!drag) return; drag=null;
+    const hit=Object.entries(boxes).find(([sz,b])=>{ const r=b.getBoundingClientRect(); return ev.clientX>=r.left-8&&ev.clientX<=r.right+8&&ev.clientY>=r.top-30&&ev.clientY<=r.bottom+8; });
+    if(!hit){ home(); return; }
+    const [sz,b]=hit;
+    if(sz==='m'){ cat.classList.remove('drag'); b.appendChild(cat); cat.classList.add('in'); cat.style.left=''; cat.style.top=''; tone(300,600,.2,'triangle',.08); taskFinish(true,'Идеально! Кот в коробке — кот счастлив'); return; }
+    home(); taskShake(b); taskMsg(sz==='s'?'Не влезает! Нужна коробка побольше':'Слишком просторно. Кот любит потеснее',true);
+  };
+  cat.addEventListener('pointerup',drop); cat.addEventListener('pointercancel',()=>{ drag=null; home(); });
+}
+/* ---------- easter egg: worship Bastet ---------- */
+function bastetMusic(){
+  if(muted) return; const a=ac(); if(!a) return;
+  try{
+    const t0=a.currentTime+.02, out=a.createGain(); out.gain.value=.9; out.connect(a.destination);
+    const lp=a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2400; lp.connect(out);
+    const f=m=>440*Math.pow(2,(m-69)/12);
+    const note=(m,t,d,type,v,dest)=>{ const o=a.createOscillator(), g=a.createGain(); o.type=type; o.frequency.setValueAtTime(f(m),t);
+      // a little ornamental bend into each note, like a ney or a mizmar
+      o.frequency.setValueAtTime(f(m)*.97,t); o.frequency.exponentialRampToValueAtTime(f(m),t+.05);
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.02); g.gain.setValueAtTime(v,t+d*.7); g.gain.exponentialRampToValueAtTime(.0008,t+d);
+      o.connect(g); g.connect(dest||lp); o.start(t); o.stop(t+d+.05); };
+    // drone on D and A under the whole phrase
+    note(50,t0,2.1,'sawtooth',.05); note(57,t0,2.1,'sawtooth',.035);
+    // double harmonic scale on D: D Eb F# G A Bb C# D
+    const mel=[[62,.16],[63,.16],[66,.16],[67,.24],[69,.16],[70,.16],[69,.16],[67,.12],[66,.12],[63,.16],[62,.5]];
+    let t=t0; mel.forEach(([m,d])=>{ note(m+12,t,d+.04,'square',.045); note(m,t,d+.04,'triangle',.06); t+=d; });
+    // darbuka: dum (low) and tek (bright click)
+    const nb=a.createBuffer(1,Math.floor(a.sampleRate*.06),a.sampleRate), nd=nb.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1)*(1-i/nd.length);
+    const dum=tt=>{ const o=a.createOscillator(), g=a.createGain(); o.type='sine'; o.frequency.setValueAtTime(150,tt); o.frequency.exponentialRampToValueAtTime(60,tt+.18); g.gain.setValueAtTime(.35,tt); g.gain.exponentialRampToValueAtTime(.001,tt+.2); o.connect(g); g.connect(out); o.start(tt); o.stop(tt+.22); };
+    const tek=tt=>{ const sN=a.createBufferSource(); sN.buffer=nb; const hp=a.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3000; const g=a.createGain(); g.gain.value=.25; sN.connect(hp); hp.connect(g); g.connect(out); sN.start(tt); };
+    [[0,'d'],[.24,'t'],[.36,'t'],[.48,'d'],[.72,'t'],[.96,'d'],[1.08,'t'],[1.2,'t'],[1.44,'d'],[1.68,'t'],[1.8,'t']].forEach(([o,k])=>k==='d'?dum(t0+o):tek(t0+o));
+  }catch(e){}
+}
+function bastet(){
+  bastetMusic(); buzz([40,60,40,60,120]);
+  if(document.querySelector('.bastet')) return;
+  const L=document.createElement('div'); L.className='bastet'; L.setAttribute('aria-hidden','true');
+  L.innerHTML='<div class="bs-rays"></div><div class="bs-sun">☀️</div><div class="bs-cat">🐈‍⬛</div><div class="bs-pyr"><span>🔺</span><span>🔺</span><span>🔺</span></div><div class="bs-t">Слава Бастет!</div><div class="bs-sand"></div>';
+  const sand=L.querySelector('.bs-sand');
+  for(let i=0;i<26;i++){ const g=document.createElement('i'); g.style.left=rnd(0,100)+'%'; g.style.animationDelay=rnd(0,.8)+'s'; g.style.animationDuration=rnd(1,1.8)+'s'; sand.appendChild(g); }
+  document.body.appendChild(L); setTimeout(()=>L.remove(),2200);
+}
+// short note over the explosion track: never covers the order or the panel
+let hudNoteT=null;
+function hudNote(t){ const n=$('hud-note'); n.textContent=t; n.hidden=false; n.classList.remove('flash'); void n.offsetWidth; n.classList.add('flash'); clearTimeout(hudNoteT); hudNoteT=setTimeout(()=>{ n.hidden=true; },1500); }
 // ---- zero gravity: own panel turned upside down or mirrored left-to-right
 function flipPanel(kind){
   cancelHolds(); unflip();
   kind=kind||(Math.random()<.5?'rot':'mir');
-  V.flipUntil=Date.now()+rnd(6500,9000); V.flipKind=kind;
+  V.flipUntil=Date.now()+rnd(5000,7000); V.flipKind=kind;
   $('panel').classList.add(kind==='mir'?'mirror':'flip');
   popText(kind==='mir'?'🪞 Невесомость! Пульт отразился':'🙃 Невесомость! Пульт перевернулся');
   tone(500,200,.5,'sine',.07); buzz(80)
 }
 function unflip(){ V.flipUntil=0; V.flipKind=null; const p=document.getElementById('panel'); if(p) p.classList.remove('flip','mirror'); }
-// ---- water leak: 3 seconds without touching the screen
+// ---- water leak: 2 seconds without touching the screen
 function startLeak(d){
   cancelHolds(); V.leakAt=performance.now();
   const L=$('leak-layer'); L.classList.remove('wet'); $('leak-msg').textContent='Замри и не трогай экран!';
   const box=$('drops'); box.textContent='';
   for(let i=0;i<14;i++){ const dr=document.createElement('i'); dr.className='drop'; dr.style.left=rnd(4,96)+'%'; dr.style.animationDelay=rnd(0,1.2)+'s'; dr.style.animationDuration=rnd(.7,1.3)+'s'; box.appendChild(dr); }
-  for(let i=0;i<4;i++) setTimeout(()=>tone(1400+Math.random()*500,500,.12,'sine',.07),i*320+Math.random()*200);
+  for(let i=0;i<3;i++) setTimeout(()=>tone(1400+Math.random()*500,500,.12,"sine",.07),i*280+Math.random()*150);
 }
 $('leak-layer').addEventListener('pointerdown',e=>{
   e.preventDefault();
@@ -2021,7 +2390,7 @@ function briefing(r,alone){
       'Перед каждым сектором осмотри пульт и нажми «Готов!».']],
     2:['Новое: лазерная точка и хитрые кнопки',[
       'Когда увидите красную точку, нажмите на неё. '+(fail||'Поймать её должен каждый, иначе корабль отбросит к взрыву.'),
-      'Кнопки с секундами внутри надо держать, пока не заполнится кольцо: «Держи Мурчать 3 сек». Отпустишь раньше, ничего не случится.',
+      'Кнопки с секундами внутри надо держать, пока не заполнится кольцо: «Держи Мурчать 1,5 сек». Отпустишь раньше, ничего не случится.',
       'Кнопки с «×2» нажимай дважды быстро. Одно нажатие не ошибка, но и не засчитается.']],
     3:['Новое: комок шерсти',[
       'Когда приказ залепит шерстью, тапните по нему 4 раза, чтобы смахнуть.',
@@ -2030,10 +2399,12 @@ function briefing(r,alone){
       'Когда появится пылесос, схватите кота пальцем и утащите за красный круг.',
       'Пылесос медленно ползёт за котом, а отпущенный кот возвращается к пылесосу. Тащите одним движением.',
       fail||'Спасти своего кота должен каждый.']],
-    5:['Новое: срывающиеся панели',[
+    5:['Новое: срывающиеся панели и личные дела',[
       'Иногда прибор срывается с болтов и повисает на одном углу.',
       'Схватите пальцем место, где был прибор, и поверните панель вокруг болта по стрелке ↺ или ↻. Когда она встанет почти ровно, защёлкнется сама.',
-      'Отпустишь раньше — панель снова провиснет. Пока висит, прибором пользоваться нельзя.']],
+      'Отпустишь раньше — панель снова провиснет. Пока висит, прибором пользоваться нельзя.',
+      'Раз за сектор кому-то из экипажа выпадает личное дело: позвонить, переключить телевизор, смахнуть вещи со стола, залезть в холодильник, напечатать слово или выбрать коробку.',
+      'Пока он занят, весь корабль стоит. Справился — корабль прыгнет вперёд, не успел — откатится к взрыву.']],
     6:['Новое: кот прошёлся по пультам',[
       'Время от времени кот топчется по пультам, и приборы меняются местами.',
       alone?'Заново ищи нужный прибор глазами.':'Иногда прибор даже перескакивает на чужой пульт. Если приказ «пропал» у тебя, крикни, что у тебя теперь новый прибор.']],
@@ -2041,7 +2412,7 @@ function briefing(r,alone){
       'Когда увидите лоток, копайте: проведите пальцем сверху вниз столько раз, сколько написано.',
       fail||'Закопать должен каждый.']],
     8:['Новое: протечка воды',[
-      'Когда начнёт капать вода, замрите на 3 секунды и не трогайте экран.',
+      'Когда начнёт капать вода, замрите на 2 секунды и не трогайте экран.',
       'Всё на корабле тоже замирает: таймеры приказов стоят, взрыв не движется, так что ничего не провалится.',
       'Тронешь экран — лапы промокнут, и корабль отбросит к взрыву.']],
     9:['Новое: блохи',[
@@ -2072,10 +2443,10 @@ function news(r){
     2:'Новое: лазерная точка и кнопки «держи» и «×2».',
     3:'Новое: комок шерсти. Залепит приказ, смахни его тапами.',
     4:'Новое: пылесос. Утащи кота за красный круг.',
-    5:'Новое: панели срываются с болтов. Поверни панель по стрелке, пока не встанет ровно.',
+    5:'Новое: панели срываются с болтов, и раз за сектор кому-то выпадает личное дело.',
     6:'Новое: кот ходит по пультам и путает приборы.',
     7:'Новое: лоток. Проведи пальцем сверху вниз несколько раз, чтобы закопать.',
-    8:'Новое: протечка. Капает вода — 3 секунды не трогай экран.',
+    8:'Новое: протечка. Капает вода — 2 секунды не трогай экран.',
     9:'Новое: блохи. Тряси телефон, чтобы кот отряхнулся.',
     10:'Новое: невесомость. Пульт переворачивается или отражается.',
     11:'Новое: доклад капитану. Мяукни в микрофон.',
@@ -2162,7 +2533,6 @@ function startVac(d){
   VAC.t=performance.now(); $('vac-layer').hidden=false;
   const r=$('vac-ring'); r.style.width=r.style.height=(VAC.R*2)+'px'; r.style.margin=(-VAC.R)+'px 0 0 '+(-VAC.R)+'px';
   tone(110,140,.6,'sawtooth',.05); tone(220,260,.6,'square',.03);
-  if(!startVac.hinted){ startVac.hinted=true; toast('Схвати кота пальцем и утащи за красный круг'); }
 }
 (function(){
   const c=$('vcat');
@@ -2180,7 +2550,7 @@ function scrape(){
     if(!noiseBuf){ noiseBuf=a.createBuffer(1,Math.floor(a.sampleRate*.12),a.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); }
     const src=a.createBufferSource(); src.buffer=noiseBuf; src.playbackRate.value=.7+Math.random()*.6;
     const f=a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=1400+Math.random()*1600; f.Q.value=1.2;
-    const g=a.createGain(); g.gain.value=.35;
+    const g=a.createGain(); g.gain.value=.12;
     src.connect(f); f.connect(g); g.connect(a.destination); src.start();
   }catch(e){}
 }
@@ -2257,7 +2627,7 @@ function startLit(d){
   L.addEventListener('pointermove',e=>{
     if(LIT.k===null||LIT.y0===null) return;
     const dy=e.clientY-LIT.y0, now=performance.now();
-    if(dy>8&&now-LIT.lastScr>70){ LIT.lastScr=now; scrape();
+    if(dy>8&&now-LIT.lastScr>110){ LIT.lastScr=now; scrape();
       const m=document.createElement('div'); m.className='lit-mark'; m.style.left=(e.clientX-2)+'px'; m.style.top=(e.clientY-26)+'px'; m.style.height='28px'; $('lit-marks').appendChild(m); setTimeout(()=>m.remove(),900); }
     if(!LIT.counted&&dy>innerHeight*.28){
       LIT.counted=true; LIT.done++;
@@ -2271,7 +2641,7 @@ function startLit(d){
 })();
 function vacFrame(now){
   if(VAC.k===null) return;
-  if(V.s&&(V.s.pz||V.s.leak)){ VAC.t=now; return; }
+  if(V.s&&(V.s.pz||V.s.leak||V.s.task)){ VAC.t=now; return; }
   const dt=Math.min(.05,(now-VAC.t)/1000); VAC.t=now;
   const W=innerWidth,H=innerHeight;
   let dx=VAC.cx-VAC.vx, dy=VAC.cy-VAC.vy, dist=Math.hypot(dx,dy)||1;
@@ -2288,9 +2658,12 @@ function vacFrame(now){
 }
 function frame(){
   const s=V.s;
+  if(s&&TK.k!==null&&s.task&&s.task.k===TK.k){ const t=s.task, el=s.pz?0:performance.now()-V.sAt;
+    if(t.rem<0){ $('task-timer').style.width='100%'; $('task-sec').textContent='без таймера'; }
+    else { const rem=Math.max(0,t.rem-el); $('task-timer').style.width=(rem/t.dur*100)+'%'; $('task-timer').classList.toggle('urgent',rem<3000); $('task-sec').textContent=(rem/1000).toFixed(1).replace('.',',')+' с'; } }
   vacFrame(performance.now());
   if(s&&V.screen==='game'){
-    const ins=s.ins&&s.ins[V.myId]; const t=$('timer'); const el=(s.pz||s.leak||s.tp)?0:performance.now()-V.sAt; t.parentNode.classList.toggle('paused',!!(s.tp||s.leak));
+    const ins=s.ins&&s.ins[V.myId]; const t=$('timer'); const el=(s.pz||s.leak||s.tp||s.task)?0:performance.now()-V.sAt; t.parentNode.classList.toggle('paused',!!(s.tp||s.leak));
     if(s.ph==='between'){ const p=s.bt?Math.max(0,s.bt-el)/(s.btd||1):0; t.style.width=(p*100)+'%'; t.classList.remove('urgent'); }
     else if(ins){ const rem=Math.max(0,ins.rem-el); const p=rem/ins.dur; t.style.width=(p*100)+'%'; t.classList.toggle('urgent',p<.3); }
     else t.style.width='0%';
