@@ -184,7 +184,7 @@ const DEFAULT_LEVELS=`100/100
 50000/100000/100000
 100000/200000/200000`;
 
-const VERSION="1.4", VERSION_DATE="15.10.2026";
+const VERSION="1.5", VERSION_DATE="15.10.2026";
 const STREETS=["Префлоп","Флоп","Тёрн","Ривер","Кубик"];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -275,6 +275,36 @@ function knock(){
   thudAt(ctx,t,0.9);thudAt(ctx,t+0.17,0.75);
 }
 
+
+
+/* ---------- voice announcements (browser TTS) ---------- */
+// voiceOn: "on"/"off" per device; if never chosen, the table creator's device speaks by default
+const voicePref=()=>ls.get("pk_voice");
+const voiceOn=()=>voicePref()?voicePref()==="on":!!(room&&room.hostId===myId);
+let spoken=new Set(), spokenRoom="", ruVoice=null;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();ruVoice=vs.find(v=>/^ru/i.test(v.lang)&&/Milena|Yuri|Google|Irina|Svetlana/i.test(v.name))||vs.find(v=>/^ru/i.test(v.lang))||null}catch(e){}}
+try{pickVoice();speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
+// iOS only lets speech start after a tap: speak a silent phrase on the first touch
+document.addEventListener("pointerdown",function unlock(){try{const u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u)}catch(e){}document.removeEventListener("pointerdown",unlock)},{once:true});
+const SKIP=/ставит (малый|большой) блайнд|анте|садится|открыл стол|встаёт|докупается|уходит|^Раздача|Теперь играем|Кубик убран/;
+function sayText(html){
+  return html.replace(/<[^>]+>/g,"").replace(/(\d)[\s\u00a0](?=\d{3}\b)/g,"$1").replace(/№/g,"номер ").replace(/[—–]/g,",").replace(/олл-ин/gi,"ол-ин").replace(/\s+/g," ").replace(/^[,\s]+|[,\s]+$/g,"");
+}
+function speak(text){
+  try{
+    const u=new SpeechSynthesisUtterance(text);u.lang="ru-RU";if(ruVoice)u.voice=ruVoice;u.rate=1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function announce(s){
+  if(!s||!s.log) return;
+  const key=e=>e.t+"|"+e.text;
+  if(spokenRoom!==s.code){spokenRoom=s.code;spoken=new Set(s.log.map(key));return} // don't read history on entering a table
+  const fresh=s.log.filter(e=>!spoken.has(key(e)));
+  fresh.forEach(e=>spoken.add(key(e)));
+  if(!voiceOn()||!("speechSynthesis" in window)) return;
+  fresh.filter(e=>!SKIP.test(e.text.replace(/<[^>]+>/g,""))).forEach(e=>speak(sayText(e.text)));
+}
 
 /* ---------- levels ---------- */
 function parseLevels(text){
@@ -581,6 +611,7 @@ function enterRoom(code){
     const v=snap.val();
     room=v&&v.code?norm(clean(v)):null;roomLoaded=true;
     if(!room||room.hand!==prevHand||room.phase!==prevPhase){winnersSel=new Set()}
+    announce(room);
     render();
   },e=>{uiErr="Нет доступа к столу. Проверьте правила базы в Firebase.";render()});
 }
@@ -754,7 +785,7 @@ function roomHtml(){
   }
   const potAll=s.pot+betsOnTable;
   return `
-  <div class="top"><button class="small" id="back">← К началу</button><div class="row" style="gap:10px"><div class="hint">${esc(s.title)} · <span class="code">${esc(s.code)}</span></div><button class="small" id="sound" aria-pressed="${soundOn}" aria-label="Звук фишек">${soundOn?"🔊 Звук":"🔇 Без звука"}</button></div></div>
+  <div class="top"><button class="small" id="back">← К началу</button><div class="row" style="gap:10px"><div class="hint">${esc(s.title)} · <span class="code">${esc(s.code)}</span></div><button class="small" id="sound" aria-pressed="${soundOn}" aria-label="Звук фишек">${soundOn?"🔊 Звук":"🔇 Без звука"}</button><button class="small" id="voice" aria-pressed="${voiceOn()}" aria-label="Озвучка ходов">${voiceOn()?"🗣 Озвучка":"🤐 Без озвучки"}</button></div></div>
   ${clockHtml(s,me)}
   <div class="table">
     <span class="lbl">${s.phase==="waiting"?(s.hand?`После раздачи №${s.hand}`:"Банк"):`Раздача №${s.hand} · банк`}</span>
@@ -775,6 +806,7 @@ function roomHtml(){
 function bindRoom(){
   const on=(id,f)=>{const el=document.getElementById(id);if(el)el.onclick=f};
   on("back",leaveView);
+  on("voice",()=>{const v=!voiceOn();ls.set("pk_voice",v?"on":"off");try{speechSynthesis.cancel()}catch(e){}if(v)speak("Озвучка включена");render()});
   const myName=()=>(room.players.find(p=>p.id===myId)||{}).name||"Игрок";
   on("diceDone",()=>{const nm=myName();run(roomCode,s=>{afterDice(s,nm,true);return s})});
   on("diceSkip",()=>{const nm=myName();run(roomCode,s=>{afterDice(s,nm,false);return s})});
