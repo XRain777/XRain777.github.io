@@ -224,6 +224,8 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 @container (min-width:150px){ .acts{grid-template-columns:1fr 1fr;grid-auto-rows:auto} }
 .acts button{min-height:0;height:100%;border:0;border-radius:11px;background:var(--tabby);color:var(--ink);font-weight:900;font-size:clamp(11px,4cqw + 3px,15px);line-height:1.05;padding:2px 2px;white-space:nowrap;overflow:hidden;box-shadow:0 4px 0 #7d3d0e;transition:transform .05s,box-shadow .05s}
 .acts button:nth-child(2){background:var(--pink);box-shadow:0 4px 0 #8e2b4f}
+.acts button:nth-child(3){background:var(--mint);box-shadow:0 4px 0 #2f7d5c}
+.ctl.wide .acts{grid-template-columns:repeat(auto-fit,minmax(0,1fr));grid-auto-flow:column}
 .acts button:active,.acts button.hit{transform:translateY(3px);box-shadow:0 1px 0 #7d3d0e}
 .ctl.act .ctl-in{align-items:stretch;justify-content:flex-start}
 .rng{flex:1 1 auto;min-height:0;max-height:64px;width:100%;display:flex;flex-direction:column;justify-content:center;gap:0}
@@ -264,6 +266,16 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .laser{position:fixed;z-index:15;width:84px;height:84px;margin:-42px 0 0 -42px;border:0;border-radius:50%;background:transparent;padding:0}
 .laser::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#fff 0 9%,var(--pink) 18%,color-mix(in srgb,var(--pink) 40%,transparent) 40%,transparent 70%);animation:jit .35s steps(2) infinite}
 @keyframes jit{0%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}100%{transform:translate(-1px,-3px)}}
+.vac-layer{position:fixed;inset:0;z-index:15;pointer-events:none;background:color-mix(in srgb,var(--void) 25%,transparent)}
+.laser-banner.vac-banner{background:var(--tabby)}
+.vac,.vcat,.vac-ring{position:absolute;left:0;top:0;will-change:transform}
+.vac{width:64px;height:64px;margin:-32px 0 0 -32px;animation:vroom .18s steps(2) infinite}
+@keyframes vroom{50%{rotate:4deg}}
+.vac-ring{border:3px dashed var(--danger);border-radius:50%;background:color-mix(in srgb,var(--danger) 10%,transparent)}
+.vcat{width:72px;height:72px;margin:-36px 0 0 -36px;display:grid;place-items:center;font-size:46px;line-height:1;pointer-events:auto;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.vcat.drag{cursor:grabbing;font-size:52px}
+.vcat.pull{animation:shiver .12s steps(2) infinite}
+@keyframes shiver{50%{rotate:-8deg}}
 .laser-banner{position:fixed;z-index:14;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));background:var(--pink);color:var(--ink);font-family:var(--display);font-weight:700;font-size:13px;padding:8px 14px;border-radius:99px;white-space:nowrap}
 .toast{position:fixed;z-index:30;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--cream);color:var(--ink);font-weight:800;padding:10px 16px;border-radius:12px;max-width:min(92vw,420px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .shake{animation:shake .4s}
@@ -442,6 +454,12 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   <p id="b-sub"></p>
 </div>
 <div class="laser-banner" id="laser-banner" hidden>Лазерная точка! Ловите все!</div>
+<div class="vac-layer" id="vac-layer" hidden>
+  <div class="laser-banner vac-banner">Пылесос! Оттащи кота из круга</div>
+  <div class="vac-ring" id="vac-ring"></div>
+  <div class="vac" id="vac" aria-hidden="true"><svg viewBox="0 0 64 64" width="64" height="64"><path d="M40 14 C52 2 62 10 58 22" fill="none" stroke="#9a8fb8" stroke-width="5" stroke-linecap="round"/><rect x="8" y="20" width="44" height="30" rx="14" fill="#ff6f9f"/><rect x="14" y="26" width="20" height="10" rx="5" fill="#ffd0e0" opacity=".8"/><circle cx="18" cy="52" r="7" fill="#2b1607"/><circle cx="42" cy="52" r="7" fill="#2b1607"/><circle cx="18" cy="52" r="2.5" fill="#ab9fcc"/><circle cx="42" cy="52" r="2.5" fill="#ab9fcc"/><path d="M50 30 l8 -3 v14 l-8 -3z" fill="#c9631b"/></svg></div>
+  <div class="vcat" id="vcat" role="button" aria-label="Кот, тащи его от пылесоса">🐈</div>
+</div>
 <button class="laser" id="laser" hidden aria-label="Поймать лазерную точку"></button>
 <div class="toast" id="toast" hidden></div>
 
@@ -458,6 +476,16 @@ const CATS=['🐱','😼','😸','😻','🙀','😺','🐈','🐈‍⬛'];
 const BOTS=[['Барсик','😼'],['Мурка','😻'],['Пушок','😸'],['Рыжик','🐈'],['Тиша','🐈‍⬛']];
 const NAMES=['Мурчатель','Вибриссометр','Когтеточка-генератор','Хвостовой стабилизатор','Лоток сингулярности','Клубковый двигатель','Валерьяновый инжектор','Лазерная указка','Мятный ускоритель','Миска антиматерии','Усатый радар','Подушечковый привод','Шерстяной фильтр','Мяукофон','Тунцовый реактор','Пушистый щит','Сметанный конденсатор','Коробка Шрёдингера','Пылесосный отпугиватель','Мышиный трекер','Лапка-манипулятор','Ушной локатор','Дремотный модуль','Фырчатель','Кусь-пушка','Гравимурр','Блохоловитель','Котопривод','Шуршащий пакет','Зевательный компенсатор','Клубок Вселенной','Тыгыдык-ускоритель','Хвостомер','Колбасный навигатор','Тапочный детектор','Кошачья мята','Подоконный телескоп','Мурлыкающий гироскоп','Сосисочный маяк','Пёрышко-дразнилка','Батарейный обогреватель','Кормушка-автомат','Лунный лоток','Хрустящий излучатель','Звёздный лоток','Миска с невесомостью','Космическая коробка','Хвостовой люк'];
 const RANGES=['Шерсть на одежде','Уровень наглости','Громкость мурчания','Пушистость хвоста','Сытость экипажа','Скорость тыгыдыка','Запас валерьянки','Сонливость пилота','Глубина лотка','Яркость лазерной точки','Давление в миске','Мокрость носа','Градус обиды','Плотность усов','Высота прыжка','Запах рыбы'];
+// ready-made cat chores: a fixed name with its own buttons; tx is the order text ({o} = chosen button, lower case)
+const CHORES=[
+  {n:'Фикус',ic:'🪴',o:['Погрызть','Уронить']},
+  {n:'Герань',ic:'🌺',o:['Погрызть','Уронить']},
+  {n:'Орхидея',ic:'🌸',o:['Погрызть','Уронить']},
+  {n:'Букет ромашек',ic:'🌼',o:['Погрызть','Уронить']},
+  {n:'Кактус на окне',ic:'🌵',o:['Погрызть','Уронить']},
+  {n:'Тюльпан',ic:'🌷',o:['Погрызть','Уронить']},
+  {n:'Вылизывание',ic:'👅',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',txi:'👅 {o}'}
+];
 const ACTS=[['Копать','Рассыпать'],['Погладить','Почесать'],['Мурчать','Фыркнуть'],['Лизнуть','Укусить'],['Спрятать','Уронить'],['Царапнуть','Тереться'],['Зевнуть','Чихнуть'],['Распушить','Сгладить'],['Понюхать','Съесть'],['Толкнуть','Сбросить'],['Охранять','Игнорить'],['Боднуть','Обнюхать']];
 const ICONS=['🧑‍🚀','🐟','🧶','🐭','🪐','🚀','🥫','🦴','🧀','🐾','🛸','🌙','📦','🪶','🧲','🔭','🍤','🥛','🛁','🧹','🪴','🎈','🔋','🧦','☂️','🎩','🧊','🍩','🕰️','🦆'];
 const DIAL_ICONS=[['🐟','🍗','🦃','🥛'],['🌞','🌙','⭐'],['🐭','🐦','🪰'],['🧶','📦','🛏️'],['🔴','🟡','🔵','🟢'],['❄️','🔥','💧']];
@@ -499,7 +527,7 @@ $('sb-plus').onclick=()=>{soloBots=Math.min(MAXP-1,soloBots+1);updSolo()};
 updSolo();
 
 /* ---------- screens ---------- */
-function show(name){ document.body.classList.toggle('ingame',name==='game'); $('pop').hidden=true; if(name==='game') keepAwake(); ['menu','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
+function show(name){ document.body.classList.toggle('ingame',name==='game'); $('pop').hidden=true; if(name==='game') keepAwake(); ['menu','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
 let wakeLock=null;
 function keepAwake(){ try{ if(navigator.wakeLock&&!wakeLock) navigator.wakeLock.request('screen').then(l=>{ wakeLock=l; l.addEventListener('release',()=>wakeLock=null); }).catch(()=>{}); }catch(e){} }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&V.screen==='game') keepAwake(); });
@@ -517,7 +545,7 @@ class Host{
   constructor(players,out){
     this.pl=players.map(p=>({...p})); this.out=out;
     this.round=0; this.pos=50; this.fire=0; this.lastT=Date.now(); this.stats={ok:0,bad:0};
-    this.okc={}; this.badc={}; this.wrc={}; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
+    this.okc={}; this.badc={}; this.wrc={}; this.vac=null; this.vacK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
     this.dead=false;
     this.nextRound();
     this.iv=setInterval(()=>this.step(),150);
@@ -531,7 +559,7 @@ class Host{
     const n=this.pl.length;
     this.goal=Math.round(4+2*n+this.round);
     this.dur=Math.max(6500,15000-1200*(this.round-1));
-    this.dot=null; this.hair=null;
+    this.dot=null; this.hair=null; this.vac=null;
     this.pos=50; this.fire=0;
     this.stepU=50/Math.max(4,Math.round(this.goal*.7));
     this.creep=.6+.1*this.round;
@@ -540,6 +568,7 @@ class Host{
     this.emit();
   }
   genPanels(){
+    const chores=shuffle(CHORES.slice()); let ck=0;
     const names=shuffle(NAMES.slice()), rnames=shuffle(RANGES.slice()), icons=shuffle(ICONS.slice()); let k=0, rk=0, ik=0;
     const iconP=this.round<3?0:Math.min(.5,.15*(this.round-2)), optP=this.round<4?0:Math.min(.5,.2*(this.round-3));
     const per=Math.min(5+Math.floor((this.round-1)/2),7);
@@ -548,13 +577,19 @@ class Host{
       const types=shuffle([Math.random()<.5?'b':'a','t',Math.random()<.5?'s':'r','d']); const arr=[];
       for(let i=0;i<per;i++){
         let t=types[i]||pick(['b','a','t','t','s','d','a','r']);
-        if('sdr'.includes(t)&&arr.filter(x=>'sdr'.includes(x.t)).length>=Math.floor(per/2)) t=pick(['b','a','t']);
+        if('sdr'.includes(t)&&arr.filter(x=>'sdr'.includes(x.t)||x.w).length>=Math.floor(per/2)) t=pick(['b','a','t']);
         if(t==='r'&&rk>=rnames.length) t='s';
         const c={id:this.round+'_'+k, n:t==='r'?rnames[rk++]:names[k%names.length], t, owner:p.id}; k++;
         if(t==='r') c.m=pick([3,3,4,5]);
         if(t==='d') c.o=pick(Math.random()<optP?DIAL_ICONS:DIALS).slice();
         if(ik<icons.length&&Math.random()<iconP) c.ic=icons[ik++];
-        if(t==='a') c.o=pick(ACTS).slice();
+        if(t==='a'){
+          const wideNow=arr.filter(x=>'sdr'.includes(x.t)||x.w).length;
+          let ch=ck<chores.length&&Math.random()<.4?chores[ck]:null;
+          if(ch&&ch.o.length>2&&wideNow>=Math.floor(per/2)) ch=null;
+          if(ch){ ck++; c.n=ch.n; c.o=ch.o.slice(); delete c.ic; if(ch.tx) c.tx=ch.tx; if(ch.ic&&Math.random()<iconP){ c.ic=ch.ic; if(ch.txi) c.txi=ch.txi; } if(ch.o.length>2) c.w=1; }
+          else c.o=pick(ACTS).slice();
+        }
         this.ctrl[c.id]=c; arr.push(c);
         this.val[c.id]= t==='t'? Math.random()<.5 : t==='s'? Math.floor(Math.random()*5) : t==='r'? Math.floor(Math.random()*(c.m+1)) : t==='d'? Math.floor(Math.random()*c.o.length) : null;
       }
@@ -563,7 +598,7 @@ class Host{
   }
   sendPanels(pid){
     const arr=this.panels&&this.panels[pid]; if(!arr) return;
-    this.out.panels(pid,{r:this.round,pid,c:arr.map(c=>({id:c.id,n:c.n,t:c.t,o:c.o,m:c.m,ic:c.ic}))});
+    this.out.panels(pid,{r:this.round,pid,c:arr.map(c=>({id:c.id,n:c.n,t:c.t,o:c.o,m:c.m,ic:c.ic,w:c.w}))});
   }
   newInstr(pid){
     const now=Date.now();
@@ -575,7 +610,7 @@ class Host{
     const c=pick(pool), cur=this.val[c.id]; let target, text;
     const L=c.ic||('«'+c.n+'»'), O=o=>isEmoji(o)?o:'«'+o+'»';
     if(c.t==='b'){ target='press'; text='Нажми '+L; }
-    else if(c.t==='a'){ target=Math.floor(Math.random()*c.o.length); text=c.o[target]+' '+L; }
+    else if(c.t==='a'){ target=Math.floor(Math.random()*c.o.length); const tpl=c.ic&&c.txi?c.txi:c.tx; text=tpl?tpl.replace('{o}',c.o[target].toLowerCase()):c.o[target]+' '+L; }
     else if(c.t==='t'){ target=!cur; text=(target?'Включи':'Выключи')+' '+L; }
     else if(c.t==='s'){ do{target=Math.floor(Math.random()*5)}while(target===cur); text='Установи '+L+' на '+target; }
     else if(c.t==='r'){ do{target=Math.floor(Math.random()*(c.m+1))}while(target===cur); text='Сдвинь '+L+' на '+target; }
@@ -635,6 +670,7 @@ class Host{
     if(a.type==='set'||a.type==='press') this.apply(pid,String(a.cid),a.v);
     else if(a.type==='shout') this.shout(pid);
     else if(a.type==='dot'&&this.dot) this.dot.hit[pid]=true;
+    else if(a.type==='vac'&&this.vac) this.vac.hit[pid]=true;
     this.emit();
   }
   step(){
@@ -646,6 +682,7 @@ class Host{
         this.pl.forEach(p=>this.pending[p.id]=now+rnd(150,1400));
         this.nextDot=now+(this.round===1?rnd(28000,40000):rnd(14000,26000));
         this.nextHair=this.round>=2?now+rnd(9000,20000):Infinity;
+        this.nextVac=this.round>=2?now+rnd(14000,28000):Infinity;
       }
       this.emit(); return;
     }
@@ -671,6 +708,7 @@ class Host{
       if(i.botAt!==undefined&&now>=i.botAt){ i.botAt=Infinity; this.apply(i.owner,i.cid,i.target); if(this.phase!=='play'){ this.emit(); return; } }
     }
     // laser dot
+    if(!this.dot&&now>=this.nextDot&&this.vac) this.nextDot=now+rnd(5000,9000);
     if(!this.dot&&now>=this.nextDot){
       this.dot={k:++this.dotK,x:rnd(.14,.86),y:rnd(.22,.82),until:now+7000,hit:{},bt:{}};
       this.pl.forEach(p=>{ if(p.bot) this.dot.bt[p.id]=now+rnd(700,2600); });
@@ -680,6 +718,18 @@ class Host{
       for(const id in d.bt){ if(now>=d.bt[id]) d.hit[id]=true; }
       if(this.pl.every(p=>d.hit[p.id])){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка поймана всем экипажем!'); }
       else if(now>d.until){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка сбежала, корабль отбросило к огню!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
+    }
+    // vacuum: every crew member drags their cat away from it
+    if(!this.vac&&now>=this.nextVac&&this.dot) this.nextVac=now+rnd(5000,9000);
+    if(!this.vac&&now>=this.nextVac){
+      this.vac={k:++this.vacK,x:rnd(.22,.78),y:rnd(.3,.72),until:now+11000,hit:{},bt:{}};
+      this.pl.forEach(p=>{ if(p.bot) this.vac.bt[p.id]=now+rnd(1500,4500); });
+    }
+    if(this.vac){
+      const v=this.vac;
+      for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
+      if(this.pl.every(p=>v.hit[p.id])){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Все коты спасены от пылесоса!'); }
+      else if(now>v.until){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Пылесос всех перепугал, корабль отбросило к огню!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
     }
     // hairball
     if(now>=this.nextHair){
@@ -698,6 +748,7 @@ class Host{
       ins, v:this.val,
       feed:this.feed.filter(f=>now-f.t<9000).slice(-6).map(f=>({k:f.k,p:f.p,o:f.o,n:f.n,c:f.c,x:f.x})),
       dot:this.dot?{k:this.dot.k,x:this.dot.x,y:this.dot.y,hit:Object.keys(this.dot.hit)}:null,
+      vac:this.vac?{k:this.vac.k,x:this.vac.x,y:this.vac.y,hit:Object.keys(this.vac.hit)}:null,
       hair:this.hair, ok:this.okc, bad:this.badc, wr:this.wrc, st:this.stats
     };
   }
@@ -707,8 +758,8 @@ class Host{
 /* =========================================================
    VIEW — renders whatever state arrives (local or network)
    ========================================================= */
-const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null};
-function resetView(){ Object.assign(V,{panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null}); $('panel').textContent=''; $('feed').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
+const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{}};
+function resetView(){ Object.assign(V,{panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{}}); stopVac(); $('panel').textContent=''; $('feed').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
 
 V.onPanels=function(m){
   if(!m||m.pid!==V.myId||!Array.isArray(m.c)) return;
@@ -719,7 +770,7 @@ function setLocal(cid,v){ if(curVal(cid)===v) return; V.pend[cid]={v,t:Date.now(
 function buildPanel(){
   const box=$('panel'); box.textContent=''; V.els={}; V.broken=null;
   V.ctrls.forEach(c=>{
-    const outer=document.createElement('div'); outer.className='ctl'+('sdr'.includes(c.t)?' wide':'')+(c.t==='a'?' act':'');
+    const outer=document.createElement('div'); outer.className='ctl'+(('sdr'.includes(c.t)||c.w)?' wide':'')+(c.t==='a'?' act':'');
     const d=document.createElement('div'); d.className='ctl-in'; outer.appendChild(d);
     const nm=document.createElement('div'); nm.className='ctl-name'+(c.ic?' ico':''); nm.textContent=c.ic||c.n; if(c.ic) nm.setAttribute('aria-label',c.n);
     const el={c,root:d,outer};
@@ -854,6 +905,10 @@ V.onTick=function(s){
     L.hidden=false; $('laser-banner').hidden=false;
     L.style.left=(d.x*100)+'vw'; L.style.top=(d.y*100)+'vh'; L.dataset.k=d.k;
   } else { $('laser').hidden=true; $('laser-banner').hidden=!(d&&inGame); }
+  // vacuum
+  const vq=s.vac;
+  if(vq&&inGame&&!(vq.hit||[]).includes(V.myId)&&!V.vacDone[vq.k]){ if(VAC.k!==vq.k) startVac(vq); }
+  else if(VAC.k!==null) stopVac();
   // hairball
   if(s.hair&&s.hair.p===V.myId&&s.hair.id>V.hairSeen){ V.hairSeen=s.hair.id; V.hairLeft=4; $('fur-n').textContent='Тапни 4 раза'; $('fur').hidden=false; }
 };
@@ -887,8 +942,44 @@ $('menu-btn').addEventListener('click',e=>{ e.stopPropagation(); const p=$('pop'
 document.addEventListener('click',e=>{ const p=$('pop'); if(!p.hidden&&!p.contains(e.target)) p.hidden=true; });
 $('full-btn').addEventListener('click',()=>{ if(isFull()) exitFull(); else goFull(); $('pop').hidden=true; });
 
+const VAC={k:null,vx:0,vy:0,cx:0,cy:0,R:150,drag:false,ox:0,oy:0,t:0};
+function stopVac(){ VAC.k=null; VAC.drag=false; const l=document.getElementById('vac-layer'); if(l) l.hidden=true; }
+function startVac(d){
+  const W=innerWidth,H=innerHeight;
+  VAC.k=d.k; VAC.R=Math.max(110,Math.min(170,Math.min(W,H)*.36));
+  VAC.vx=d.x*W; VAC.vy=d.y*H;
+  const a=Math.random()*Math.PI*2; VAC.cx=VAC.vx+Math.cos(a)*58; VAC.cy=VAC.vy+Math.sin(a)*58;
+  VAC.t=performance.now(); $('vac-layer').hidden=false;
+  const r=$('vac-ring'); r.style.width=r.style.height=(VAC.R*2)+'px'; r.style.margin=(-VAC.R)+'px 0 0 '+(-VAC.R)+'px';
+  tone(110,140,.6,'sawtooth',.05); tone(220,260,.6,'square',.03);
+  if(!startVac.hinted){ startVac.hinted=true; toast('Схвати кота пальцем и утащи за красный круг'); }
+}
+(function(){
+  const c=$('vcat');
+  c.addEventListener('pointerdown',e=>{ if(VAC.k===null) return; e.preventDefault(); VAC.drag=true; VAC.ox=e.clientX-VAC.cx; VAC.oy=e.clientY-VAC.cy; c.classList.add('drag'); try{c.setPointerCapture(e.pointerId)}catch(_){} });
+  c.addEventListener('pointermove',e=>{ if(!VAC.drag) return; VAC.cx=e.clientX-VAC.ox; VAC.cy=e.clientY-VAC.oy; });
+  const up=()=>{ VAC.drag=false; c.classList.remove('drag'); };
+  c.addEventListener('pointerup',up); c.addEventListener('pointercancel',up);
+})();
+function vacFrame(now){
+  if(VAC.k===null) return;
+  const dt=Math.min(.05,(now-VAC.t)/1000); VAC.t=now;
+  const W=innerWidth,H=innerHeight;
+  let dx=VAC.cx-VAC.vx, dy=VAC.cy-VAC.vy, dist=Math.hypot(dx,dy)||1;
+  // the vacuum crawls after the cat, and pulls it in whenever nobody holds it
+  if(dist>40){ VAC.vx+=dx/dist*38*dt; VAC.vy+=dy/dist*38*dt; }
+  if(!VAC.drag&&dist>34){ VAC.cx-=dx/dist*70*dt; VAC.cy-=dy/dist*70*dt; }
+  VAC.vx=Math.max(32,Math.min(W-32,VAC.vx)); VAC.vy=Math.max(32,Math.min(H-32,VAC.vy));
+  VAC.cx=Math.max(30,Math.min(W-30,VAC.cx)); VAC.cy=Math.max(30,Math.min(H-30,VAC.cy));
+  dist=Math.hypot(VAC.cx-VAC.vx,VAC.cy-VAC.vy);
+  $('vac').style.transform='translate('+VAC.vx+'px,'+VAC.vy+'px)';
+  $('vac-ring').style.transform='translate('+VAC.vx+'px,'+VAC.vy+'px)';
+  const c=$('vcat'); c.style.transform='translate('+VAC.cx+'px,'+VAC.cy+'px)'; c.classList.toggle('pull',!VAC.drag);
+  if(dist>VAC.R){ const k=VAC.k; V.vacDone[k]=true; stopVac(); SFX.ok(); V.act({type:'vac'}); }
+}
 function frame(){
   const s=V.s;
+  vacFrame(performance.now());
   if(s&&V.screen==='game'){
     const ins=s.ins&&s.ins[V.myId]; const t=$('timer');
     if(ins){ const rem=Math.max(0,ins.rem-(performance.now()-V.sAt)); const p=rem/ins.dur; t.style.width=(p*100)+'%'; t.classList.toggle('urgent',p<.3); }
