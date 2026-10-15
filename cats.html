@@ -188,6 +188,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .order-row{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
 .timer{flex:1;height:9px;border-radius:99px;background:rgba(70,45,5,.25);box-shadow:inset 0 1px 2px rgba(0,0,0,.3);overflow:hidden}
 .timer i{display:block;height:100%;width:0;background:#6e4c10;border-radius:99px}
+.timer.paused{opacity:.45;background:repeating-linear-gradient(90deg,rgba(70,45,5,.3) 0 6px,transparent 6px 10px)}
 .timer i.urgent{background:var(--danger)}
 .shout{flex:none;background:var(--ink);color:var(--cream);border:0;border-radius:11px;padding:9px 12px;font-weight:900;font-size:13px}
 .shout:active{transform:scale(.97)}
@@ -199,25 +200,22 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
    #8a6a4f;color:var(--cream);font-family:var(--display);font-weight:700;font-size:15px;text-shadow:0 2px 0 #3d2a1a}
 .fur small{font-family:var(--body);font-weight:800;font-size:13px}
 
-/* feed */
-.feed{display:flex;flex-direction:column;gap:4px;height:108px;overflow:hidden;margin:0;padding:0;list-style:none}
-.feed li{display:flex;gap:8px;align-items:flex-start;font-size:14px;line-height:1.25;padding:5px 8px;border-radius:10px;border:1px solid transparent;animation:fade 9s forwards}
-.feed li.mine{background:color-mix(in srgb,var(--tabby) 16%,var(--void));border-color:var(--tabby);animation:none}
-.feed li.other{opacity:.8}
-.feed .av{font-size:18px;line-height:1.1;flex:none}
-.feed .tx{min-width:0;display:flex;flex-wrap:wrap;column-gap:6px;row-gap:1px;align-items:baseline}
-.feed .cmd{flex-basis:100%;font-weight:800;color:var(--cream);overflow-wrap:anywhere}
-.feed .tag{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--ink);background:var(--tabby);border-radius:99px;padding:1px 7px}
-.feed b{color:var(--tabby);font-size:12px;font-weight:800}
-.feed li.sys .cmd{color:var(--mint)}
-.feed .empty{color:var(--dim);font-size:13px;animation:none;padding:5px 8px}
 @keyframes fade{0%,55%{opacity:1}100%{opacity:.25}}
 
 /* control plate */
 .plate-head{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;margin-top:6px}
 .plate-head .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.panel{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,1fr);gap:8px;grid-auto-flow:dense}
-.ctl{background:var(--plate);border:1px solid var(--edge);border-radius:14px;min-width:0;min-height:0;overflow:hidden;container-type:size}
+.panel{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,1fr);gap:0;grid-auto-flow:dense;border:2px solid #15102a;border-radius:16px;overflow:hidden;background:#15102a;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.panel.has-broken{overflow:visible}
+.ctl{border:1px solid #15102a;border-radius:0;min-width:0;min-height:0;overflow:hidden;container-type:size;
+  /* a metal plate with a screw in each corner */
+  background:
+   radial-gradient(circle at 7px 7px,#8d7fbb 0 1.6px,#3b2f63 2.2px,transparent 2.8px),
+   radial-gradient(circle at calc(100% - 7px) 7px,#8d7fbb 0 1.6px,#3b2f63 2.2px,transparent 2.8px),
+   radial-gradient(circle at 7px calc(100% - 7px),#8d7fbb 0 1.6px,#3b2f63 2.2px,transparent 2.8px),
+   radial-gradient(circle at calc(100% - 7px) calc(100% - 7px),#8d7fbb 0 1.6px,#3b2f63 2.2px,transparent 2.8px),
+   linear-gradient(160deg,color-mix(in srgb,var(--plate) 88%,#fff) 0%,var(--plate) 45%,color-mix(in srgb,var(--plate) 85%,#000) 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -1px 0 rgba(0,0,0,.25)}
 .ctl-name.ico{font-family:var(--body);font-size:clamp(22px,calc(30cqh - 4px),36px);line-height:1.1;hyphens:none}
 .seg button.emo{font-size:clamp(18px,7cqh,26px)}
 /* broken panel: the plate hangs from one bolt and swings until screwed back */
@@ -408,7 +406,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   .ctl.wide .rng{max-height:none}
   .ticks{font-size:10px}
 }
-@container (max-height:88px){
+@container (max-height:70px){
   .ctl:not(.wide):not(.act) .ctl-in{flex-direction:row;justify-content:space-between}
   .ctl.act .ctl-name{font-size:11px}
   .ctl.act .ctl-in{gap:4px;padding:6px}
@@ -418,8 +416,6 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   .sw{--h:min(44px,calc(100cqh - 18px),19cqw)}
   .sw::before{display:none}
 }
-@media (max-height:740px){ .feed .cmd{flex-basis:auto} .feed{height:54px} }
-body.mp .feed,body.alone .feed{display:none!important}
 @media (max-height:640px){ .order-x{--ofs:clamp(15px,4.2vw,18px)} .order:not(.btw) .order-k{display:none} }
 @media (max-width:360px){ .hud{gap:6px} .meter.sector b{font-size:20px} .run .k > span:first-child,.run .k > span:last-child{display:none} }
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important} }
@@ -538,6 +534,9 @@ body.mp .feed,body.alone .feed{display:none!important}
 #panel.turn-r{animation:turnr .22s ease-out} #panel.turn-l{animation:turnl .22s ease-out}
 @keyframes turnr{from{opacity:.3;translate:24px 0}} @keyframes turnl{from{opacity:.3;translate:-24px 0}}
 .ctl.broken .ctl-in *{pointer-events:none!important}
+.acts.one{grid-template-columns:1fr!important}
+.acts.one button{background:var(--danger);box-shadow:0 4px 0 #8e1f2b;font-size:clamp(13px,5cqw + 4px,19px);letter-spacing:.02em}
+.ctl.span2{grid-column:span 2}
 </style>
 </head>
 <body>
@@ -590,10 +589,7 @@ body.mp .feed,body.alone .feed{display:none!important}
 
     <div class="card">
       <h2>Соло</h2>
-      <p class="muted" id="solo-hint">Боты сами выкрикивают свои приказы. Твои приказы они выполнят, только если ты мяукнешь их экипажу.</p>
-      <div class="row"><span>Котов-ботов</span>
-        <div class="stepper"><button id="sb-minus" aria-label="Меньше ботов">−</button><b id="sb-n">2</b><button id="sb-plus" aria-label="Больше ботов">+</button></div>
-      </div>
+      <p class="muted">Тренировка в одиночку: все приказы относятся к твоему пульту.</p>
       <div class="row"><span>Старт с сектора</span><div class="startsel" id="solo-start"></div></div>
       <button class="primary" id="btn-solo">Взлететь</button>
     </div>
@@ -621,14 +617,14 @@ body.mp .feed,body.alone .feed{display:none!important}
       <summary>Как играть</summary>
       <ol>
         <li>На карточке сверху твой приказ. Он может касаться любого прибора на корабле.</li>
-        <li>Если прибор на твоём пульте, выполни сам. Если нет, нажми «Мяукнуть экипажу» (или просто крикни вслух, если сидите рядом).</li>
+        <li>Если прибор на твоём пульте, выполни сам. Если нет, крикни приказ экипажу вслух.</li>
         <li>Перед каждым сектором осмотри свой пульт и нажми «Готов!». Сектор начнётся, когда готовы все.</li>
         <li>Корабль спасается от взрыва звезды. Выполненный приказ уносит его вперёд, проваленный отбрасывает к взрыву, лишнее нажатие (которого никто не просил) тоже отбрасывает немного назад, а взрыв сам расползается следом. Долетели до портала: прыжок в следующий сектор. Взрыв догнал: конец полёта.</li>
         <li>С каждым сектором добавляется по одной напасти: лазерная точка и кнопки с удержанием, комок шерсти, пылесос, срывающиеся панели, кот на пультах, лоток, протечка, блохи, невесомость, мяуканье в микрофон, иконки вместо названий.</li>
         <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
       </ol>
     </details>
-    <p class="muted" style="text-align:center;font-size:12px">Версия 16.8 · 14:35</p>
+    <p class="muted" style="text-align:center;font-size:12px">Версия 17.2 · 15:20</p>
   </section>
 
   <!-- SETTINGS -->
@@ -636,6 +632,9 @@ body.mp .feed,body.alone .feed{display:none!important}
     <header class="brand">
       <div class="brand-top"><h1 class="set-h">Настройки</h1><button class="icon-btn" id="set-back" aria-label="Назад в меню">✕</button></div>
     </header>
+    <div class="card">
+      <button class="opt" id="vib-set" role="switch" aria-checked="true"><span><b>Вибрация</b><small>Отклик кнопок, ползунков и событий. На iPhone нужна iOS 18 или новее.</small></span><i class="mini-sw"></i></button>
+    </div>
     <div class="card">
       <h2>Микрофон</h2>
       <p class="muted">Нужен для напасти «Доклад капитану». Включи проверку и мяукни: если полоска заходит за белую черту и держится там, мяуканье засчитается.</p>
@@ -665,10 +664,6 @@ body.mp .feed,body.alone .feed{display:none!important}
     <div class="card">
       <h2>Экипаж</h2>
       <ul class="crewlist" id="w-list"></ul>
-      <div id="w-host" class="row" hidden>
-        <span>Котов-ботов</span>
-        <div class="stepper"><button id="wb-minus" aria-label="Меньше ботов">−</button><b id="wb-n">0</b><button id="wb-plus" aria-label="Больше ботов">+</button></div>
-      </div>
       <div class="row" id="w-start-row" hidden><span>Старт с сектора</span><div class="startsel" id="w-start"></div></div>
       <button class="primary" id="btn-start" hidden>Взлететь всем экипажем</button>
       <p class="muted" id="w-note"></p>
@@ -701,7 +696,7 @@ body.mp .feed,body.alone .feed{display:none!important}
       <div class="order-k" id="order-k">Приказ на мостик</div>
       <div class="order-x" id="order-x">Готовимся…</div>
       <div class="order-sub" id="order-sub" hidden></div>
-      <div class="order-row"><div class="timer"><i id="timer"></i></div><button class="shout" id="shout">Мяукнуть экипажу</button><button class="shout ready" id="ready" hidden>Готов!</button></div>
+      <div class="order-row"><div class="timer"><i id="timer"></i></div><button class="shout ready" id="ready" hidden>Готов!</button></div>
       <button class="fur" id="fur" hidden>Комок шерсти!<small id="fur-n">Тапни 4 раза</small></button>
     </div>
 
@@ -718,7 +713,6 @@ body.mp .feed,body.alone .feed{display:none!important}
       <div class="pg-mid"><span id="pg-t">Страница 1 из 2</span><span class="pg-dots" id="pg-dots" aria-hidden="true"></span></div>
       <button class="pg-btn" id="pg-next" aria-label="Следующая страница пульта">›</button>
     </div>
-    <ul class="feed" id="feed"></ul>
 
   </section>
 
@@ -860,6 +854,7 @@ const TSTEPS=[
   {n:'Ползунок',h:'Сдвинь ползунок на число и отпусти палец, 2 раза.',ctl:[{t:'r',n:'Шерсть на одежде',m:7},T_BTN],on:[0],ok:okOrders(2)},
   {n:'Кнопки-действия',h:'Нажми действие из приказа, 2 раза.',ctl:[T_ACT,T_BTN],on:[0],ok:okOrders(2)},
   {n:'Цветок',h:'Погрызи или урони цветок по приказу, 2 раза.',ctl:[{t:'a',n:'Фикус',o:['Погрызть','Уронить']},T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Одиночная кнопка',h:'Панель с одной кнопкой: нажми её по приказу, 2 раза.',ctl:[{t:'a',n:'Злая рука',o:['КУСЬ']},{t:'a',n:'Окно',o:['Смотреть']}],on:[0,1],ok:okOrders(2)},
   {n:'Вылизывание',h:'Вылижи то, что сказано, 2 раза.',ctl:[{t:'a',n:'Вылизывание',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',w:1},T_BTN,T_TGL],on:[0],ok:okOrders(2)},
   {n:'Удержание',h:'Держи кнопку, пока кольцо не заполнится. Отпустишь раньше — не засчитается, но и не ошибка.',ctl:[{t:'h',n:'Дверь от собаки',hd:2},T_TGL],on:[0],ok:okOrders(2)},
   {n:'Двойной тап',h:'Нажми кнопку «×2» дважды быстро. Одно нажатие ничего не делает.',ctl:[{t:'x',n:'Гравимурр'},T_TGL],on:[0],ok:okOrders(2)},
@@ -916,7 +911,14 @@ const CHORES=[
   {n:'Букет ромашек',ic:'🌼',o:['Погрызть','Уронить']},
   {n:'Кактус на окне',ic:'🌵',o:['Погрызть','Уронить']},
   {n:'Тюльпан',ic:'🌷',o:['Погрызть','Уронить']},
-  {n:'Вылизывание',ic:'👅',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',txi:'👅 {o}'}
+  {n:'Вылизывание',ic:'👅',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',txi:'👅 {o}'},
+  // one-button panels
+  {n:'Злая рука',ic:'✋',o:['КУСЬ']},
+  {n:'Окно',ic:'🪟',o:['Смотреть']},
+  {n:'Корм',ic:'🍗',o:['Просить']},
+  {n:'Пакет',ic:'🛍️',o:['Шуршать']},
+  {n:'Коробка',ic:'📦',o:['Залезть']},
+  {n:'Хозяин',ic:'😴',o:['Разбудить']}
 ];
 const ACTS=[['Копать','Рассыпать'],['Погладить','Почесать'],['Мурчать','Фыркнуть'],['Лизнуть','Укусить'],['Спрятать','Уронить'],['Царапнуть','Тереться'],['Зевнуть','Чихнуть'],['Распушить','Сгладить'],['Понюхать','Съесть'],['Толкнуть','Сбросить'],['Охранять','Игнорить'],['Боднуть','Обнюхать']];
 const ICONS=['🧑‍🚀','🐟','🧶','🐭','🪐','🚀','🥫','🦴','🧀','🐾','🛸','🌙','📦','🪶','🧲','🔭','🍤','🥛','🛁','🧹','🪴','🎈','🔋','🧦','☂️','🎩','🧊','🍩','🕰️','🦆'];
@@ -1020,12 +1022,6 @@ function renderModes(){
 }
 renderProg();
 
-let soloBots=2;
-function updSolo(){ $('sb-n').textContent=soloBots; $('sb-minus').disabled=soloBots<=0;
-  $('solo-hint').textContent=soloBots?'Боты сами выкрикивают свои приказы. Твои приказы они выполнят, только если ты мяукнешь их экипажу.':'Только ты и корабль. Все приказы относятся к твоему пульту, успевай сам.'; $('sb-plus').disabled=soloBots>=MAXP-1; }
-$('sb-minus').onclick=()=>{soloBots=Math.max(0,soloBots-1);updSolo()};
-$('sb-plus').onclick=()=>{soloBots=Math.min(MAXP-1,soloBots+1);updSolo()};
-updSolo();
 
 /* ---------- screens ---------- */
 function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); if(name!=='set') mtStop(); ['menu','set','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); stopFlea(); stopMic(); unflip(); $('leak-layer').hidden=true; $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
@@ -1134,7 +1130,8 @@ class Host{
     const taken=new Set(Object.values(this.instr).filter(Boolean).map(i=>i.cid));
     const all=Object.values(this.ctrl).filter(c=>!taken.has(c.id));
     const others=all.filter(c=>c.owner!==pid), own=all.filter(c=>c.owner===pid);
-    let pool=(others.length&&(Math.random()<.72||!own.length))?others:own;
+    const srcBot=(this.player(pid)||{}).bot;
+    let pool=srcBot&&own.length?own:(others.length&&(Math.random()<.72||!own.length))?others:own;
     if(!pool.length) pool=all; if(!pool.length) return;
     const c=pick(pool), {target,text,parts}=this.buildInstr(c);
     const i={cid:c.id,target,text,parts,start:now,dur:this.dur,shouted:false,owner:c.owner};
@@ -1312,6 +1309,12 @@ class Host{
       } else { this.emit(); return; }
     }
     const dt=Math.min(1,(now-this.lastT)/1000); this.lastT=now;
+    // while everyone deals with a shared hazard (laser, vacuum, litter, fleas, mic) order timers stand still
+    this.tp=!!(this.dot||this.vac||this.lit||this.flea||this.mic);
+    if(this.tp){ const ms=dt*1000;
+      for(const k in this.instr){ const i=this.instr[k]; if(!i) continue; i.start+=ms;
+        if(typeof i.shoutAt==='number'&&isFinite(i.shoutAt)) i.shoutAt+=ms; if(typeof i.botAt==='number'&&isFinite(i.botAt)) i.botAt+=ms; }
+      for(const k in this.pending) this.pending[k]+=ms; }
     this.fire=Math.min(100,this.fire+this.creep*dt); this.checkCaught();
     if(this.phase==='over'){ this.emit(); return; }
     for(const p of this.pl){ if(!this.instr[p.id]&&this.pending[p.id]&&now>=this.pending[p.id]){ delete this.pending[p.id]; this.newInstr(p.id); } }
@@ -1329,7 +1332,7 @@ class Host{
       const src=this.player(pid);
       if(src&&src.bot&&i.shoutAt&&!i.shouted&&now>=i.shoutAt) this.shout(pid);
       const ow=this.player(i.owner);
-      if(ow&&ow.bot&&i.botAt===undefined&&(i.shouted||i.owner===pid)) i.botAt=Math.random()<.08?Infinity:now+rnd(1300,4200);
+      if(ow&&ow.bot&&i.botAt===undefined) i.botAt=Math.random()<.08?Infinity:now+rnd(1300,4200);
       if(i.botAt!==undefined&&now>=i.botAt){ i.botAt=Infinity; this.apply(i.owner,i.cid,i.target); if(this.phase!=='play'){ this.emit(); return; } }
     }
     // laser dot
@@ -1461,8 +1464,7 @@ class Host{
       mic:this.mic?{k:this.mic.k,hit:Object.keys(this.mic.hit)}:null,
       md:this.mode, tr:this.trail,
       dbg:this.dbg?1:0, tst:this.dbg&&this.T?{i:this.T.i,n:TSTEPS.length,t:(TSTEPS[this.T.i]||{}).n||'',h:(TSTEPS[this.T.i]||{}).h||'',ok:this.T.doneAt?1:0,cmd:this.T.cmd||null}:null,
-      ins, v:this.val, lr:this.lastRes,
-      feed:this.feed.filter(f=>now-f.t<9000).slice(-6).map(f=>({k:f.k,p:f.p,o:f.o,n:f.n,c:f.c,x:f.x})),
+      ins, v:this.val, lr:this.lastRes, tp:this.tp&&this.phase==='play'?1:0,
       dot:this.dot?{k:this.dot.k,x:this.dot.x,y:this.dot.y,hit:Object.keys(this.dot.hit)}:null,
       vac:this.vac?{k:this.vac.k,x:this.vac.x,y:this.vac.y,hit:Object.keys(this.vac.hit)}:null,
       lit:this.lit?{k:this.lit.k,n:this.lit.n,hit:Object.keys(this.lit.hit)}:null,
@@ -1477,7 +1479,7 @@ class Host{
    VIEW — renders whatever state arrives (local or network)
    ========================================================= */
 const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{},litDone:{},fleaDone:{},micDone:{},leakDone:{},leakSeen:0,panV:0,nextFlip:0,flipUntil:0,orderSig:'',lastCb:0};
-function resetView(){ unflip(); stopMic(); $('leak-layer').hidden=true; Object.assign(V,{tstI:-1,tstOk:-1,tstCmd:0,panV:0,nextFlip:0,leakDone:{},leakSeen:0,micDone:{},panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},litDone:{},fleaDone:{},orderSig:''}); stopVac(); stopLit(); stopFlea(); $('panel').textContent=''; $('feed').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
+function resetView(){ unflip(); stopMic(); $('leak-layer').hidden=true; Object.assign(V,{tstI:-1,tstOk:-1,tstCmd:0,panV:0,nextFlip:0,leakDone:{},leakSeen:0,micDone:{},panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},litDone:{},fleaDone:{},orderSig:''}); stopVac(); stopLit(); stopFlea(); $('panel').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
 
 V.onPanels=function(m){
   if(!m||m.pid!==V.myId||!Array.isArray(m.c)) return;
@@ -1485,7 +1487,7 @@ V.onPanels=function(m){
   V.panV=+m.v||0;
   if(m.r!==V.panelR) V.page=0;
   V.panelR=m.r; V.ctrls=m.c; V.pend={}; buildPanel(); if(V.s) updVals();
-  if(walked){ popText('🐾 Кот прошёлся по пультам!'); const p=$('panel'); p.classList.remove('walk'); void p.offsetWidth; p.classList.add('walk'); try{navigator.vibrate&&navigator.vibrate([30,40,30,40,30])}catch(e){} }
+  if(walked){ popText('🐾 Кот прошёлся по пультам!'); const p=$('panel'); p.classList.remove('walk'); void p.offsetWidth; p.classList.add('walk'); buzz([30,40,30,40,30]) }
 };
 function curVal(cid){ const p=V.pend[cid]; if(p&&Date.now()-p.t<1200) return p.v; return V.s&&V.s.v?V.s.v[cid]:undefined; }
 function setLocal(cid,v){ if(curVal(cid)===v) return; V.pend[cid]={v,t:Date.now()}; updVals(); V.act({type:'set',cid,v}); SFX.click(); }
@@ -1494,6 +1496,7 @@ function cancelHolds(){ [...HOLDING].forEach(f=>f()); HOLDING.clear(); }
 function buildPanel(){
   cancelHolds();
   if(V.broken&&V.broken.stop) V.broken.stop();
+  $('panel').classList.remove('has-broken');
   const box=$('panel'); box.textContent=''; V.els={}; V.broken=null;
   V.ctrls.forEach(c=>{
     const outer=document.createElement('div'); outer.className='ctl'+(('sdr'.includes(c.t)||c.w)?' wide':'')+(c.t==='a'?' act':'');
@@ -1503,7 +1506,7 @@ function buildPanel(){
     if(c.t==='b'){
       d.appendChild(nm);
       const b=document.createElement('button'); b.className='big'; b.setAttribute('aria-label','Нажать '+c.n);
-      b.addEventListener('click',()=>{ b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120); SFX.click(); V.act({type:'press',cid:c.id}); });
+      b.addEventListener('click',()=>{ b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120); SFX.click(); buzz(14); V.act({type:'press',cid:c.id}); });
       d.appendChild(b);
     } else if(c.t==='h'){
       // hold: the ring fills while the finger stays down; letting go early does nothing
@@ -1514,9 +1517,9 @@ function buildPanel(){
       const stop=()=>{ cancelAnimationFrame(raf); t0=0; b.classList.remove('hit'); b.style.setProperty('--hp','0'); lab.textContent=c.hd+' с'; HOLDING.delete(stop); };
       const tick=()=>{ if(!t0) return; const p=Math.min(1,(performance.now()-t0)/need); b.style.setProperty('--hp',String(p));
         lab.textContent=Math.max(0,Math.ceil((need-(performance.now()-t0))/1000))+' с';
-        if(p>=1){ stop(); SFX.ok(); try{navigator.vibrate&&navigator.vibrate(40)}catch(e){} V.act({type:'press',cid:c.id}); return; }
+        if(p>=1){ stop(); SFX.ok(); buzz(40); V.act({type:'press',cid:c.id}); return; }
         raf=requestAnimationFrame(tick); };
-      b.addEventListener('pointerdown',e=>{ e.preventDefault(); if(t0) return; pidr=e.pointerId; try{b.setPointerCapture(pidr)}catch(_){} t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); tone(330,360,.12,'sine',.04); raf=requestAnimationFrame(tick); });
+      b.addEventListener('pointerdown',e=>{ e.preventDefault(); if(t0) return; pidr=e.pointerId; try{b.setPointerCapture(pidr)}catch(_){} t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); buzz(10); tone(330,360,.12,'sine',.04); raf=requestAnimationFrame(tick); });
       ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>{ if(t0) stop(); }));
       b.addEventListener('contextmenu',e=>e.preventDefault());
       b.addEventListener('keydown',e=>{ if((e.key===' '||e.key==='Enter')&&!t0&&!e.repeat){ e.preventDefault(); t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); raf=requestAnimationFrame(tick); } });
@@ -1529,8 +1532,8 @@ function buildPanel(){
       const lab=document.createElement('span'); lab.className='blab'; lab.textContent='×2'; b.appendChild(lab);
       let last=0;
       b.addEventListener('click',()=>{ const now=performance.now(); b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120);
-        if(now-last<480){ last=0; b.classList.remove('armed'); SFX.click(); V.act({type:'press',cid:c.id}); }
-        else { last=now; b.classList.add('armed'); tone(700,760,.04,'square',.03); setTimeout(()=>{ if(performance.now()-last>=470) b.classList.remove('armed'); },480); } });
+        if(now-last<480){ last=0; b.classList.remove('armed'); SFX.click(); buzz(16); V.act({type:'press',cid:c.id}); }
+        else { last=now; b.classList.add('armed'); buzz(6); tone(700,760,.04,'square',.03); setTimeout(()=>{ if(performance.now()-last>=470) b.classList.remove('armed'); },480); } });
       b.addEventListener('dblclick',e=>e.preventDefault());
       d.appendChild(b);
     } else if(c.t==='r'){
@@ -1540,18 +1543,20 @@ function buildPanel(){
       const inp=document.createElement('input'); inp.type='range'; inp.min='0'; inp.max=String(c.m); inp.step='1'; inp.id='r-'+c.id; inp.setAttribute('aria-label',c.n);
       const paint=()=>{ inp.style.setProperty('--p',(100*inp.value/c.m)+'%'); badge.textContent=inp.value+' из '+c.m; };
       inp.addEventListener('pointerdown',()=>{ el.drag=true; });
-      inp.addEventListener('input',()=>{ el.drag=true; paint(); });
-      inp.addEventListener('change',()=>{ el.drag=false; paint(); setLocal(c.id,+inp.value); });
+      let lastStep=null;
+      inp.addEventListener('input',()=>{ el.drag=true; paint(); if(lastStep!==null&&+inp.value!==lastStep) buzz(7); lastStep=+inp.value; });
+      inp.addEventListener('pointerdown',()=>{ lastStep=+inp.value; });
+      inp.addEventListener('change',()=>{ el.drag=false; paint(); buzz(16); setLocal(c.id,+inp.value); });
       ['pointerup','pointercancel','blur'].forEach(ev=>inp.addEventListener(ev,()=>{ setTimeout(()=>{ el.drag=false; },50); }));
       const ticks=document.createElement('div'); ticks.className='ticks';
       for(let i=0;i<=c.m;i++){ const t=document.createElement('span'); t.textContent=i; ticks.appendChild(t); }
       w.appendChild(inp); w.appendChild(ticks); d.appendChild(w); el.rng=inp; el.paint=paint;
     } else if(c.t==='a'){
       d.appendChild(nm);
-      const g=document.createElement('div'); g.className='acts';
+      const g=document.createElement('div'); g.className='acts'+(c.o.length===1?' one':'');
       c.o.forEach((o,idx)=>{
         const b=document.createElement('button'); b.textContent=o; b.setAttribute('aria-label',o+' '+c.n);
-        b.addEventListener('click',()=>{ b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120); SFX.click(); V.act({type:'press',cid:c.id,v:idx}); });
+        b.addEventListener('click',()=>{ b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120); SFX.click(); buzz(14); V.act({type:'press',cid:c.id,v:idx}); });
         g.appendChild(b);
       });
       d.appendChild(g);
@@ -1559,7 +1564,7 @@ function buildPanel(){
       d.appendChild(nm);
       const b=document.createElement('button'); b.className='sw'; b.setAttribute('role','switch'); b.setAttribute('aria-label',c.n);
       const st=document.createElement('div'); st.className='sw-state';
-      b.addEventListener('click',()=>setLocal(c.id,!curVal(c.id)));
+      b.addEventListener('click',()=>{ buzz(18); setLocal(c.id,!curVal(c.id)); });
       d.appendChild(b); d.appendChild(st); el.sw=b; el.st=st;
     } else {
       d.appendChild(nm);
@@ -1570,7 +1575,7 @@ function buildPanel(){
         if(c.t==='s'){ const bar=document.createElement('i'); bar.style.height=(4+Math.round(idx*16/sm))+'px'; b.appendChild(bar); b.appendChild(document.createTextNode(String(o))); }
         else { b.textContent=o; if(isEmoji(o)) b.classList.add('emo'); }
         b.setAttribute('aria-label',c.n+': '+o);
-        b.addEventListener('click',()=>setLocal(c.id,idx));
+        b.addEventListener('click',()=>{ buzz(10); setLocal(c.id,idx); });
         seg.appendChild(b); return b;
       });
       d.appendChild(seg);
@@ -1580,7 +1585,7 @@ function buildPanel(){
   layoutPages();
 }
 /* ---------- multi-page panel: as many rows per page as fit on the screen ---------- */
-const MINROW=116, PGAP=8;   // smallest comfortable row height, px
+const MINROW=84, MAXROW=124, PGAP=0;   // row height range, px: pages appear only below MINROW
 function panelRows(){
   // two narrow controls share a row, a wide one takes a whole row (same as the grid places them)
   const rows=[]; let half=null;
@@ -1598,6 +1603,8 @@ function layoutPages(){
   const bar=$('pager');
   if(!V.ctrls.length||!Object.keys(V.els).length){ bar.hidden=true; V.pages=[]; return; }
   const rows=panelRows();
+  // a narrow control left alone in its row stretches across, so the plates always close up edge to edge
+  rows.forEach(r=>r.forEach(id=>{ const el=V.els[id]; if(el) el.outer.classList.toggle('span2',r.length===1&&!el.outer.classList.contains('wide')); }));
   bar.hidden=true;
   let per=Math.max(1,Math.floor((panelSpace()+PGAP)/(MINROW+PGAP)));
   if(rows.length>per){ bar.hidden=false; per=Math.max(1,Math.floor((panelSpace()+PGAP)/(MINROW+PGAP))); }
@@ -1609,7 +1616,7 @@ function layoutPages(){
 function showPage(){
   const box=$('panel'), pg=(V.pages||[])[V.page]||[], ids=new Set(pg.flat());
   for(const id in V.els) V.els[id].outer.hidden=!ids.has(id);
-  const n=Math.max(1,pg.length); box.style.setProperty('--pmax',(n*150+(n-1)*PGAP)+'px');
+  const n=Math.max(1,pg.length); box.style.setProperty('--pmax',(n*MAXROW+(n-1)*PGAP)+'px');
   const total=(V.pages||[]).length;
   $('pg-t').textContent='Страница '+(V.page+1)+' из '+total;
   const dots=$('pg-dots'); dots.textContent='';
@@ -1617,7 +1624,7 @@ function showPage(){
 }
 function turnPage(d){
   const total=(V.pages||[]).length; if(total<2) return;
-  cancelHolds(); V.page=(V.page+d+total)%total; showPage(); tone(520+d*60,560,.05,'triangle',.05);
+  cancelHolds(); buzz(8); V.page=(V.page+d+total)%total; showPage(); tone(520+d*60,560,.05,'triangle',.05);
   const box=$('panel'); box.classList.remove('turn-l','turn-r'); void box.offsetWidth; box.classList.add(d>0?'turn-r':'turn-l');
 }
 $('pg-prev').addEventListener('click',()=>turnPage(-1));
@@ -1695,35 +1702,16 @@ V.onTick=function(s){
   const ins=s.ins&&s.ins[V.myId];
   renderOrder(s,ins,inGame);
   // re-split the panel into pages whenever the free space changes (rotation, feed shown/hidden, order slip height)
-  { const p=$('panel'), fd=$('feed'), key=innerHeight+'|'+Math.round(p.getBoundingClientRect().top)+'|'+(fd.offsetParent?fd.offsetHeight:0)+'|'+V.ctrls.length;
+  { const p=$('panel'), key=innerHeight+'|'+Math.round(p.getBoundingClientRect().top)+'|'+V.ctrls.length;
     if(key!==V.pgKey){ V.pgKey=key; layoutPages(); } }
   renderTester(s);
   // flashes
   const ok=(s.ok&&s.ok[V.myId])||0, bad=(s.bad&&s.bad[V.myId])||0;
   if(V.seenOk!==null&&ok>V.seenOk){ const o=$('order'); o.classList.remove('ok'); void o.offsetWidth; o.classList.add('ok'); SFX.ok(); fishPop(); }
-  if(V.seenBad!==null&&bad>V.seenBad){ SFX.bad(); try{navigator.vibrate&&navigator.vibrate(200)}catch(e){} }
+  if(V.seenBad!==null&&bad>V.seenBad){ SFX.bad(); buzz(200) }
   const wr=(s.wr&&s.wr[V.myId])||0;
   if(V.seenWr!=null&&wr>V.seenWr){ tone(160,120,.18,'square',.07); toast('Лишнее действие! Корабль отбросило к взрыву.'); }
   V.seenOk=ok; V.seenBad=bad; V.seenWr=wr;
-  // feed
-  const feedAll=Array.isArray(s.feed)?s.feed:[];
-  const feed=feedAll.filter(f=>!f.p||f.p!==V.myId).slice().reverse().sort((a,b)=>((b.o===V.myId)-(a.o===V.myId))).slice(0,innerHeight<740?1:2);
-  const sig=feed.map(f=>f.k).join(',');
-  if(sig!==V.feedSig){
-    const hadPrev=V.feedSig!==''; const prevKeys=new Set(V.feedSig.split(',')); V.feedSig=sig; const ul=$('feed'); ul.textContent='';
-    if(!feed.length){ const li=document.createElement('li'); li.className='empty'; li.textContent='В эфире тихо. Тут появятся крики экипажа.'; ul.appendChild(li); }
-    feed.forEach(f=>{
-      const mineCtl=f.o&&f.o===V.myId;
-      const li=document.createElement('li'); li.className=!f.n?'sys':mineCtl?'mine':'other';
-      const av=document.createElement('span'); av.className='av'; av.textContent=f.c||'📡';
-      const tx=document.createElement('span'); tx.className='tx';
-      if(f.n){ const b=document.createElement('b'); b.textContent=f.n; tx.appendChild(b); }
-      if(mineCtl){ const t=document.createElement('span'); t.className='tag'; t.textContent='на твоём пульте'; tx.appendChild(t); }
-      const cmd=document.createElement('span'); cmd.className='cmd'; cmd.textContent=f.x; tx.appendChild(cmd);
-      li.appendChild(av); li.appendChild(tx); ul.appendChild(li);
-      if(!prevKeys.has(String(f.k))&&hadPrev&&f.n){ if(mineCtl) SFX.meow(); else tone(900,700,.08,'sine',.05); }
-    });
-  }
   // crew
   const csig=pl.map(p=>p.join('|')).join(';');
   if(csig!==V.crewSig){ V.crewSig=csig; const cr=$('crew'); cr.textContent='';
@@ -1776,7 +1764,23 @@ function renderTester(s){
 }
 $('dbg-prev').addEventListener('click',()=>{ SFX.click(); V.act({type:'dbg',go:-1}); });
 $('dbg-next').addEventListener('click',()=>{ SFX.click(); V.act({type:'dbg',go:1}); });
-let breakHinted=false;
+/* ---------- haptics: short vibration on Android; on iPhone (iOS 18+) the system switch tick ---------- */
+let vibOn=true;
+try{ vibOn=localStorage.getItem('koto-vib')!=='0'; }catch(e){}
+const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let iosHap=null;
+function buzz(p){
+  if(!vibOn) return;
+  try{
+    if(navigator.vibrate){ navigator.vibrate(p); return; }
+    if(IOS){
+      // Safari has no vibrate(); toggling a hidden <input switch> gives a light haptic tick
+      if(!iosHap){ const l=document.createElement('label'); l.setAttribute('aria-hidden','true'); l.style.cssText='position:fixed;left:-100px;top:0;width:1px;height:1px;opacity:0;pointer-events:none';
+        const i=document.createElement('input'); i.type='checkbox'; i.setAttribute('switch',''); i.tabIndex=-1; l.appendChild(i); document.body.appendChild(l); iosHap=l; }
+      iosHap.click();
+    }
+  }catch(e){}
+}
 // broken panel: it hangs from one corner bolt and swings like a pendulum;
 // grab it, turn it round the bolt (any way, any angle) until it is level again
 const FIX_SNAP=7;          // degrees from level at which the panel clicks back into place
@@ -1789,7 +1793,7 @@ function breakCtl(){
   const com=Math.atan2(cy,cx), eq=Math.PI/2-com;               // it comes to rest with its centre right below the bolt
   const B={id:el.c.id,th:eq*.25,om:0,drag:false,raf:0,last:performance.now(),a0:0,dl:0,dragT:0};
   V.broken=B;
-  o.classList.add('broken','hang-'+side);
+  o.classList.add('broken','hang-'+side); $('panel').classList.add('has-broken');
   const pivot=document.createElement('i'); pivot.className='pivot'; o.appendChild(pivot);
   const fix=document.createElement('button'); fix.className='fix';
   const lab=document.createElement('span'); lab.textContent=(eq>0?'↺':'↻')+' Поверни на место'; fix.appendChild(lab);
@@ -1809,8 +1813,8 @@ function breakCtl(){
   };
   const done=()=>{
     if(V.broken!==B) return; stop(); V.act({type:'fixdone'});
-    inner.style.transform=''; o.classList.remove('broken','hang-l','hang-r'); fix.remove(); pivot.remove();
-    SFX.ok(); try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
+    inner.style.transform=''; o.classList.remove('broken','hang-l','hang-r'); $('panel').classList.remove('has-broken'); fix.remove(); pivot.remove();
+    SFX.ok(); buzz(40)
     o.classList.add('snap'); setTimeout(()=>o.classList.remove('snap'),400);
   };
   // the hanging plate itself is grabbable too; these listeners go away once it is fixed
@@ -1856,8 +1860,7 @@ function breakCtl(){
   fix.addEventListener('contextmenu',e=>e.preventDefault());
   o.appendChild(fix);
   paint(); B.raf=requestAnimationFrame(loop);
-  tone(240,90,.35,'square',.08); try{navigator.vibrate&&navigator.vibrate([60,40,60])}catch(e){}
-  if(!breakHinted){ breakHinted=true; toast('Панель сорвалась! Схвати её и поверни вокруг болта, пока не встанет ровно.'); }
+  tone(240,90,.35,'square',.08); buzz([60,40,60])
 }
 // ---- zero gravity: own panel turned upside down or mirrored left-to-right
 function flipPanel(kind){
@@ -1866,7 +1869,7 @@ function flipPanel(kind){
   V.flipUntil=Date.now()+rnd(6500,9000); V.flipKind=kind;
   $('panel').classList.add(kind==='mir'?'mirror':'flip');
   popText(kind==='mir'?'🪞 Невесомость! Пульт отразился':'🙃 Невесомость! Пульт перевернулся');
-  tone(500,200,.5,'sine',.07); try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}
+  tone(500,200,.5,'sine',.07); buzz(80)
 }
 function unflip(){ V.flipUntil=0; V.flipKind=null; const p=document.getElementById('panel'); if(p) p.classList.remove('flip','mirror'); }
 // ---- water leak: 3 seconds without touching the screen
@@ -1882,7 +1885,7 @@ $('leak-layer').addEventListener('pointerdown',e=>{
   const s=V.s; if(!s||!s.leak) return; const k=s.leak.k;
   if(V.leakDone[k]||performance.now()-(V.leakAt||0)<350) return;   // a tap already in flight when it started doesn't count
   V.leakDone[k]=true; $('leak-layer').classList.add('wet'); $('leak-msg').textContent='Лапы промокли! Корабль отбросило';
-  SFX.bad(); try{navigator.vibrate&&navigator.vibrate(200)}catch(_){} V.act({type:'leak'});
+  SFX.bad(); buzz(200); V.act({type:'leak'});
 });
 // ---- microphone: meow loudly, or tap the cat 8 times
 // microphone threshold (RMS level); the meter shows 0..MIC_MAX
@@ -1949,6 +1952,9 @@ async function mtStart(){
   MT.raf=requestAnimationFrame(loop);
   return true;
 }
+function syncVib(){ $('vib-set').setAttribute('aria-checked',String(vibOn)); }
+$('vib-set').addEventListener('click',()=>{ vibOn=!vibOn; try{localStorage.setItem('koto-vib',vibOn?'1':'0')}catch(e){} syncVib(); SFX.click(); buzz(20); });
+syncVib();
 $('btn-settings').addEventListener('click',()=>{ SFX.click(); show('set'); mtSync(); });
 $('set-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
 $('mt-toggle').addEventListener('click',()=>{ if(MT.stream) mtStop(); else mtStart(); });
@@ -2083,7 +2089,7 @@ function fitOrder(){
 }
 addEventListener('resize',()=>{ if(V.screen==='game'){ fitOrder(); layoutPages(); } });
 function renderOrder(s,ins,inGame){
-  const k=$('order-k'), x=$('order-x'), sub=$('order-sub'), ready=$('ready'), shout=$('shout');
+  const k=$('order-k'), x=$('order-x'), sub=$('order-sub'), ready=$('ready');
   const between=s.ph==='between', iAmReady=(s.rd||[]).includes(V.myId);
   let sig;
   if(!inGame) sig='spect';
@@ -2113,7 +2119,6 @@ function renderOrder(s,ins,inGame){
   ready.hidden=!(between&&inGame); ready.disabled=iAmReady; ready.textContent=iAmReady?'Ждём остальных…':'Готов!';
   const alone=(s.pl||[]).length<=1;
   document.body.classList.toggle('alone',alone);
-  shout.hidden=G.mode==='mp'||alone||between||!inGame; shout.disabled=!ins;
 }
 $('ready').addEventListener('click',()=>{ askMotion(); SFX.click(); V.act({type:'ready'}); });
 $('pause-btn').addEventListener('click',()=>{ $('pop').hidden=true; V.act({type:'pause',on:true}); });
@@ -2140,7 +2145,6 @@ function jolt(){ const a=$('app'); a.classList.remove('shake'); document.body.cl
 
 $('laser').addEventListener('click',()=>{ const k=+$('laser').dataset.k; V.dotDone[k]=true; $('laser').hidden=true; SFX.ok(); V.act({type:'dot'}); });
 $('fur').addEventListener('click',()=>{ V.hairLeft--; SFX.click(); if(V.hairLeft<=0){ $('fur').hidden=true; V.act({type:'hairdone'}); } else $('fur-n').textContent='Ещё '+V.hairLeft; });
-$('shout').addEventListener('click',()=>{ SFX.meow(); V.act({type:'shout'}); });
 $('mute').addEventListener('click',()=>{ muted=!muted; $('mute').textContent=muted?'Включить звук':'Выключить звук'; $('pop').hidden=true; });
 function syncFull(){ const b=$('full-btn'); b.disabled=!canFull; b.setAttribute('aria-checked',String(isFull())); b.firstChild.textContent=canFull?'Полный экран':'Полный экран недоступен'; }
 document.addEventListener('fullscreenchange',syncFull); document.addEventListener('webkitfullscreenchange',syncFull);
@@ -2205,7 +2209,7 @@ function fleaShake(){
   const on=[...document.querySelectorAll('#fleas .flea:not(.off)')];
   for(let i=0;i<3&&on.length;i++){ const f=on.splice(Math.floor(Math.random()*on.length),1)[0]; f.style.setProperty('--fx',rnd(-160,160)+'px'); f.style.setProperty('--fy',rnd(-140,60)+'px'); f.classList.add('off'); }
   tone(240,140,.09,'triangle',.07);
-  try{ navigator.vibrate&&navigator.vibrate(30); }catch(e){}
+  buzz(30)
   if(FLEA.done>=FLEA.n){ const k=FLEA.k; V.fleaDone[k]=true; stopFlea(); SFX.ok(); V.act({type:'flea'}); }
 }
 addEventListener('devicemotion',e=>{
@@ -2286,7 +2290,7 @@ function frame(){
   const s=V.s;
   vacFrame(performance.now());
   if(s&&V.screen==='game'){
-    const ins=s.ins&&s.ins[V.myId]; const t=$('timer'); const el=(s.pz||s.leak)?0:performance.now()-V.sAt;
+    const ins=s.ins&&s.ins[V.myId]; const t=$('timer'); const el=(s.pz||s.leak||s.tp)?0:performance.now()-V.sAt; t.parentNode.classList.toggle('paused',!!(s.tp||s.leak));
     if(s.ph==='between'){ const p=s.bt?Math.max(0,s.bt-el)/(s.btd||1):0; t.style.width=(p*100)+'%'; t.classList.remove('urgent'); }
     else if(ins){ const rem=Math.max(0,ins.rem-el); const p=rem/ins.dur; t.style.width=(p*100)+'%'; t.classList.toggle('urgent',p<.3); }
     else t.style.width='0%';
@@ -2474,7 +2478,7 @@ addEventListener('pagehide',()=>{ if(V.screen==='game'&&V.s&&!V.s.pz&&V.s.ph!=='
 /* =========================================================
    GAME CONTROL: solo + multiplayer transport
    ========================================================= */
-const G={mode:null,host:null,net:null,mpBots:0,hostPeer:null};
+const G={mode:null,host:null,net:null,hostPeer:null};
 function stopAll(){
   if(G.host){ G.host.stop(); G.host=null; }
   if(G.net){
@@ -2491,7 +2495,6 @@ function startSolo(dbg){
   dbg=dbg===true;
   askMotion(); goFull(); ac(); stopAll(); G.mode='solo'; G.dbg=dbg; resetView(); V.myId='me';
   const players=[{id:'me',name:me.name,cat:me.cat,hat:validHat(prog.hat)||'',bot:false}];
-  for(let i=0;i<(dbg?0:soloBots);i++) players.push({id:'b'+i,name:BOTS[i][0],cat:BOTS[i][1],bot:true});
   V.act=a=>{ if(G.host) G.host.act('me',a); };
   show('game');
   G.host=new Host(players,{tick:s=>V.onTick(s),panels:(pid,m)=>{ if(pid==='me') V.onPanels(m); }},{start:dbg?1:startSector,ship:prog.ship,trail:validTrail(prog.trail),mode:gameMode,debug:dbg});
@@ -2574,7 +2577,7 @@ async function mpJoin(code,asHost){
     toast(e&&String(e.code||e.message).toUpperCase().includes('PERMISSION')?'Firebase отклонил запись: проверь правила Realtime Database.':'Не удалось подключиться: '+((e&&e.message)||'ошибка'));
     return;
   }
-  G.mode='mp'; G.net={room,code,host:asHost,pid,players:{},unsubs:[]}; G.mpBots=0;
+  G.mode='mp'; G.net={room,code,host:asHost,pid,players:{},unsubs:[]};
   resetView(); V.myId=pid;
   const on=(ref,ev,fn)=>{ ref.on(ev,fn); G.net.unsubs.push(()=>ref.off(ev,fn)); };
   on(room.child('players'),'value',snap=>{
@@ -2606,7 +2609,6 @@ function renderWait(){
   const list=$('w-list'); list.textContent='';
   const ps=Object.entries(G.net.players).filter(([,p])=>p&&p.n).sort((a,b)=>(b[1].h||0)-(a[1].h||0)||(a[1].t||0)-(b[1].t||0));
   const hostP=ps.find(([,p])=>p.h);
-  const bots=host?G.mpBots:Math.max(0,Math.min(BOTS.length,(hostP&&+hostP[1].b)||0));
   ps.forEach(([id,pr])=>{
     const li=document.createElement('li');
     const av=document.createElement('span'); av.className='av'; av.appendChild(catNode(safeCat(pr.c),pr.ht));
@@ -2615,24 +2617,18 @@ function renderWait(){
     if(pr.h){ const t=document.createElement('span'); t.className='pill cap'; t.textContent='капитан'; li.appendChild(t); }
     list.appendChild(li);
   });
-  for(let i=0;i<bots;i++){ const li=document.createElement('li'); const av=document.createElement('span'); av.className='av'; av.textContent=BOTS[i][1]; const nm=document.createElement('span'); nm.className='nm'; nm.textContent=BOTS[i][0]; const t=document.createElement('span'); t.className='pill'; t.textContent='бот'; li.appendChild(av); li.appendChild(nm); li.appendChild(t); list.appendChild(li); }
   const humans=ps.length;
-  $('w-host').hidden=!host; $('btn-start').hidden=!host; $('w-start-row').hidden=!host;
-  $('wb-n').textContent=G.mpBots; $('wb-minus').disabled=G.mpBots<=0; $('wb-plus').disabled=humans+G.mpBots>=MAXP||G.mpBots>=BOTS.length;
-  $('w-note').textContent=host?(humans>MAXP?'На борту больше '+MAXP+' котов: лишние будут зрителями.':'Можно начинать в любой момент. Боты добавят пульты и приказы.'):'Ждём, когда капитан нажмёт «Взлететь».';
+  $('btn-start').hidden=!host; $('w-start-row').hidden=!host;
+  $('w-note').textContent=host?(humans>MAXP?'На борту больше '+MAXP+' котов: лишние будут зрителями.':'Можно начинать в любой момент.'):'Ждём, когда капитан нажмёт «Взлететь».';
 }
 function safeCat(c){ return CATS.includes(c)?c:CATS[0]; }
 $('w-copy').onclick=()=>{ const v=$('w-link').value; const fallback=()=>{ $('w-link').select(); toast('Выдели и скопируй ссылку'); }; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(()=>toast('Ссылка скопирована'),fallback); else fallback(); };
-function setBots(n){ G.mpBots=n; if(G.net) G.net.room.child('players/'+G.net.pid+'/b').set(n).catch(()=>{}); renderWait(); }
-$('wb-minus').onclick=()=>setBots(Math.max(0,G.mpBots-1));
-$('wb-plus').onclick=()=>setBots(Math.min(BOTS.length,G.mpBots+1));
 
 function mpStart(){
   if(!G.net||!G.net.host) return; goFull(); ac();
   const pid=G.net.pid;
   const ps=Object.entries(G.net.players).filter(([,p])=>p&&p.n).sort((a,b)=>(b[0]===pid)-(a[0]===pid)||(a[1].t||0)-(b[1].t||0));
   const players=ps.slice(0,MAXP).map(([id,p])=>({id,name:String(p.n).slice(0,16),cat:safeCat(p.c),hat:validHat(p.ht)||'',bot:false}));
-  for(let i=0;i<G.mpBots&&players.length<MAXP;i++) players.push({id:'bot'+i,name:BOTS[i][0],cat:BOTS[i][1],bot:true});
   if(G.host) G.host.stop();
   resetView(); V.myId=pid; show('game');
   const room=G.net.room;
