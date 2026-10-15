@@ -644,6 +644,51 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .bs-sand{position:absolute;inset:0}
 .bs-sand i{position:absolute;top:-10px;width:4px;height:4px;border-radius:50%;background:#f3d18a;animation:bssand 1.4s linear infinite}
 @keyframes bssand{to{transform:translate(-40px,105vh)}}
+.cups{position:relative;height:200px;margin-top:10px;--sp:.4s}
+.cup{position:absolute;bottom:30px;width:92px;height:76px;border:0;padding:0;border-radius:50% 50% 14px 14px/70% 70% 14px 14px;
+  background:radial-gradient(circle at 35% 25%,#ffd0e0,var(--pink) 45%,#a83463);box-shadow:inset 0 -8px 0 rgba(0,0,0,.18),0 8px 10px rgba(0,0,0,.35);
+  transition:left var(--sp) ease-in-out,transform .3s;z-index:2}
+.cup::after{content:"";position:absolute;left:-6px;right:-6px;bottom:-4px;height:12px;border-radius:8px;background:#7d2348}
+.cup.up{transform:translateY(-70px)}
+.cup.hop-u{animation:hopu var(--sp) ease-in-out} .cup.hop-d{animation:hopd var(--sp) ease-in-out}
+@keyframes hopu{50%{transform:translateY(-22px)}} @keyframes hopd{50%{transform:translateY(16px) scale(.96)}}
+.cup:disabled{opacity:1;cursor:default}
+.cup-fish{position:absolute;bottom:34px;width:40px;text-align:center;font-size:34px;line-height:1;z-index:1}
+.jp-room{position:relative;height:250px;border-radius:14px;background:linear-gradient(transparent 85%,#3b2f63 85%);overflow:hidden}
+.jp-shelf{position:absolute;right:56px;top:14px;font-size:64px;line-height:1}
+.jp-cat{position:absolute;left:42%;bottom:12%;font-size:56px;line-height:1;transform:translateX(-50%);transform-origin:bottom center}
+.jp-cat.jp-ok{animation:jpok .55s ease-out forwards}
+@keyframes jpok{60%{transform:translate(60px,-160px) rotate(-10deg)}100%{transform:translate(70px,-150px)}}
+.jp-cat.jp-low{animation:jplow .8s ease-in-out}
+@keyframes jplow{40%{transform:translate(20px,-80px)}100%{transform:translateX(-50%)}}
+.jp-cat.jp-high{animation:jphigh .8s ease-in-out}
+@keyframes jphigh{30%{transform:translate(40px,-210px) rotate(20deg)}100%{transform:translateX(-50%)}}
+.jp-bar{position:absolute;left:14px;top:14px;bottom:14px;width:24px;border-radius:12px;background:var(--void);border:2px solid var(--edge);overflow:hidden}
+.jp-zone{position:absolute;left:0;right:0;background:color-mix(in srgb,var(--mint) 70%,transparent)}
+.jp-mark{position:absolute;left:-2px;right:-2px;height:4px;margin-bottom:-2px;background:var(--cream);box-shadow:0 0 6px #fff}
+.jp-btn,.mk-btn{height:60px;border:0;border-radius:16px;background:var(--tabby);color:var(--ink);font-family:var(--display);font-size:20px;font-weight:900;box-shadow:0 5px 0 #7d3d0e;touch-action:none;user-select:none;-webkit-user-select:none}
+.jp-btn:active,.mk-btn.on{transform:translateY(4px);box-shadow:0 1px 0 #7d3d0e}
+.mk-scene{position:relative;height:230px}
+.mk-jug{position:absolute;left:50%;top:6px;font-size:58px;line-height:1;transform:translateX(-80%) rotate(0deg);transform-origin:bottom right;transition:transform .2s}
+.mk-scene.pour .mk-jug{transform:translateX(-80%) rotate(-55deg)}
+.mk-stream{position:absolute;left:calc(50% - 4px);top:62px;width:8px;height:0;border-radius:4px;background:#f6f3ea;transition:height .15s}
+.mk-scene.pour .mk-stream{height:86px}
+.mk-bowl{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:170px;height:82px;border:5px solid #c9cfda;border-top:0;border-radius:0 0 80px 80px/0 0 70px 70px;overflow:hidden;background:#2b2540}
+.mk-milk{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#ffffff,#ece6d6)}
+.mk-band{position:absolute;left:0;right:0;border-top:2px dashed var(--mint);border-bottom:2px dashed var(--mint);background:color-mix(in srgb,var(--mint) 18%,transparent)}
+.mk-scene.spill .mk-bowl{box-shadow:0 14px 0 -4px #f6f3ea,18px 12px 0 -6px #f6f3ea,-20px 12px 0 -6px #f6f3ea}
+.mm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:4px}
+.mm-grid.six{grid-template-columns:repeat(3,1fr)}
+.mm-card{position:relative;height:96px;border:0;border-radius:14px;background:var(--plate);box-shadow:inset 0 0 0 2px var(--edge);perspective:400px;font-size:40px}
+.mm-card span{position:absolute;inset:0;display:grid;place-items:center;border-radius:14px;backface-visibility:hidden;transition:transform .3s}
+.mm-back{background:repeating-linear-gradient(45deg,#3b2f63 0 8px,#2f2450 8px 16px);font-size:28px;opacity:.8}
+.mm-face{transform:rotateY(180deg);background:#f7e8d3}
+.mm-card.open .mm-back{transform:rotateY(180deg)} .mm-card.open .mm-face{transform:rotateY(0)}
+.mm-card.done .mm-face{background:var(--mint)}
+.log-list{display:flex;flex-direction:column;gap:6px}
+.log-row{display:flex;align-items:center;gap:8px;background:var(--plate);border-radius:10px;padding:6px 6px 6px 10px;font-size:13px;font-weight:700}
+.log-row span{flex:1;min-width:0}
+.log-row button{padding:6px 12px}
 </style>
 </head>
 <body>
@@ -731,7 +776,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
         <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
       </ol>
     </details>
-    <p class="muted" style="text-align:center;font-size:12px">Версия 18.2 · 16:30</p>
+    <p class="muted" id="ver" style="text-align:center;font-size:12px"></p>
   </section>
 
   <!-- SETTINGS -->
@@ -741,6 +786,13 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     </header>
     <div class="card">
       <button class="opt" id="vib-set" role="switch" aria-checked="true"><span><b>Вибрация</b><small>Отклик кнопок, ползунков и событий. На iPhone нужна iOS 18 или новее.</small></span><i class="mini-sw"></i></button>
+    </div>
+    <div class="card">
+      <h2>Логи полётов</h2>
+      <p class="muted">Для настройки баланса: на телефоне капитана записывается всё, что происходило в полёте. Хранятся последние 8 полётов.</p>
+      <p class="muted" id="log-count"></p>
+      <div class="log-list" id="log-list"></div>
+      <div class="row"><button class="primary" id="log-all">Скачать все логи</button><button class="ghost" id="log-clear">Очистить</button></div>
     </div>
     <div class="card">
       <h2>Микрофон</h2>
@@ -857,6 +909,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
       <dl class="fun" id="o-fun"></dl>
     </div>
     <button class="secondary" id="btn-share">📸 Поделиться итогами</button>
+    <button class="secondary" id="btn-log" hidden>📄 Скачать лог полёта</button>
     <button class="primary" id="btn-again">Ещё полёт</button>
     <button class="secondary" id="btn-lobby" hidden>Вернуть экипаж в комнату</button>
     <p class="muted" id="o-wait" hidden>Ждём, когда капитан начнёт новый полёт.</p>
@@ -944,6 +997,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const CATS=['🐱','😼','😸','😻','🙀','😺','🐈','🐈‍⬛','🦁','🐯'];
 const CAT_LVL=[0,0,0,0,2,3,4,5,7,9];
 const SHIPS=[['🚀',0],['🛸',2],['🛰️',4],['🐟',6],['🦄',8]];
+const r1=x=>Math.round((+x||0)*10)/10;
+const GAME_VER='18.6', GAME_BUILD='18:15';
 const STARTS=[1,3,5,7,9];
 // cosmetics bought with fish: [emoji, price]
 const HATS=[['🎀',15],['🧢',25],['⛑️',35],['🎓',50],['🎩',70],['👑',120]];
@@ -960,7 +1015,8 @@ try{ const m=localStorage.getItem('koto-mode'); if(MODES[m]) gameMode=m; }catch(
 const HOLDS=['Игрушка в зубах','Дверь от собаки','Хвост пистолетом','Замереть','Мурчать'];
 // ---- personal tasks: one crew member at a time gets a full-screen chore while the whole ship waits
 const BASTET={n:'Бастет',ic:'🐈‍⬛',o:['Поклоняться']};
-const TASK_TYPES=['phone','tv','table','fridge','keys','boxes'];
+const TASK_TYPES=['phone','tv','table','fridge','keys','boxes','cups','jump','milk','memory'];
+const MEMO_ICONS=['🐟','🧶','🐭','🥛','🪶','🐦'];
 const TV_CH=[['Спорт','⚽'],['Новости','📰'],['Природа','🐦'],['Музыка','🎵']];
 const TABLE_ITEMS=[['🥛','кружка'],['📱','телефон'],['🖊️','ручка'],['🔑','ключи'],['🧦','носок'],['📚','книга'],['🕶️','очки'],['🧸','мишка'],['🍪','печенье']];
 const FRIDGE_ITEMS=[['🥛','Сметана'],['🌭','Колбаса'],['🐟','Рыба'],['🧀','Сыр'],['🍗','Курица'],['🥚','Яйца'],['🧈','Масло'],['🥓','Бекон'],['🍤','Креветки'],['🥩','Мясо']];
@@ -980,6 +1036,19 @@ function makeTask(ty,opt){
   if(ty==='fridge'){ const it=shuffle(FRIDGE_ITEMS.slice()).slice(0,6), t=Math.floor(Math.random()*6);
     return {title:'Достань из холодильника: '+it[t][1],wait:'лезет в холодильник',sec:12,it,t}; }
   if(ty==='keys'){ const w=pick(KEY_WORDS); return {title:'Напечатай на ноутбуке «'+w+'»',wait:'печатает на ноутбуке',sec:14,w}; }
+  const r=Math.max(5,opt.r||5);
+  if(ty==='cups'){
+    // the further the ship, the more and the faster the swaps
+    const n=Math.min(8,4+Math.floor((r-5)*.6)), sp=Math.max(.28,.45-.03*(r-5)), sw=[];
+    for(let i=0;i<n;i++){ const a=Math.floor(Math.random()*3); let b; do{ b=Math.floor(Math.random()*3); }while(b===a); sw.push([a,b]); }
+    return {title:'Напёрстки: следи, под какой миской рыба',wait:'играет в напёрстки',sec:Math.ceil(1.6+n*sp+5),fish:Math.floor(Math.random()*3),sw,sp};
+  }
+  if(ty==='jump'){ const w=Math.max(.14,.26-.02*(r-5)), lo=rnd(.45,.86-w);
+    return {title:'Запрыгни на шкаф: жми, когда сила в зелёной зоне',wait:'прыгает на шкаф',sec:10,lo,hi:lo+w,per:Math.max(1,1.5-.06*(r-5))}; }
+  if(ty==='milk'){ const w=Math.max(.1,.16-.01*(r-5)), lo=rnd(.45,.8-w);
+    return {title:'Налей молоко до черты: держи, чтобы лить',wait:'наливает молоко',sec:11,lo,hi:lo+w}; }
+  if(ty==='memory'){ const pairs=r>=8?3:2, ic=shuffle(MEMO_ICONS.slice()).slice(0,pairs), cards=shuffle(ic.concat(ic));
+    return {title:'Мемори: найди все пары',wait:'играет в мемори',sec:pairs===3?18:13,cards}; }
   // boxes: one too small, one just right, one far too big
   return {title:'Залезь в самую маленькую коробку, в которую поместишься',wait:'выбирает коробку',sec:11,ord:shuffle(['s','m','l'])};
 }
@@ -987,6 +1056,10 @@ function makeTask(ty,opt){
 // ctl = test panel, on = indexes of controls that get orders, ok(base) = passed? (this = Host)
 const T_BTN={t:'b',n:'Мурчатель'}, T_TGL={t:'t',n:'Зевательный компенсатор'}, T_ACT={t:'a',n:'Лапка-манипулятор',o:['Погладить','Почесать']}, T_DIAL={t:'d',n:'Тунцовый реактор',o:['Тунец','Курица','Лосось']};
 const T_FOUR=[T_BTN,T_TGL,T_ACT,T_DIAL];
+// a full late-game panel (7 controls) and an oversized one (14 controls) that has to split into pages
+const T_SEVEN=[T_BTN,T_TGL,T_ACT,T_DIAL,{t:'s',n:'Дремотный модуль',m:4},{t:'h',n:'Мурчать',hd:1},{t:'x',n:'Гравимурр'}];
+const T_MANY=T_SEVEN.concat([{t:'r',n:'Шерсть на одежде',m:5},{t:'a',n:'Фикус',o:['Погрызть','Уронить']},{t:'a',n:'Злая рука',o:['КУСЬ']},{t:'t',n:'Кошачья мята'},
+  {t:'d',n:'Колбасный навигатор',o:['Утро','Ночь','3:00']},{t:'b',n:'Тапочный детектор'},{t:'a',n:'Окно',o:['Смотреть']}]);
 const okOrders=n=>function(b){ return (this.okc.me||0)-b.ok>=n; };
 const TSTEPS=[
   {n:'Круглая кнопка',h:'Нажми кнопку из приказа, 2 раза.',ctl:[T_BTN,T_TGL],on:[0],ok:okOrders(2)},
@@ -1001,6 +1074,8 @@ const TSTEPS=[
   {n:'Вылизывание',h:'Вылижи то, что сказано, 2 раза.',ctl:[{t:'a',n:'Вылизывание',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',w:1},T_BTN,T_TGL],on:[0],ok:okOrders(2)},
   {n:'Удержание',h:'Держи кнопку, пока кольцо не заполнится. Отпустишь раньше — не засчитается, но и не ошибка.',ctl:[{t:'h',n:'Дверь от собаки',hd:1.5},T_TGL],on:[0],ok:okOrders(2)},
   {n:'Двойной тап',h:'Нажми кнопку «×2» дважды быстро. Одно нажатие ничего не делает.',ctl:[{t:'x',n:'Гравимурр'},T_TGL],on:[0],ok:okOrders(2)},
+  {n:'Полный пульт: 1 страница',h:'7 приборов, как на поздних секторах. Все должны влезть на экран без листания. Выполни 3 приказа.',ctl:T_SEVEN,on:[6,4,1,5,0,3,2],ok:okOrders(3)},
+  {n:'Огромный пульт: страницы',h:'14 приборов не влезут на один экран: внизу кнопки ‹ ›. Приказы будут на разных страницах, листай. Выполни 4 приказа.',ctl:T_MANY,on:[13,0,10,7,3,11],ok:okOrders(4)},
   {n:'Лишнее нажатие',h:'Приказа нет. Нажми любую кнопку: должно появиться предупреждение о лишнем действии.',ctl:[T_BTN,T_TGL],on:[],ok:function(b){ return (this.wrc.me||0)>b.wr; }},
   {n:'Комбо',h:'Выполни 5 приказов подряд без ошибок.',ctl:T_FOUR,on:[0,1,2,3],ok:function(){ return this.combo>=5; }},
   {n:'Лазерная точка',h:'Поймай красную точку.',go:function(now){ this.dot={k:++this.dotK,x:rnd(.2,.8),y:rnd(.3,.75),until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.dot>b.dot; }},
@@ -1020,6 +1095,10 @@ const TSTEPS=[
   {n:'Личное дело: стол',h:'Смахни пальцем вбок всё, кроме вазы. Можно специально уронить вазу и проверить провал.',go:function(){ this.startTask('table'); },ok:function(b){ return this.fun.task>b.task; }},
   {n:'Личное дело: холодильник',h:'Открой дверцу, потянув влево, и возьми нужный продукт.',go:function(){ this.startTask('fridge'); },ok:function(b){ return this.fun.task>b.task; }},
   {n:'Личное дело: ноутбук',h:'Напечатай слово по буквам.',go:function(){ this.startTask('keys'); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: напёрстки',h:'Следи за миской с рыбой и тапни по ней. Попытка одна; при промахе дело начнётся заново.',go:function(){ this.startTask('cups',{r:7}); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: прыжок на шкаф',h:'Жми «Прыжок!», когда белая черта в зелёной зоне.',go:function(){ this.startTask('jump'); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: молоко',h:'Держи кнопку, чтобы лить, отпусти внутри зелёной полосы.',go:function(){ this.startTask('milk'); },ok:function(b){ return this.fun.task>b.task; }},
+  {n:'Личное дело: мемори',h:'Открывай по две карточки и найди все пары.',go:function(){ this.startTask('memory',{r:8}); },ok:function(b){ return this.fun.task>b.task; }},
   {n:'Личное дело: коробки',h:'Перетащи кота в самую маленькую коробку, куда он влезет.',go:function(){ this.startTask('boxes'); },ok:function(b){ return this.fun.task>b.task; }},
   {n:'Иконки',h:'Приборы показаны эмодзи. Выполни 2 приказа.',ctl:[{t:'b',n:'Мышиный трекер',ic:'🐭'},{t:'t',n:'Кошачья мята',ic:'🪴'},{t:'a',n:'Вылизывание',ic:'👅',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',txi:'👅 {o}',w:1}],on:[0,1,2],ok:okOrders(2)},
   {n:'Иконки в режимах',h:'Варианты переключателя тоже эмодзи. Выполни 2 приказа.',ctl:[{t:'d',n:'Миска с невесомостью',o:['🐟','🍗','🦃','🥛']},T_BTN],on:[0],ok:okOrders(2)},
@@ -1101,6 +1180,7 @@ try{ const s=JSON.parse(localStorage.getItem('koto-me')||'null'); if(s){ me.name
 if(!me.name) me.name=pick(['Капитан Мур','Штурман Лапка','Кот Бортинженер','Усатый пилот']);
 function saveMe(){ try{ localStorage.setItem('koto-me',JSON.stringify(me)); }catch(e){} }
 $('nick').value=me.name;
+$('ver').textContent='Версия '+GAME_VER+' · '+GAME_BUILD;
 const isTester=()=>me.name.trim().toLowerCase()==='тестер';
 function syncTester(){ const c=document.getElementById('tester-card'); if(c) c.hidden=!isTester(); }
 $('nick').addEventListener('input',e=>{ me.name=e.target.value.trim().slice(0,16)||'Котик'; saveMe(); syncTester(); });
@@ -1198,10 +1278,34 @@ class Host{
     this.round=Math.max(0,(opts.start||1)-1); this.pos=50; this.fire=0; this.lastT=Date.now(); this.stats={ok:0,bad:0};
     this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.taskK=0; this.taskTurn=0; this.task=null; this.tres=null; this.fun={task:0,taskBad:0,drop:0,chew:0,lick:0,vac:0,dot:0,shout:0,lit:0,flea:0,leak:0,leaks:0,mic:0,shuf:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.lit=null; this.litK=0; this.flea=null; this.fleaK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
     this.dead=false; this.startR=this.round+1;
+    // flight log for balancing: [ms since start, type, data]
+    this.log=[]; this.t0real=Date.now(); this.evOn={}; this.lastSnap=0; this.logSaved=false;
+    this.L('meta',{ver:GAME_VER,mode:this.mode,dbg:this.dbg?1:0,start:this.startR,players:this.pl.map(p=>({id:p.id,name:p.name,bot:p.bot?1:0}))});
     if(this.dbg) this.dbgInit(); else this.nextRound();
     this.iv=setInterval(()=>this.step(),150);
   }
-  stop(){ this.dead=true; clearInterval(this.iv); }
+  stop(){ if(!this.dead&&!this.logSaved&&this.log){ this.L('quit',{round:this.round,pos:r1(this.pos),fire:r1(this.fire)}); this.saveLog('quit'); } this.dead=true; clearInterval(this.iv); }
+  L(t,d){ if(this.log&&this.log.length<20000) this.log.push([Date.now()-this.t0real,t,d||0]); }
+  saveLog(reason){
+    if(this.logSaved) return; this.logSaved=true;
+    const st=this.stats||{};
+    const rec={ver:GAME_VER,date:new Date(this.t0real).toISOString(),mode:this.mode,dbg:this.dbg?1:0,reason,startSector:this.startR,endSector:this.round,
+      durationMs:Date.now()-this.t0real,players:this.pl.map(p=>({id:p.id,name:p.name,bot:p.bot?1:0})),
+      device:{ua:navigator.userAgent,w:innerWidth,h:innerHeight,dpr:devicePixelRatio||1},
+      summary:{ok:st.ok||0,missed:st.bad||0,wrong:st.wrong||0,maxCombo:this.maxCombo,fun:this.fun,
+        perPlayer:this.pl.map(p=>({id:p.id,name:p.name,ok:this.doneBy[p.id]||0,wrong:this.wrc[p.id]||0,missed:this.badc[p.id]||0,leakTouches:this.leakTouch[p.id]||0}))},
+      events:this.log};
+    storeLog(rec);
+  }
+  // shared hazards and personal tasks: log when they appear and how they end
+  trackEvents(){
+    const now=Date.now(), cnt={dot:'dot',vac:'vac',lit:'lit',flea:'flea',mic:'mic',leak:'leak',task:'task'};
+    for(const n in cnt){
+      const on=this[n], c=this.fun[cnt[n]]||0;
+      if(on&&!this.evOn[n]){ this.evOn[n]={t:now,c}; this.L('ev+',n==='task'?{e:'task',ty:on.ty,p:on.p,sec:on.d.sec}:{e:n}); }
+      else if(!on&&this.evOn[n]){ const s0=this.evOn[n]; delete this.evOn[n]; this.L('ev-',{e:n,ok:c>s0.c?1:0,ms:now-s0.t}); }
+    }
+  }
   player(id){ return this.pl.find(p=>p.id===id); }
   nextRound(){
     const now=Date.now();
@@ -1218,6 +1322,9 @@ class Host{
     // pause before the next order shrinks with every sector so late sectors can still be outrun
     this.gapOk=Math.max(120,600-50*(this.round-1)); this.gapBad=Math.max(300,700-40*(this.round-1));
     this.genPanels();
+    if(this.log){ if(this.secT) this.L('sec-',{round:this.round-1,ms:Date.now()-this.secT}); this.secT=0;
+      this.L('sec+',{round:this.round,goal:this.goal,orderMs:Math.round(this.dur),creep:Math.round(this.creep*100)/100,stepU:r1(this.stepU),gapOk:this.gapOk,gapBad:this.gapBad,
+        panels:Object.fromEntries(Object.entries(this.panels).map(([pid,arr])=>[pid,arr.map(c=>c.t+(c.m!=null?c.m:'')).join(' ')]))}); }
     this.pl.forEach(p=>{ if(!p.bot) this.sendPanels(p.id); });
     this.emit();
   }
@@ -1261,6 +1368,7 @@ class Host{
   }
   // "the cat walked over the panels": controls swap places, and a couple hop to another crew member's panel
   shufflePanels(){
+    this.L('ev',{e:'shuffle'});
     const ids=this.pl.map(p=>p.id).filter(id=>this.panels[id]&&this.panels[id].length);
     const moves=ids.length>1?Math.min(2,ids.length-1):0;
     for(let n=0;n<moves;n++){
@@ -1284,11 +1392,15 @@ class Host{
     const srcBot=(this.player(pid)||{}).bot;
     let pool=srcBot&&own.length?own:(others.length&&(Math.random()<.72||!own.length))?others:own;
     if(!pool.length) pool=all; if(!pool.length) return;
+    this.recent=this.recent||{}; const rec=this.recent[pid]||[];
+    const fresh=pool.filter(c=>!rec.includes(c.id)); if(fresh.length) pool=fresh;
     const c=pick(pool), {target,text,parts}=this.buildInstr(c);
+    this.recent[pid]=rec.concat(c.id).slice(all.length>=5?-2:-1);
     const i={cid:c.id,target,text,parts,start:now,dur:this.dur,shouted:false,owner:c.owner};
     const src=this.player(pid);
     if(src&&src.bot&&c.owner!==pid) i.shoutAt=now+rnd(700,1900);
     this.instr[pid]=i;
+    this.L('o',{p:pid,c:c.id,t:c.t,own:c.owner===pid?1:0,x:text,d:Math.round(this.dur)});
   }
   buildInstr(c){
     const cur=this.val[c.id]; let target, text;
@@ -1325,10 +1437,11 @@ class Host{
     let hit=false;
     for(const k of Object.keys(this.instr)){ const i=this.instr[k]; if(i&&i.cid===cid&&i.target===val){
       if(!hit){ this.doneBy[pid]=(this.doneBy[pid]||0)+1; const opt=c.t==='a'?c.o[val]:''; if(opt==='Уронить') this.fun.drop++; else if(opt==='Погрызть') this.fun.chew++; else if(c.tx) this.fun.lick++; }
+      this.L('ok',{p:k,by:pid,c:cid,ms:Date.now()-i.start});
       hit=true; this.complete(k); if(this.phase!=='play') return; } }
     if(!hit){
       // an action nobody asked for pushes the ship back toward the fire
-      this.wrc[pid]=(this.wrc[pid]||0)+1; this.stats.wrong=(this.stats.wrong||0)+1;
+      this.wrc[pid]=(this.wrc[pid]||0)+1; this.stats.wrong=(this.stats.wrong||0)+1; this.L('wr',{p:pid,c:cid,t:c.t});
       this.damage(this.M.wrong);
     }
   }
@@ -1338,11 +1451,13 @@ class Host{
     this.combo++; this.maxCombo=Math.max(this.maxCombo,this.combo);
     if(this.dbg){ if(this.combo%5===0) this.addFeed(null,'Комбо ×'+this.combo+'!'); return; }
     let gain=this.stepU;
+    if(this.combo%5===0) this.L('combo',{n:this.combo});
     if(this.combo%5===0&&this.M.combo){ gain+=this.stepU*.6; this.addFeed(null,'Комбо ×'+this.combo+'! Корабль рванул вперёд'); }
     this.pos=Math.min(100,this.pos+gain);
     if(this.pos>=100) this.nextRound();
   }
   damage(mult){
+    this.L('dmg',{m:Math.round(mult*100)/100,pos:r1(this.pos),fire:r1(this.fire)});
     this.combo=0; if(this.dbg) return;
     this.pos=Math.max(0,this.pos-this.stepU*mult);
     this.checkCaught();
@@ -1383,17 +1498,19 @@ class Host{
       ['Минут сна в лотке',String(R(5,90))],
       ['Носков украдено',String(R(1,7))]
     ];
+    this.L('end',{round:this.round,ok:st.ok,missed:st.bad,wrong:st.wrong||0,secs:st.time}); if(this.secT) this.L('sec-',{round:this.round,ms:Date.now()-this.secT,lost:1}); this.saveLog('over');
     st.fun=shuffle(real).slice(0,3).concat(shuffle(fake).slice(0,6-Math.min(3,real.length)));
   }
   toBot(pid){
     const p=this.player(pid); if(!p||p.bot) return;
-    p.bot=true; p.name=p.name+' (автопилот)';
+    p.bot=true; p.name=p.name+' (автопилот)'; this.L('left',{p:pid});
     this.addFeed(null,p.name.replace(' (автопилот)','')+' ушёл, его пульт на автопилоте');
     const i=this.instr[pid]; if(i&&i.owner!==pid&&!i.shouted) i.shoutAt=Date.now()+400;
   }
   act(pid,a){
     if(!a||typeof a!=='object'||!this.player(pid)) return;
     if(a.type==='need'){ this.sendPanels(pid); return; }
+    if(a.type==='clog'){ this.L('c',{p:pid,e:String(a.e||'').slice(0,16),ms:Math.max(0,Math.min(600000,+a.ms||0)),k:a.k?String(a.k).slice(0,8):undefined}); return; }
     if(this.dbg&&this.T){ if(a.type==='dbg'){ if(this.paused) return; this.dbgGo(this.T.i+(a.go<0?-1:1)); this.emit(); return; } if(a.type==='fixdone') this.T.fixOk=true; if(a.type==='hairdone') this.T.hairOk=true; }
     if(a.type==='pause'){ if(this.phase!=='over') this.setPause(!!a.on); this.emit(); return; }
     if(this.paused) return;
@@ -1432,6 +1549,7 @@ class Host{
   setPause(on){
     if(on===!!this.paused) return;
     if(this.dbg&&this.T){ if(on) this.T.sawPause=true; else if(this.T.sawPause) this.T.resumed=true; }
+    this.L('pause',{on:on?1:0});
     if(on){ this.paused=true; this.pausedAt=Date.now(); return; }
     const d=Date.now()-this.pausedAt; this.paused=false;
     this.shiftAll(d);
@@ -1444,7 +1562,7 @@ class Host{
     if(this.phase==='between'){
       if(!isFinite(this.until)&&this.pl.filter(p=>!p.bot).every(p=>this.ready[p.id])) this.until=now+this.btDur;
       if(now>=this.until){
-        this.phase='play'; this.lastT=now;
+        this.phase='play'; this.lastT=now; this.secT=now; this.L('play',{round:this.round});
         this.pl.forEach(p=>this.pending[p.id]=now+rnd(150,1400));
         // event timers carry over between sectors, so short sectors don't keep pushing them back
         const soon=(t,a,b)=>(t===undefined||t===Infinity)?now+rnd(a,b):Math.max(t,now+rnd(2500,5000));
@@ -1456,7 +1574,8 @@ class Host{
         this.nextLeak=this.round>=8?soon(this.nextLeak,4000,9000):Infinity;
         this.nextFlea=this.round>=9?soon(this.nextFlea,3000,8000):Infinity;
         this.nextMic=this.round>=11?soon(this.nextMic,3000,8000):Infinity;
-        this.taskAt=this.round>=5?now+rnd(5000,14000):Infinity;
+        this.tasksLeft=this.round>=7?2:this.round>=5?1:0;
+        this.taskAt=this.tasksLeft?now+rnd(5000,14000):Infinity;
       }
       this.emit(); return;
     }
@@ -1487,7 +1606,7 @@ class Host{
     for(const pid of Object.keys(this.instr)){
       const i=this.instr[pid]; if(!i) continue;
       if(now>i.start+i.dur){
-        this.instr[pid]=null; this.badc[pid]=(this.badc[pid]||0)+1; this.stats.bad++;
+        this.L('to',{p:pid,c:i.cid,t:(this.ctrl[i.cid]||{}).t}); this.instr[pid]=null; this.badc[pid]=(this.badc[pid]||0)+1; this.stats.bad++;
         this.pending[pid]=now+(this.gapBad||700); this.lastRes[pid]='fail'; this.damage(this.M.fail);
         if(this.phase==='over'){ this.emit(); return; }
       }
@@ -1572,14 +1691,14 @@ class Host{
     // personal task, once per sector, when no shared hazard is on
     if(now>=this.taskAt){
       if(this.busy()) this.taskAt=now+2000;
-      else { this.taskAt=Infinity; this.startTask(); this.emit(); return; }
+      else { this.taskAt=Infinity; this.tasksLeft=Math.max(0,(this.tasksLeft||1)-1); this.startTask(); this.emit(); return; }
     }
     // the cat walks over everyone's panels
     if(now>=this.nextShuf){ this.fun.shuf++; this.shufflePanels(); this.nextShuf=now+rnd(22000,36000); }
     // hairball
     if(now>=this.nextHair){
       const humans=this.pl.filter(p=>!p.bot);
-      if(humans.length){ this.hair={p:pick(humans).id,id:++this.hairId}; }
+      if(humans.length){ this.hair={p:pick(humans).id,id:++this.hairId}; this.L('ev',{e:'hair',p:this.hair.p}); }
       this.nextHair=now+rnd(16000,32000);
     }
     this.emit();
@@ -1588,12 +1707,13 @@ class Host{
     const humans=this.pl.filter(p=>!p.bot); if(!humans.length) return;
     const p=humans[this.taskTurn%humans.length]; this.taskTurn++;          // crew members take turns
     ty=ty||pick(TASK_TYPES.filter(x=>x!==this.lastTaskTy)); this.lastTaskTy=ty;
-    const d=makeTask(ty,opt), now=Date.now();
+    const d=makeTask(ty,Object.assign({r:this.round},opt||{})), now=Date.now();
     this.task={k:++this.taskK,p:p.id,ty,d,at:now,until:this.dbg?Infinity:now+d.sec*1000};
   }
   endTask(ok){
     const T=this.task; if(!T) return; const now=Date.now();
     this.task=null; this.shiftAll(now-T.at); this.lastT=now;
+    if(this.tasksLeft>0&&!this.dbg) this.taskAt=now+rnd(8000,15000);
     this.tres={k:T.k,ok:ok?1:0,p:T.p};
     const p=this.player(T.p), nm=p?p.name:'Кто-то';
     if(ok){ this.fun.task++; this.addFeed(null,nm+' справился с личным делом!');
@@ -1616,8 +1736,9 @@ class Host{
   dbgOrder(){
     const st=TSTEPS[this.T.i], arr=(this.panels.me||[]); if(!st||!st.on||!st.on.length||!arr.length) return;
     // orders go to the tested controls, found by name because the cat may have shuffled them
-    const want=st.on.map(k=>st.ctl[k].n), pool=arr.filter(c=>want.includes(c.n)); if(!pool.length) return;
-    const c=pool[(this.T.oi++)%pool.length], b=this.buildInstr(c);
+    const want=st.on.map(k=>st.ctl[k].n).filter(n=>arr.some(c=>c.n===n)); if(!want.length) return;
+    const name=want[(this.T.oi++)%want.length], c=arr.find(x=>x.n===name); if(!c) return;
+    const b=this.buildInstr(c);
     this.instr.me={cid:c.id,target:b.target,text:b.text,parts:b.parts,start:Date.now(),dur:this.dur,shouted:false,owner:'me'};
   }
   dbgCmd(c){ this.T.cmd={k:++this.T.cmdK,c}; }
@@ -1662,7 +1783,11 @@ class Host{
       hair:this.hair, jk:this.phase==='between'?this.joke:-1, cb:this.combo, sh:this.ship, ok:this.okc, bad:this.badc, wr:this.wrc, st:this.stats
     };
   }
-  emit(){ if(!this.dead) this.out.tick(this.state()); }
+  emit(){
+    if(this.dead) return;
+    if(this.log){ this.trackEvents(); const now=Date.now(); if(this.phase==='play'&&!this.paused&&now-this.lastSnap>=2000){ this.lastSnap=now; this.L('s',{pos:r1(this.pos),fire:r1(this.fire),combo:this.combo}); } }
+    this.out.tick(this.state());
+  }
 }
 
 /* =========================================================
@@ -1782,12 +1907,38 @@ function panelRows(){
   V.ctrls.forEach(c=>{ const wide='sdr'.includes(c.t)||c.w; if(wide) rows.push([c.id]); else if(half){ half.push(c.id); half=null; } else { half=[c.id]; rows.push(half); } });
   return rows;
 }
+// the part of the screen really visible: some phones report a taller layout than they show
+function visBottom(){
+  let h=innerHeight;
+  const ch=document.documentElement.clientHeight; if(ch>0) h=Math.min(h,ch);
+  const vv=window.visualViewport; if(vv&&vv.height>0) h=Math.min(h,vv.height+(vv.offsetTop||0));
+  if(screen&&screen.height>200) h=Math.min(h,screen.height);
+  return h;
+}
+function belowPanel(){
+  let below=8;
+  for(let el=$('panel').nextElementSibling; el; el=el.nextElementSibling){ if(el.offsetParent!==null) below+=el.offsetHeight+8; }
+  return below;
+}
 function panelSpace(){
   const box=$('panel'); box.style.setProperty('--pmax','none');
-  // the panel takes the free height; as a fallback also measure up to the bottom of the screen
-  let below=10;
-  for(let el=box.nextElementSibling; el; el=el.nextElementSibling){ if(el.offsetParent!==null) below+=el.offsetHeight+PGAP; }
-  return Math.max(0,Math.min(box.clientHeight,innerHeight-box.getBoundingClientRect().top-below));
+  // the panel takes the free height, but never more than what is left down to the visible bottom of the screen
+  return Math.max(0,Math.min(box.clientHeight,visBottom()-box.getBoundingClientRect().top-belowPanel()));
+}
+function splitPages(rows,per){
+  per=Math.max(1,per);
+  per=Math.ceil(rows.length/Math.ceil(rows.length/per));   // spread rows evenly: 5 rows → 3+2, not 4+1
+  const pages=[]; for(let i=0;i<rows.length;i+=per) pages.push(rows.slice(i,i+per));
+  V.pages=pages; V.page=Math.max(0,Math.min(V.page||0,pages.length-1));
+  $('pager').hidden=pages.length<2;
+  showPage();
+  return per;
+}
+function panelOverflows(){
+  const lim=visBottom()-2; let bottom=0;
+  document.querySelectorAll('#panel .ctl').forEach(e=>{ if(!e.hidden) bottom=Math.max(bottom,e.getBoundingClientRect().bottom); });
+  const pg=$('pager'); if(!pg.hidden) bottom=Math.max(bottom,pg.getBoundingClientRect().bottom);
+  return bottom>lim;
 }
 function layoutPages(){
   const bar=$('pager');
@@ -1796,17 +1947,19 @@ function layoutPages(){
   // a narrow control left alone in its row stretches across, so the plates always close up edge to edge
   rows.forEach(r=>r.forEach(id=>{ const el=V.els[id]; if(el) el.outer.classList.toggle('span2',r.length===1&&!el.outer.classList.contains('wide')); }));
   bar.hidden=true;
-  let per=Math.max(1,Math.floor((panelSpace()+PGAP)/(MINROW+PGAP)));
-  if(rows.length>per){ bar.hidden=false; per=Math.max(1,Math.floor((panelSpace()+PGAP)/(MINROW+PGAP))); }
-  per=Math.ceil(rows.length/Math.ceil(rows.length/per));   // spread rows evenly: 5 rows → 3+2, not 4+1
-  const pages=[]; for(let i=0;i<rows.length;i+=per) pages.push(rows.slice(i,i+per));
-  V.pages=pages; V.page=Math.max(0,Math.min(V.page||0,pages.length-1));
-  showPage();
+  let per=Math.floor((panelSpace()+PGAP)/(MINROW+PGAP));
+  if(rows.length>per){ bar.hidden=false; per=Math.floor((panelSpace()+PGAP)/(MINROW+PGAP)); }
+  per=splitPages(rows,per);
+  // safety net: whatever the phone reports, if the plates still run off the screen, take a row off each page
+  for(let i=0;i<8&&per>1&&panelOverflows();i++) per=splitPages(rows,per-1);
 }
 function showPage(){
   const box=$('panel'), pg=(V.pages||[])[V.page]||[], ids=new Set(pg.flat());
   for(const id in V.els) V.els[id].outer.hidden=!ids.has(id);
-  const n=Math.max(1,pg.length); box.style.setProperty('--pmax',(n*MAXROW+(n-1)*PGAP)+'px');
+  const n=Math.max(1,pg.length);
+  box.style.setProperty('--pmax','none');
+  const room=visBottom()-box.getBoundingClientRect().top-belowPanel();
+  box.style.setProperty('--pmax',Math.max(n*MINROW,Math.min(n*MAXROW+(n-1)*PGAP,room))+'px');
   const total=(V.pages||[]).length;
   $('pg-t').textContent='Страница '+(V.page+1)+' из '+total;
   const dots=$('pg-dots'); dots.textContent='';
@@ -1892,7 +2045,7 @@ V.onTick=function(s){
   const ins=s.ins&&s.ins[V.myId];
   renderOrder(s,ins,inGame);
   // re-split the panel into pages whenever the free space changes (rotation, feed shown/hidden, order slip height)
-  { const p=$('panel'), key=innerHeight+'|'+Math.round(p.getBoundingClientRect().top)+'|'+V.ctrls.length;
+  { const p=$('panel'), key=visBottom()+'|'+Math.round(p.getBoundingClientRect().top)+'|'+V.ctrls.length;
     if(key!==V.pgKey){ V.pgKey=key; layoutPages(); } }
   renderTester(s);
   // flashes
@@ -1952,7 +2105,7 @@ V.onTick=function(s){
     $('leak-n').textContent=Math.max(1,Math.ceil((+lk.rem||0)/1000));
   } else $('leak-layer').hidden=true;
   // hairball
-  if(s.hair&&s.hair.p===V.myId&&s.hair.id>V.hairSeen){ V.hairSeen=s.hair.id; V.hairLeft=4; $('fur-n').textContent='Тапни 4 раза'; $('fur').hidden=false; }
+  if(s.hair&&s.hair.p===V.myId&&s.hair.id>V.hairSeen){ V.hairSeen=s.hair.id; V.hairLeft=4; V.hairT=performance.now(); $('fur-n').textContent='Тапни 4 раза'; $('fur').hidden=false; }
 };
 function renderTester(s){
   const bar=$('dbg-bar'), t=s.dbg&&s.tst; bar.hidden=!t; if(!t) return;
@@ -1992,7 +2145,8 @@ function breakCtl(){
   // centre of mass relative to the bolt, in the panel's own coordinates
   const w=o.offsetWidth||160, h=o.offsetHeight||100, cx=(side==='l'?1:-1)*Math.max(10,w/2-14), cy=Math.max(10,h/2-14);
   const com=Math.atan2(cy,cx), eq=Math.PI/2-com;               // it comes to rest with its centre right below the bolt
-  const B={id:el.c.id,th:eq*.25,om:0,drag:false,raf:0,last:performance.now(),a0:0,dl:0,dragT:0};
+  V.act({type:'clog',e:'break'});
+  const B={t0:performance.now(),id:el.c.id,th:eq*.25,om:0,drag:false,raf:0,last:performance.now(),a0:0,dl:0,dragT:0};
   V.broken=B;
   o.classList.add('broken','hang-'+side); $('panel').classList.add('has-broken');
   const pivot=document.createElement('i'); pivot.className='pivot'; o.appendChild(pivot);
@@ -2013,7 +2167,7 @@ function breakCtl(){
     lastStep=step;
   };
   const done=()=>{
-    if(V.broken!==B) return; stop(); V.act({type:'fixdone'});
+    if(V.broken!==B) return; stop(); V.act({type:'fixdone'}); V.act({type:'clog',e:'fix',ms:Math.round(performance.now()-B.t0)});
     inner.style.transform=''; o.classList.remove('broken','hang-l','hang-r'); $('panel').classList.remove('has-broken'); fix.remove(); pivot.remove();
     SFX.ok(); buzz(40)
     o.classList.add('snap'); setTimeout(()=>o.classList.remove('snap'),400);
@@ -2081,7 +2235,7 @@ function openTask(t){
   const d=t.d||{}, body=$('task-body'); body.textContent=''; body.className='task-body tb-'+t.ty;
   $('task-title').textContent=d.title||''; taskMsg('');
   $('task-layer').hidden=false; tone(660,880,.12,'triangle',.08); buzz([30,40,30]);
-  ({phone:taskPhone,tv:taskTv,table:taskTable,fridge:taskFridge,keys:taskKeys,boxes:taskBoxes})[t.ty](d,body);
+  ({phone:taskPhone,tv:taskTv,table:taskTable,fridge:taskFridge,keys:taskKeys,boxes:taskBoxes,cups:taskCups,jump:taskJump,milk:taskMilk,memory:taskMemory})[t.ty](d,body);
 }
 // phone: dial the number from the sticker, press the green handset
 function taskPhone(d,body){
@@ -2175,6 +2329,93 @@ function taskKeys(d,body){
     kb.appendChild(r); });
   paint();
 }
+// thimbles: a fish hides under one of three bowls, the bowls shuffle, one guess
+function taskCups(d,body){
+  const k=TK.k, wrap=el('div','cups'); body.appendChild(wrap);
+  const fish=el('div','cup-fish','🐟'); wrap.appendChild(fish);
+  const cups=[0,1,2].map(i=>{ const c=el('button','cup'); c.type='button'; c.disabled=true; c.setAttribute('aria-label','Миска '+(i+1)); wrap.appendChild(c); return {el:c,pos:i}; });
+  const fishCup=cups[d.fish];
+  const at=(c,p)=>{ c.pos=p; c.el.style.left='calc('+(p*33.333)+'% + 16.666% - 46px)'; };
+  cups.forEach(c=>at(c,c.pos));
+  const putFish=()=>{ fish.style.left='calc('+(fishCup.pos*33.333)+'% + 16.666% - 20px)'; };
+  putFish(); fishCup.el.classList.add('up'); taskMsg('Запоминай, где рыба!');
+  const alive=()=>TK.k===k&&!TK.done;
+  setTimeout(()=>{ if(!alive()) return; fishCup.el.classList.remove('up'); taskMsg('Следи!'); tone(300,200,.1,'triangle',.06);
+    let i=0; const ms=d.sp*1000;
+    wrap.style.setProperty('--sp',(d.sp*.92)+'s');
+    const step=()=>{ if(!alive()) return;
+      if(i>=d.sw.length){ fish.style.opacity='0'; putFish(); fish.style.opacity=''; cups.forEach(c=>c.el.disabled=false); taskMsg('Где рыба? Тапни по миске'); return; }
+      const [a,b]=d.sw[i++], ca=cups.find(c=>c.pos===a), cb=cups.find(c=>c.pos===b);
+      ca.el.classList.add('hop-u'); cb.el.classList.add('hop-d'); at(ca,b); at(cb,a); tone(500+i*30,420,.05,'square',.03);
+      setTimeout(()=>{ ca.el.classList.remove('hop-u'); cb.el.classList.remove('hop-d'); step(); },ms);
+    };
+    setTimeout(step,250);
+  },1100);
+  cups.forEach(c=>c.el.addEventListener('click',()=>{
+    if(!alive()) return; cups.forEach(x=>x.el.disabled=true); buzz(14);
+    putFish(); c.el.classList.add('up');
+    if(c===fishCup) taskFinish(true,'Рыба найдена! Мур!');
+    else { setTimeout(()=>fishCup.el.classList.add('up'),350); taskFinish(false,'Мимо! Рыба была под другой миской'); }
+  }));
+}
+// jump on the wardrobe: tap while the power bar is in the green zone
+function taskJump(d,body){
+  const k=TK.k, room=el('div','jp-room'), shelf=el('div','jp-shelf'), cat=el('div','jp-cat','🐈'), bar=el('div','jp-bar'), zone=el('i','jp-zone'), mark=el('b','jp-mark');
+  shelf.appendChild(el('span','','🗄️')); room.appendChild(shelf); room.appendChild(cat); bar.appendChild(zone); bar.appendChild(mark); room.appendChild(bar); body.appendChild(room);
+  zone.style.bottom=(d.lo*100)+'%'; zone.style.height=((d.hi-d.lo)*100)+'%';
+  const btn=el('button','jp-btn','Прыжок!'); btn.type='button'; body.appendChild(btn);
+  let t0=performance.now(), raf=0, busy=false, v=0;
+  const loop=now=>{ if(TK.k!==k||TK.done) return; if(!busy&&!(V.s&&V.s.pz)){ const ph=((now-t0)/1000/d.per)%2; v=ph<1?ph:2-ph; mark.style.bottom=(v*100)+'%'; cat.style.transform='translateX(-50%) scaleY('+(1-v*.25)+')'; } raf=requestAnimationFrame(loop); };
+  raf=requestAnimationFrame(loop);
+  btn.addEventListener('click',()=>{
+    if(busy||TK.done) return; busy=true; buzz(16);
+    cat.style.transform=''; const hit=v>=d.lo&&v<=d.hi;
+    if(hit){ cat.classList.add('jp-ok'); tone(300,900,.3,'triangle',.08); setTimeout(()=>taskFinish(true,'Кот на шкафу! Царь горы'),550); return; }
+    if(v<d.lo){ cat.classList.add('jp-low'); tone(400,250,.3,'triangle',.07); taskMsg('Не допрыгнул! Ещё раз',true); }
+    else { cat.classList.add('jp-high'); tone(200,80,.25,'square',.08); taskMsg('Бум! В потолок. Слабее!',true); }
+    buzz(60);
+    setTimeout(()=>{ cat.classList.remove('jp-low','jp-high'); busy=false; t0=performance.now(); },800);
+  });
+}
+// milk: hold to pour, stop inside the band; too much spills
+function taskMilk(d,body){
+  const k=TK.k, scene=el('div','mk-scene'), jug=el('div','mk-jug','🥛'), stream=el('i','mk-stream'), bowl=el('div','mk-bowl'), milk=el('i','mk-milk'), band=el('b','mk-band');
+  bowl.appendChild(milk); bowl.appendChild(band); scene.appendChild(jug); scene.appendChild(stream); scene.appendChild(bowl); body.appendChild(scene);
+  band.style.bottom=(d.lo*100)+'%'; band.style.height=((d.hi-d.lo)*100)+'%';
+  const btn=el('button','mk-btn','Держи, чтобы лить'); btn.type='button'; body.appendChild(btn);
+  let lvl=0, pouring=false, last=0, raf=0;
+  const paint=()=>{ milk.style.height=(lvl*100)+'%'; };
+  const loop=now=>{ if(TK.k!==k||TK.done){ return; }
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    if(pouring&&!(V.s&&V.s.pz)){ lvl+=dt*.42; paint(); if(Math.random()<.3) tone(900+Math.random()*300,700,.03,'sine',.015);
+      if(lvl>=1){ lvl=1; paint(); stop(); scene.classList.add('spill'); taskFinish(false,'Перелил! Молоко на полу'); return; } }
+    raf=requestAnimationFrame(loop); };
+  const start=e=>{ if(TK.done) return; e.preventDefault(); pouring=true; last=performance.now(); scene.classList.add('pour'); btn.classList.add('on'); buzz(10); try{btn.setPointerCapture(e.pointerId)}catch(_){} cancelAnimationFrame(raf); raf=requestAnimationFrame(loop); };
+  const stop=()=>{ if(!pouring) return; pouring=false; scene.classList.remove('pour'); btn.classList.remove('on');
+    if(TK.done) return;
+    if(lvl>d.hi){ scene.classList.add('spill'); taskFinish(false,'Перелил! Кот обиделся'); }
+    else if(lvl>=d.lo){ taskFinish(true,'В самый раз! Кот лакает'); }
+    else taskMsg(lvl>0?'Мало! Долей ещё':'',false); };
+  btn.addEventListener('pointerdown',start);
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>btn.addEventListener(ev,stop));
+  btn.addEventListener('contextmenu',e=>e.preventDefault());
+  paint();
+}
+// memory: open two cards at a time, find all the pairs
+function taskMemory(d,body){
+  const k=TK.k, grid=el('div','mm-grid'+(d.cards.length>4?' six':'')); body.appendChild(grid);
+  let open=[], found=0, lock=false;
+  const cards=d.cards.map((ic,i)=>{ const c=el('button','mm-card'); c.type='button'; const f=el('span','mm-face',ic), b=el('span','mm-back','🐾'); c.appendChild(b); c.appendChild(f); grid.appendChild(c); c.dataset.ic=ic; return c; });
+  cards.forEach(c=>c.addEventListener('click',()=>{
+    if(TK.k!==k||TK.done||lock||c.classList.contains('open')) return;
+    c.classList.add('open'); open.push(c); buzz(10); tone(600,700,.05,'triangle',.04);
+    if(open.length<2) return;
+    const [a,b]=open; open=[];
+    if(a.dataset.ic===b.dataset.ic){ a.classList.add('done'); b.classList.add('done'); found+=2; tone(700,1100,.12,'triangle',.06);
+      if(found>=cards.length) taskFinish(true,'Все пары найдены!'); }
+    else { lock=true; setTimeout(()=>{ a.classList.remove('open'); b.classList.remove('open'); lock=false; },650); }
+  }));
+}
 // boxes: drag the cat into the smallest box it fits in
 function taskBoxes(d,body){
   const room=el('div','bx-room'), row=el('div','bx-row'), cat=el('div','bx-cat','🐈'); body.appendChild(room); room.appendChild(row); room.appendChild(cat);
@@ -2235,7 +2476,7 @@ function hudNote(t){ const n=$('hud-note'); n.textContent=t; n.hidden=false; n.c
 function flipPanel(kind){
   cancelHolds(); unflip();
   kind=kind||(Math.random()<.5?'rot':'mir');
-  V.flipUntil=Date.now()+rnd(5000,7000); V.flipKind=kind;
+  V.flipUntil=Date.now()+rnd(5000,7000); V.flipKind=kind; V.act({type:'clog',e:'flip',k:kind});
   $('panel').classList.add(kind==='mir'?'mirror':'flip');
   popText(kind==='mir'?'🪞 Невесомость! Пульт отразился':'🙃 Невесомость! Пульт перевернулся');
   tone(500,200,.5,'sine',.07); buzz(80)
@@ -2324,7 +2565,9 @@ async function mtStart(){
 function syncVib(){ $('vib-set').setAttribute('aria-checked',String(vibOn)); }
 $('vib-set').addEventListener('click',()=>{ vibOn=!vibOn; try{localStorage.setItem('koto-vib',vibOn?'1':'0')}catch(e){} syncVib(); SFX.click(); buzz(20); });
 syncVib();
-$('btn-settings').addEventListener('click',()=>{ SFX.click(); show('set'); mtSync(); });
+$('log-all').addEventListener('click',()=>{ SFX.click(); downloadAllLogs(); });
+$('log-clear').addEventListener('click',()=>{ if(!confirm('Удалить все сохранённые логи полётов?')) return; try{ localStorage.removeItem(LOG_KEY); }catch(e){} renderLogs(); });
+$('btn-settings').addEventListener('click',()=>{ renderLogs();  SFX.click(); show('set'); mtSync(); });
 $('set-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
 $('mt-toggle').addEventListener('click',()=>{ if(MT.stream) mtStop(); else mtStart(); });
 $('mt-thr').addEventListener('input',e=>setMicThr(sliderToThr(+e.target.value)));
@@ -2403,7 +2646,7 @@ function briefing(r,alone){
       'Иногда прибор срывается с болтов и повисает на одном углу.',
       'Схватите пальцем место, где был прибор, и поверните панель вокруг болта по стрелке ↺ или ↻. Когда она встанет почти ровно, защёлкнется сама.',
       'Отпустишь раньше — панель снова провиснет. Пока висит, прибором пользоваться нельзя.',
-      'Раз за сектор кому-то из экипажа выпадает личное дело: позвонить, переключить телевизор, смахнуть вещи со стола, залезть в холодильник, напечатать слово или выбрать коробку.',
+      'Раз за сектор (с сектора 7 — два раза) кому-то из экипажа выпадает личное дело: позвонить, переключить телевизор, смахнуть вещи со стола, налить молоко, сыграть в напёрстки, запрыгнуть на шкаф и другие.',
       'Пока он занят, весь корабль стоит. Справился — корабль прыгнет вперёд, не успел — откатится к взрыву.']],
     6:['Новое: кот прошёлся по пультам',[
       'Время от времени кот топчется по пультам, и приборы меняются местами.',
@@ -2459,6 +2702,9 @@ function fitOrder(){
   while(x.scrollHeight>x.clientHeight+1&&fs>11&&n<14){ fs-=1; x.style.fontSize=fs+'px'; n++; }
 }
 addEventListener('resize',()=>{ if(V.screen==='game'){ fitOrder(); layoutPages(); } });
+if(window.visualViewport) visualViewport.addEventListener('resize',()=>{ if(V.screen==='game') layoutPages(); });
+// fonts arrive late and change the height of the order slip: split the panel again once they are in
+try{ document.fonts&&document.fonts.ready.then(()=>{ if(V.screen==='game') layoutPages(); }); document.fonts&&document.fonts.addEventListener&&document.fonts.addEventListener('loadingdone',()=>{ if(V.screen==='game') layoutPages(); }); }catch(e){}
 function renderOrder(s,ins,inGame){
   const k=$('order-k'), x=$('order-x'), sub=$('order-sub'), ready=$('ready');
   const between=s.ph==='between', iAmReady=(s.rd||[]).includes(V.myId);
@@ -2515,7 +2761,7 @@ function confetti(){
 function jolt(){ const a=$('app'); a.classList.remove('shake'); document.body.classList.remove('redflash'); void a.offsetWidth; a.classList.add('shake'); document.body.classList.add('redflash'); setTimeout(()=>{a.classList.remove('shake');document.body.classList.remove('redflash')},460); }
 
 $('laser').addEventListener('click',()=>{ const k=+$('laser').dataset.k; V.dotDone[k]=true; $('laser').hidden=true; SFX.ok(); V.act({type:'dot'}); });
-$('fur').addEventListener('click',()=>{ V.hairLeft--; SFX.click(); if(V.hairLeft<=0){ $('fur').hidden=true; V.act({type:'hairdone'}); } else $('fur-n').textContent='Ещё '+V.hairLeft; });
+$('fur').addEventListener('click',()=>{ V.hairLeft--; SFX.click(); if(V.hairLeft<=0){ $('fur').hidden=true; V.act({type:'hairdone'}); V.act({type:'clog',e:'hair',ms:Math.round(performance.now()-(V.hairT||performance.now()))}); } else $('fur-n').textContent='Ещё '+V.hairLeft; });
 $('mute').addEventListener('click',()=>{ muted=!muted; $('mute').textContent=muted?'Включить звук':'Выключить звук'; $('pop').hidden=true; });
 function syncFull(){ const b=$('full-btn'); b.disabled=!canFull; b.setAttribute('aria-checked',String(isFull())); b.firstChild.textContent=canFull?'Полный экран':'Полный экран недоступен'; }
 document.addEventListener('fullscreenchange',syncFull); document.addEventListener('webkitfullscreenchange',syncFull);
@@ -2739,10 +2985,44 @@ function showOver(s){
   V.overS=s;
   if(st.dbg){ $('o-title').textContent='Проверка завершена'; $('o-sub').textContent='Все механики пройдены. Рыбки и рекорды в режиме тестера не начисляются.'; }
   const isHost=G.mode==='solo'||(G.net&&G.net.host);
+  $('btn-log').hidden=!(isHost&&V.lastLog);
   $('btn-again').hidden=!isHost; $('btn-lobby').hidden=!(G.mode==='mp'&&G.net&&G.net.host); $('o-wait').hidden=isHost;
   SFX.bad();
 }
 
+/* ---------- flight logs: kept on the captain's device, downloadable for balancing ---------- */
+const LOG_KEY='koto-logs', LOG_MAX=8;
+function readLogs(){ try{ const a=JSON.parse(localStorage.getItem(LOG_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+function storeLog(rec){
+  V.lastLog=rec;
+  let all=readLogs(); all.push(rec); all=all.slice(-LOG_MAX);
+  // if the browser storage is full, drop the oldest flights until it fits
+  while(all.length){ try{ localStorage.setItem(LOG_KEY,JSON.stringify(all)); break; }catch(e){ all.shift(); } }
+  if(typeof renderLogs==='function') renderLogs();
+}
+function stamp(d){ const t=new Date(d), z=n=>String(n).padStart(2,'0'); return t.getFullYear()+'-'+z(t.getMonth()+1)+'-'+z(t.getDate())+'_'+z(t.getHours())+'-'+z(t.getMinutes()); }
+function downloadJSON(obj,name){
+  const blob=new Blob([JSON.stringify(obj,null,1)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500);
+}
+const LOG_README='Лог полёта «Котокорабля». events: [мс от начала, тип, данные]. Типы: meta — игроки и режим; sec+ / sec- — начало и конец сектора с параметрами (goal — приказов на сектор, orderMs — время на приказ, creep — скорость взрыва в единицах/с, stepU — шаг корабля за приказ, panels — типы приборов у каждого игрока); play — сектор пошёл; o — выдан приказ (p — кому, c — прибор, t — тип прибора, own — прибор на своём пульте); ok — выполнен (by — кто нажал, ms — за сколько); to — приказ сгорел по таймеру; wr — лишнее нажатие; dmg — откат корабля (m — множитель шага); combo — комбо; s — снимок раз в 2 с (pos — корабль, fire — взрыв, 0..100); ev+ / ev- — общая напасть или личное дело началось / кончилось (ok — справились, ms — длительность); ev — кот прошёлся по пультам или комок шерсти; c — заметки с телефонов игроков (break/fix — панель сорвалась/прикручена, flip — невесомость, hair — шерсть смахнута); pause; left — игрок ушёл; end — конец полёта; quit — вышли в меню. Типы приборов: b кнопка, h удержание, x двойной тап, t тумблер, s шкала, r ползунок, d переключатель, a кнопки-действия.';
+function downloadLog(rec){ if(!rec) return; downloadJSON({readme:LOG_README,flights:[rec]},'kotokorabl-log-'+stamp(rec.date)+'.json'); }
+function downloadAllLogs(){ const all=readLogs(); if(!all.length){ toast('Логов пока нет'); return; } downloadJSON({readme:LOG_README,flights:all},'kotokorabl-logs-'+stamp(Date.now())+'.json'); }
+function renderLogs(){
+  const box=document.getElementById('log-list'); if(!box) return; box.textContent='';
+  const all=readLogs();
+  $('log-count').textContent=all.length?('Сохранено полётов: '+all.length+' из '+LOG_MAX):'Пока ни одного полёта';
+  $('log-all').disabled=!all.length; $('log-clear').disabled=!all.length;
+  all.slice().reverse().forEach(rec=>{
+    const row=document.createElement('div'); row.className='log-row';
+    const t=new Date(rec.date), mins=Math.floor((rec.durationMs||0)/60000), secs=Math.round(((rec.durationMs||0)%60000)/1000);
+    const info=document.createElement('span');
+    info.textContent=t.toLocaleString('ru-RU',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+' · '+(rec.players||[]).filter(p=>!p.bot).length+' игр. · сектор '+rec.endSector+' · '+mins+':'+String(secs).padStart(2,'0')+(rec.dbg?' · тестер':'')+(rec.reason==='quit'?' · вышли':'');
+    const b=document.createElement('button'); b.className='secondary'; b.textContent='⬇'; b.setAttribute('aria-label','Скачать лог этого полёта'); b.onclick=()=>downloadLog(rec);
+    row.appendChild(info); row.appendChild(b); box.appendChild(row);
+  });
+}
 /* ---------- share card: a picture of the flight results ---------- */
 function wrapText(g,text,x,y,maxW,lh){
   const words=String(text).split(' '); let line='', n=0;
@@ -2800,6 +3080,7 @@ async function shareResults(){
   }catch(e){ toast('Не получилось сделать картинку'); }
   btn.disabled=false;
 }
+$('btn-log').addEventListener('click',()=>{ SFX.click(); downloadLog(V.lastLog); });
 $('btn-share').addEventListener('click',()=>{ SFX.click(); shareResults(); });
 
 /* ---------- music: a small generative loop that speeds up as the explosion gets closer ---------- */
