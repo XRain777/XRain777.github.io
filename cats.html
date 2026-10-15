@@ -116,7 +116,7 @@ body.ingame{overflow:hidden}
 body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 #scr-game{flex:1;min-height:0;gap:8px}
 #scr-game > *{flex:none}
-#scr-game > .panel{flex:1 1 0;min-height:0}
+#scr-game > .panel{flex:1 1 0;min-height:0;max-height:var(--pmax,none)}
 .hud-menu{position:relative}
 .pop{position:absolute;right:0;top:calc(100% + 6px);z-index:16;background:var(--hull);border:1px solid var(--edge);border-radius:14px;padding:6px;display:flex;flex-direction:column;min-width:236px;box-shadow:0 12px 30px rgba(0,0,0,.45)}
 .pop button{background:none;border:0;text-align:left;padding:11px 12px;border-radius:9px;font-weight:800}
@@ -131,7 +131,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .bar i{display:block;height:100%;width:100%;background:var(--mint);border-radius:99px;transition:width .3s,background .3s}
 .bar i.mid{background:var(--tabby)} .bar i.low{background:var(--danger)}
 #h-gap{color:var(--cream)}
-.run .k span:first-child{color:var(--danger)}
+.run .k > span:first-child{color:var(--danger)}
 .track{position:relative;height:34px;margin-top:5px;border-radius:99px;background:linear-gradient(90deg,var(--hull),color-mix(in srgb,var(--pink) 18%,var(--hull)));border:1px solid var(--edge);overflow:hidden}
 .track.danger{border-color:var(--danger);animation:alarm .6s steps(2) infinite}
 @keyframes alarm{50%{box-shadow:0 0 0 2px color-mix(in srgb,var(--danger) 60%,transparent)}}
@@ -176,6 +176,11 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .mini-sw::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--dim);transition:left .15s}
 .pop button[aria-checked=true] .mini-sw{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 25%,var(--void))}
 .pop button[aria-checked=true] .mini-sw::after{left:18px;background:var(--mint)}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;background:none;border:0;padding:0;text-align:left;width:100%}
+.opt span{display:flex;flex-direction:column;gap:2px}
+.opt small{color:var(--dim);font-size:13px;font-weight:600}
+.opt[aria-checked=true] .mini-sw{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 25%,var(--void))}
+.opt[aria-checked=true] .mini-sw::after{left:18px;background:var(--mint)}
 .pop button:disabled{opacity:.5}
 .order-k{position:relative;z-index:1;font-family:var(--display);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#5b3f0b}
 .order-x{--ofs:clamp(16px,4.6vw,21px);font-family:var(--display);font-weight:700;font-size:var(--ofs);line-height:1.2;height:calc(var(--ofs) * 2.45);overflow:hidden;text-wrap:balance;position:relative;z-index:1}
@@ -209,7 +214,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 @keyframes fade{0%,55%{opacity:1}100%{opacity:.25}}
 
 /* control plate */
-.plate-head{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0}
+.plate-head{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;margin-top:6px}
 .plate-head .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .panel{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,1fr);gap:8px;grid-auto-flow:dense}
 .ctl{background:var(--plate);border:1px solid var(--edge);border-radius:14px;min-width:0;min-height:0;overflow:hidden;container-type:size}
@@ -219,16 +224,19 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .ctl{position:relative}
 .ctl.broken{overflow:visible;z-index:6;background:repeating-linear-gradient(-45deg,var(--void) 0 7px,color-mix(in srgb,var(--hull) 80%,var(--void)) 7px 14px);border-style:dashed}
 .ctl.broken .ctl-in{background:var(--plate);border:1px solid var(--edge);border-radius:14px;box-shadow:0 10px 18px rgba(0,0,0,.45);pointer-events:none}
-.ctl.hang-l .ctl-in{transform-origin:14px 14px;animation:dangle-l 1.7s ease-in-out infinite alternate}
-.ctl.hang-r .ctl-in{transform-origin:calc(100% - 14px) 14px;animation:dangle-r 1.7s ease-in-out infinite alternate}
+.ctl.hang-l .ctl-in{transform-origin:14px 14px}
+.ctl.hang-r .ctl-in{transform-origin:calc(100% - 14px) 14px}
+.ctl .pivot{position:absolute;top:13px;width:2px;height:2px;pointer-events:none}
+.ctl.hang-l .pivot{left:13px} .ctl.hang-r .pivot{right:13px}
 .ctl.broken .ctl-in::before{content:"";position:absolute;top:8px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#ddd 0 35%,#777 40% 100%);box-shadow:0 0 0 2px var(--void)}
 .ctl.hang-l .ctl-in::before{left:8px} .ctl.hang-r .ctl-in::before{right:8px}
 .ctl-in{position:relative}
 @keyframes dangle-l{from{transform:rotate(24deg)}to{transform:rotate(38deg)}}
 @keyframes dangle-r{from{transform:rotate(-24deg)}to{transform:rotate(-38deg)}}
 .ctl.tug .ctl-in{animation-duration:.25s}
-.fix{position:absolute;inset:0;z-index:7;border:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:6px;border-radius:14px}
-.fix span{background:var(--danger);color:var(--ink);font-weight:900;font-size:13px;padding:5px 11px;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,.5);animation:blink .8s steps(2) infinite}
+.fix{position:absolute;inset:0;z-index:7;border:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:6px;border-radius:14px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.fix:active{cursor:grabbing}
+.fix span{transition:opacity .15s;background:var(--danger);color:var(--ink);font-weight:900;font-size:13px;padding:5px 11px;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,.5);animation:blink .8s steps(2) infinite}
 @keyframes blink{50%{background:var(--cream)}}
 .ctl.snap{animation:snap .35s}
 @keyframes snap{30%{transform:scale(1.05)}100%{transform:none}}
@@ -291,11 +299,30 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .between .k{font-family:var(--display);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
 .between h2{font-size:clamp(34px,11vw,56px);font-weight:900;color:var(--tabby)}
 .between p{max-width:34ch;color:var(--cream)}
+.brief{width:min(420px,100%);background:var(--hull);border:1px solid var(--edge);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;text-align:left}
+.brief h3{font-size:18px;font-weight:900;color:var(--tabby)}
+.brief ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;color:var(--cream);font-weight:700;line-height:1.35}
+.brief .primary{align-self:stretch}
+.joke .joke-t{white-space:pre-line;margin:0;max-width:none;font-size:17px;font-weight:700;line-height:1.45;color:var(--cream)}
+.joke h3{color:var(--mint)}
+.joke{animation:unl .4s both}
 .warp{width:180px;height:4px;border-radius:99px;background:linear-gradient(90deg,transparent,var(--pink),var(--tabby),transparent);animation:warp 1s linear infinite}
 @keyframes warp{0%{transform:scaleX(.2)}50%{transform:scaleX(1)}100%{transform:scaleX(.2)}}
 .laser{position:fixed;z-index:15;width:84px;height:84px;margin:-42px 0 0 -42px;border:0;border-radius:50%;background:transparent;padding:0}
 .laser::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#fff 0 9%,var(--pink) 18%,color-mix(in srgb,var(--pink) 40%,transparent) 40%,transparent 70%);animation:jit .35s steps(2) infinite}
 @keyframes jit{0%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}100%{transform:translate(-1px,-3px)}}
+.flea-layer{position:fixed;inset:0;z-index:15;touch-action:none;user-select:none;-webkit-user-select:none;background:color-mix(in srgb,var(--void) 55%,transparent);cursor:ew-resize}
+.laser-banner.flea-banner{background:var(--mint)}
+.flea-cat{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font-size:clamp(110px,34vw,170px);line-height:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.flea-cat.wob{animation:wob .28s}
+@keyframes wob{25%{transform:translate(-56%,-50%) rotate(-10deg)}75%{transform:translate(-44%,-50%) rotate(10deg)}}
+.fleas{position:absolute;inset:-10%}
+.flea{position:absolute;width:7px;height:5px;border-radius:50%;background:#1a0e05;box-shadow:0 0 0 1px rgba(255,255,255,.35);animation:hop .5s ease-in-out infinite alternate}
+@keyframes hop{to{transform:translateY(-9px)}}
+.flea.off{animation:fleaoff .6s forwards}
+@keyframes fleaoff{to{transform:translate(var(--fx),var(--fy)) rotate(200deg);opacity:0}}
+.flea-layer .lit-count{top:22%}
+.flea-hint{position:absolute;left:16px;right:16px;bottom:calc(10% + env(safe-area-inset-bottom,0px));text-align:center;color:var(--cream);font-weight:700;opacity:.85}
 .lit-layer{position:fixed;inset:0;z-index:15;touch-action:none;user-select:none;-webkit-user-select:none;background:color-mix(in srgb,var(--void) 55%,transparent);cursor:ns-resize}
 .laser-banner.lit-banner{background:#e6c27a}
 .lit-arrows{position:absolute;left:0;right:0;top:22%;display:flex;justify-content:center;gap:28px;font-size:34px;color:var(--cream);opacity:.85}
@@ -314,7 +341,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .vac-layer{position:fixed;inset:0;z-index:15;pointer-events:none;background:color-mix(in srgb,var(--void) 25%,transparent)}
 .laser-banner.vac-banner{background:var(--tabby)}
 .vac,.vcat,.vac-ring{position:absolute;left:0;top:0;will-change:transform}
-.vac{width:64px;height:64px;margin:-32px 0 0 -32px;animation:vroom .18s steps(2) infinite}
+.vac{width:64px;height:64px;margin:-32px 0 0 -32px}
 @keyframes vroom{50%{rotate:4deg}}
 .vac-ring{border:3px dashed var(--danger);border-radius:50%;background:color-mix(in srgb,var(--danger) 10%,transparent)}
 .vcat{width:72px;height:72px;margin:-36px 0 0 -36px;display:grid;place-items:center;font-size:46px;line-height:1;pointer-events:auto;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
@@ -326,6 +353,34 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .redflash::after{content:"";position:fixed;inset:0;pointer-events:none;background:color-mix(in srgb,var(--danger) 25%,transparent);animation:rf .45s forwards;z-index:12}
 @keyframes rf{to{opacity:0}}
 
+.prog .prog-top,.loot .prog-top{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.rank{font-family:var(--display);font-size:20px;font-weight:900;color:var(--tabby);display:block}
+.fishc{font-family:var(--display);font-weight:900;font-size:20px;font-variant-numeric:tabular-nums}
+.xp{height:12px;border-radius:99px;background:var(--void);border:1px solid var(--edge);overflow:hidden}
+.xp i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--tabby),var(--pink));transition:width .6s}
+.prog-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--dim);font-size:14px}
+.prog-row b{color:var(--cream);font-variant-numeric:tabular-nums}
+.ach summary{cursor:pointer;font-weight:800;color:var(--cream)}
+.ach ul{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--dim)}
+.ach li.got{color:var(--cream);font-weight:700}
+.cats button:disabled{opacity:.5;cursor:not-allowed}
+.startsel{display:flex;gap:6px;margin-left:auto}
+.startsel button{min-width:44px;height:40px;border-radius:11px;background:var(--plate);border:1px solid var(--edge);font-weight:900}
+.startsel button.on{background:var(--tabby);color:var(--ink);border-color:var(--tabby)}
+.startsel button:disabled{opacity:.5}
+.loot-big{font-family:var(--display);font-weight:900;font-size:clamp(34px,10vw,48px);color:var(--tabby)}
+.unlocks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.unlocks li{background:color-mix(in srgb,var(--mint) 14%,var(--plate));border:1px solid var(--mint);border-radius:10px;padding:8px 10px;font-weight:800;animation:unl .5s both}
+.unlocks li:nth-child(2){animation-delay:.15s} .unlocks li:nth-child(3){animation-delay:.3s} .unlocks li:nth-child(n+4){animation-delay:.45s}
+@keyframes unl{from{transform:scale(.9);opacity:0}}
+.combo{color:var(--tabby);font-weight:900}
+.gapw{font-style:normal}
+.ship.norot{transform:translate(-50%,-50%)}
+.fishpop{position:fixed;z-index:30;pointer-events:none;font-family:var(--display);font-weight:900;font-size:18px;color:var(--mint);text-shadow:0 2px 0 rgba(0,0,0,.4);animation:fishup 1s ease-out forwards}
+@keyframes fishup{to{transform:translateY(-46px);opacity:0}}
+.bigpop{position:fixed;z-index:30;left:50%;top:38%;max-width:92vw;text-align:center;transform:translate(-50%,-50%);pointer-events:none;font-family:var(--display);font-weight:900;font-size:clamp(26px,8vw,40px);color:var(--tabby);text-shadow:0 4px 0 var(--void),0 0 24px color-mix(in srgb,var(--tabby) 60%,transparent);white-space:normal;text-wrap:balance;animation:bigpop 1.6s ease-out forwards}
+@keyframes bigpop{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}15%{transform:translate(-50%,-50%) scale(1.15);opacity:1}30%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{transform:translate(-50%,-80%);opacity:0}}
+.confetti{position:fixed;inset:0;z-index:29;pointer-events:none}
 .over-hero{display:flex;flex-direction:column;gap:8px;padding-block:20px 6px}
 .over-hero h1{font-size:clamp(28px,8vw,40px);font-weight:900}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -366,13 +421,113 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 @media (max-height:740px){ .feed .cmd{flex-basis:auto} .feed{height:54px} }
 body.mp .feed,body.alone .feed{display:none!important}
 @media (max-height:640px){ .order-x{--ofs:clamp(15px,4.2vw,18px)} .order:not(.btw) .order-k{display:none} }
-@media (max-width:360px){ .hud{gap:6px} .meter.sector b{font-size:20px} .run .k span:first-child,.run .k span:last-child{display:none} }
+@media (max-width:360px){ .hud{gap:6px} .meter.sector b{font-size:20px} .run .k > span:first-child,.run .k > span:last-child{display:none} }
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important} }
 .cfg textarea{width:100%;min-height:120px;background:var(--void);border:1px solid var(--edge);border-radius:12px;color:var(--cream);font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:10px}
 .cfg summary{font-weight:800;cursor:pointer;color:var(--dim)}
 .cfg[open] summary{margin-bottom:10px}
 .invite{display:flex;gap:8px;align-items:stretch}
 .invite input{flex:1;min-width:0;font-size:13px!important;font-weight:600!important}
+
+/* hold and double-tap buttons */
+.big .blab{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-family:var(--display);font-weight:900;font-size:clamp(12px,28%,18px);color:var(--ink);pointer-events:none;font-variant-numeric:tabular-nums}
+.big.hold{background:radial-gradient(circle at 35% 30%,#ffd6e6,var(--pink) 55%,#a83463);box-shadow:0 6px 0 #6e1f3f,inset 0 -4px 8px rgba(0,0,0,.18);touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.big.hold::before{content:"";position:absolute;inset:-7px;border-radius:50%;z-index:1;pointer-events:none;
+  background:conic-gradient(var(--mint) calc(var(--hp,0) * 360deg),color-mix(in srgb,var(--edge) 70%,transparent) 0);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5px));mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5px))}
+.big.hold:active,.big.hold.hit{box-shadow:0 1px 0 #6e1f3f,inset 0 -2px 6px rgba(0,0,0,.2)}
+.big.dbl{background:radial-gradient(circle at 35% 30%,#d8fff0,var(--mint) 55%,#2f9c70);box-shadow:0 6px 0 #1f5e44,inset 0 -4px 8px rgba(0,0,0,.18)}
+.big.dbl:active,.big.dbl.hit{box-shadow:0 1px 0 #1f5e44,inset 0 -2px 6px rgba(0,0,0,.2)}
+.big.dbl.armed{outline:3px solid var(--cream);outline-offset:3px}
+/* the cat walked over the panel / zero gravity */
+#panel{transition:transform .5s cubic-bezier(.4,1.5,.5,1)}
+#panel.flip{transform:rotate(180deg)}
+#panel.mirror{transform:scaleX(-1)}
+#panel.walk{animation:walk .5s}
+@keyframes walk{20%{transform:translateY(-6px) rotate(-1deg)}50%{transform:translateY(4px) rotate(1deg)}80%{transform:translateY(-2px)}}
+.laser-banner.flip-banner{background:#b9a6ff;top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:13;pointer-events:none}
+/* water leak */
+.leak-layer{position:fixed;inset:0;z-index:24;touch-action:none;user-select:none;-webkit-user-select:none;background:linear-gradient(180deg,color-mix(in srgb,#2a6fd6 30%,transparent),color-mix(in srgb,#0b1f4a 70%,transparent));backdrop-filter:blur(1.5px)}
+.leak-layer.wet{background:linear-gradient(180deg,color-mix(in srgb,var(--danger) 30%,transparent),color-mix(in srgb,#0b1f4a 75%,transparent))}
+.laser-banner.leak-banner{background:#7cc4ff}
+.drops{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.drop{position:absolute;top:-30px;width:12px;height:18px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 35% 35%,#e6f6ff,#6ab8ff 60%,#2a6fd6);animation:dropfall 1s linear infinite}
+@keyframes dropfall{to{transform:translateY(110vh)}}
+.leak-n{position:absolute;left:0;right:0;top:36%;text-align:center;font-family:var(--display);font-weight:900;font-size:clamp(70px,24vw,120px);line-height:1;color:var(--cream);text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.leak-msg{position:absolute;left:16px;right:16px;top:calc(36% + clamp(80px,26vw,130px));text-align:center;font-weight:900;font-size:18px;color:var(--cream)}
+/* microphone */
+.mic-layer{position:fixed;inset:0;z-index:15;background:color-mix(in srgb,var(--void) 70%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:60px 24px}
+.laser-banner.mic-banner{background:var(--mint)}
+.mic-cat{position:relative;border:0;background:none;font-size:clamp(110px,34vw,160px);line-height:1;padding:0;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5));transition:transform .1s}
+.mic-cat.loud{transform:scale(1.12)}
+.mic-cat.wob{animation:wob .28s}
+.mic-ic{position:absolute;right:-6%;bottom:2%;font-size:.38em}
+.mic-meter{width:18px;height:70px;border-radius:9px;background:var(--hull);border:1px solid var(--edge);overflow:hidden;display:flex;align-items:flex-end}
+.mic-meter i{display:block;width:100%;height:100%;background:linear-gradient(0deg,var(--mint),var(--tabby));transform-origin:bottom;transform:scaleY(0)}
+.mic-prog{width:min(280px,80vw)}
+.mic-layer .flea-hint{position:static}
+/* ship trail */
+.trail{position:absolute;top:50%;transform:translateY(-50%);width:56px;text-align:right;font-size:12px;line-height:1;letter-spacing:-3px;white-space:nowrap;opacity:.85;transition:left .45s cubic-bezier(.3,1.4,.5,1);z-index:1;pointer-events:none;-webkit-mask:linear-gradient(90deg,transparent,#000);mask:linear-gradient(90deg,transparent,#000)}
+/* hats */
+.kc{position:relative;display:inline-block;line-height:1}
+.kc .kh{position:absolute;left:50%;top:-.42em;transform:translateX(-50%) rotate(-8deg);font-size:.6em;line-height:1;pointer-events:none}
+.crew span.kc{display:grid}
+/* order slip skins */
+.order.skin-silver{background:linear-gradient(160deg,#ffffff 0%,#c9cfdb 22%,#eef1f7 44%,#8f98aa 70%,#dfe4ee 90%,#aab2c2 100%);border-color:#5d6474;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -2px 0 rgba(40,45,60,.35),0 5px 0 #474d5c,0 10px 18px rgba(0,0,0,.35)}
+.order.skin-rose{background:linear-gradient(160deg,#ffe6dc 0%,#e8a58e 22%,#fbd0c0 44%,#b9705a 70%,#f2bba6 90%,#cc8a74 100%);border-color:#83493a;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -2px 0 rgba(90,40,30,.35),0 5px 0 #6b3829,0 10px 18px rgba(0,0,0,.35)}
+.order.skin-mint{background:linear-gradient(160deg,#e9fff5 0%,#8fe3bf 22%,#c9f7e3 44%,#4fae86 70%,#aeedd2 90%,#6cc59f 100%);border-color:#2d7356;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -2px 0 rgba(20,70,50,.35),0 5px 0 #245b45,0 10px 18px rgba(0,0,0,.35)}
+.order.skin-cosmo{--gold-ink:#fff4e6;background:radial-gradient(1px 1px at 20% 30%,#fff 50%,transparent 51%),radial-gradient(1.5px 1.5px at 70% 60%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 85% 20%,#ffd 50%,transparent 51%),linear-gradient(160deg,#4b2a8a 0%,#2a1858 40%,#6a2d7a 75%,#ff6f9f 130%);border-color:#8d6fd8;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 5px 0 #1d1240,0 10px 18px rgba(0,0,0,.4)}
+.order.skin-cosmo .order-k{color:#d9c8ff}
+.order.skin-cosmo .order-x .verb{color:#ffb35c;text-shadow:none}
+.order.skin-cosmo .timer{background:rgba(255,255,255,.18)}
+.order.skin-cosmo .timer i{background:var(--tabby)}
+/* menu: mode picker and shop */
+.modesel{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.modesel button{border-radius:12px;background:var(--plate);border:1px solid var(--edge);padding:10px 4px;font-weight:900;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.modesel button small{font-weight:700;font-size:11px;color:var(--dim)}
+.modesel button[aria-checked=true]{background:var(--tabby);border-color:var(--tabby);color:var(--ink)}
+.modesel button[aria-checked=true] small{color:var(--ink)}
+.shop summary{display:flex;justify-content:space-between;align-items:center;font-family:var(--display);font-weight:700;font-size:15px;cursor:pointer;list-style:none}
+.shop summary::-webkit-details-marker{display:none}
+.shop summary span::before{content:"▸ ";color:var(--dim)}
+.shop[open] summary span::before{content:"▾ "}
+.shop .cats button{position:relative;width:54px;height:54px}
+.shop .cats button .pr,.skins button .pr{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);background:var(--void);border:1px solid var(--edge);border-radius:99px;font-size:10px;font-weight:900;padding:0 5px;white-space:nowrap;color:var(--cream)}
+.shop .cats button.arm,.skins button.arm{border-color:var(--pink);animation:inspect .6s ease-in-out infinite alternate}
+.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:16px 8px;margin-bottom:6px}
+.shop .cats{row-gap:16px;margin-bottom:8px}
+.skins button{position:relative;height:46px;border-radius:12px;border:2px solid var(--edge);font-weight:900;font-size:12px;color:#3a2405;padding:0 4px}
+.skins button[aria-pressed=true]{border-color:var(--cream);box-shadow:0 0 0 2px var(--tabby)}
+.sw-gold{background:linear-gradient(160deg,#fff1b8,#e8bd52 40%,#c08e2c)}
+.sw-silver{background:linear-gradient(160deg,#fff,#c9cfdb 40%,#8f98aa)}
+.sw-rose{background:linear-gradient(160deg,#ffe6dc,#e8a58e 40%,#b9705a)}
+.sw-mint{background:linear-gradient(160deg,#e9fff5,#8fe3bf 40%,#4fae86)}
+.sw-cosmo{background:linear-gradient(160deg,#4b2a8a,#2a1858 50%,#ff6f9f);color:#fff4e6!important}
+.brand-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.gear{flex:none;font-size:20px}
+.set-h{font-size:clamp(26px,8vw,34px);font-weight:900}
+.mt-meter{position:relative;height:26px;border-radius:99px;background:var(--void);border:1px solid var(--edge);overflow:hidden}
+.mt-meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--dim),var(--tabby));transition:width .05s linear}
+.mt-meter.over i{background:linear-gradient(90deg,var(--mint),#b8ffd9)}
+.mt-meter b{position:absolute;top:0;bottom:0;width:3px;margin-left:-1px;background:var(--cream);box-shadow:0 0 0 1px var(--void)}
+.mt-status{font-weight:800;min-height:1.45em}
+.mt-status.ok{color:var(--mint)} .mt-status.bad{color:var(--danger)}
+.mt-val{font-family:var(--display);color:var(--tabby);margin-left:auto;font-variant-numeric:tabular-nums}
+.mt-range{-webkit-appearance:none;appearance:none;width:100%;height:40px;margin:0;background:transparent;--p:50%}
+.mt-range::-webkit-slider-runnable-track{height:12px;border-radius:99px;border:1px solid var(--edge);background:linear-gradient(90deg,var(--tabby) var(--p),var(--void) var(--p))}
+.mt-range::-moz-range-track{height:12px;border-radius:99px;border:1px solid var(--edge);background:var(--void)}
+.mt-range::-moz-range-progress{height:12px;border-radius:99px;background:var(--tabby)}
+.mt-range::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-10px;border-radius:50%;background:var(--cream);border:4px solid var(--tabby)}
+.mt-range::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--cream);border:4px solid var(--tabby)}
+.mt-ends{display:flex;justify-content:space-between;font-size:12px;margin-top:-6px}
+.mic-meter{position:relative}
+.mic-meter::after{content:"";position:absolute;left:-3px;right:-3px;bottom:var(--thr,20%);height:2px;background:var(--cream)}
+.tester{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 8%,var(--hull))}
+.dbg-bar{display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--mint) 12%,var(--hull));border:1px dashed var(--mint);border-radius:14px;padding:6px}
+.dbg-bar.ok{background:color-mix(in srgb,var(--mint) 35%,var(--hull));border-style:solid}
+.dbg-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}
+.dbg-t b{font-family:var(--display);font-size:12px;color:var(--mint)}
+.dbg-t span{font-size:13px;font-weight:700;color:var(--cream)}
 </style>
 </head>
 <body>
@@ -382,7 +537,7 @@ body.mp .feed,body.alone .feed{display:none!important}
   <!-- MENU -->
   <section id="scr-menu" class="scr">
     <header class="brand">
-      <div class="logo">Кото<span>корабль</span></div>
+      <div class="brand-top"><div class="logo">Кото<span>корабль</span></div><button class="icon-btn gear" id="btn-settings" aria-label="Настройки">⚙️</button></div>
       <p class="tag">Кооперативная паника для экипажа из кошек. Приказы приходят тебе, а нужные рычаги чаще всего на пультах у других.</p>
     </header>
 
@@ -393,12 +548,43 @@ body.mp .feed,body.alone .feed{display:none!important}
       <div class="cats" id="cats"></div>
     </div>
 
+    <div class="card prog">
+      <div class="prog-top"><div><div class="lbl">Звание</div><b id="rank" class="rank">Котёнок-юнга</b></div><div class="fishc" id="fish">🐟 0</div></div>
+      <div class="xp"><i id="xp-bar"></i></div>
+      <div class="muted" id="xp-t"></div>
+      <div class="prog-row"><span>Рекорд: сектор <b id="best">0</b></span><span>Полётов: <b id="flights">0</b></span></div>
+      <div class="lbl">Корабль</div>
+      <div class="cats ships" id="ships"></div>
+      <details class="ach"><summary id="ach-sum">Достижения</summary><ul id="ach-list"></ul></details>
+    </div>
+
+    <div class="card">
+      <div class="lbl">Режим полёта</div>
+      <div class="modesel" id="modesel" role="radiogroup" aria-label="Режим полёта"></div>
+      <p class="muted" id="mode-hint"></p>
+    </div>
+
+    <details class="card shop" id="shop">
+      <summary><span>Кошачья лавка</span><b class="fishc" id="wallet">🐟 0</b></summary>
+      <p class="muted">Рыбки тратятся на украшения, а звание остаётся. Нажми на вещь, потом ещё раз, чтобы купить.</p>
+      <div class="lbl">Шапка для кота</div><div class="cats" id="shop-hats"></div>
+      <div class="lbl">След за кораблём</div><div class="cats" id="shop-trails"></div>
+      <div class="lbl">Панель приказов</div><div class="skins" id="shop-skins"></div>
+    </details>
+
+    <div class="card tester" id="tester-card" hidden>
+      <h2>🛠 Режим тестера</h2>
+      <p class="muted">Без таймеров и взрыва: по очереди проверяются все приборы и напасти. Можно пропускать и возвращаться. Рыбки и рекорды не начисляются.</p>
+      <button class="primary" id="btn-tester">Начать проверку</button>
+    </div>
+
     <div class="card">
       <h2>Соло</h2>
       <p class="muted" id="solo-hint">Боты сами выкрикивают свои приказы. Твои приказы они выполнят, только если ты мяукнешь их экипажу.</p>
       <div class="row"><span>Котов-ботов</span>
         <div class="stepper"><button id="sb-minus" aria-label="Меньше ботов">−</button><b id="sb-n">2</b><button id="sb-plus" aria-label="Больше ботов">+</button></div>
       </div>
+      <div class="row"><span>Старт с сектора</span><div class="startsel" id="solo-start"></div></div>
       <button class="primary" id="btn-solo">Взлететь</button>
     </div>
 
@@ -418,6 +604,9 @@ body.mp .feed,body.alone .feed{display:none!important}
       </details>
     </div>
 
+    <div class="card">
+      <button class="opt" id="expert-menu" role="switch" aria-checked="false"><span><b>Режим для опытных</b><small>Без объяснений новых напастей перед секторами</small></span><i class="mini-sw"></i></button>
+    </div>
     <details class="card rules" id="rules">
       <summary>Как играть</summary>
       <ol>
@@ -425,11 +614,34 @@ body.mp .feed,body.alone .feed{display:none!important}
         <li>Если прибор на твоём пульте, выполни сам. Если нет, нажми «Мяукнуть экипажу» (или просто крикни вслух, если сидите рядом).</li>
         <li>Перед каждым сектором осмотри свой пульт и нажми «Готов!». Сектор начнётся, когда готовы все.</li>
         <li>Корабль спасается от взрыва звезды. Выполненный приказ уносит его вперёд, проваленный отбрасывает к взрыву, лишнее нажатие (которого никто не просил) тоже отбрасывает немного назад, а взрыв сам расползается следом. Долетели до портала: прыжок в следующий сектор. Взрыв догнал: конец полёта.</li>
-        <li>С каждым сектором добавляется по одной напасти: лазерная точка, комок шерсти, пылесос, срывающиеся панели, лоток, иконки вместо названий.</li>
+        <li>С каждым сектором добавляется по одной напасти: лазерная точка и кнопки с удержанием, комок шерсти, пылесос, срывающиеся панели, кот на пультах, лоток, протечка, блохи, невесомость, мяуканье в микрофон, иконки вместо названий.</li>
         <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
       </ol>
     </details>
-    <p class="muted" style="text-align:center;font-size:12px">Версия 15.10 · 12:05</p>
+    <p class="muted" style="text-align:center;font-size:12px">Версия 16.6 · 14:25</p>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="scr-set" class="scr" hidden>
+    <header class="brand">
+      <div class="brand-top"><h1 class="set-h">Настройки</h1><button class="icon-btn" id="set-back" aria-label="Назад в меню">✕</button></div>
+    </header>
+    <div class="card">
+      <h2>Микрофон</h2>
+      <p class="muted">Нужен для напасти «Доклад капитану». Включи проверку и мяукни: если полоска заходит за белую черту и держится там, мяуканье засчитается.</p>
+      <div class="mt-meter" id="mt-meter" aria-hidden="true"><i id="mt-lvl"></i><b id="mt-mark"></b></div>
+      <div class="xp"><i id="mt-prog"></i></div>
+      <p class="mt-status" id="mt-status" role="status">Микрофон выключен</p>
+      <button class="primary" id="mt-toggle">Проверить микрофон</button>
+      <div class="row"><label for="mt-thr">Порог громкости</label><b class="mt-val" id="mt-val">25%</b></div>
+      <input type="range" id="mt-thr" min="1" max="100" step="1" class="mt-range">
+      <div class="mt-ends muted"><span>чутко: ловит шёпот</span><span>нужно орать</span></div>
+      <div class="row">
+        <button class="secondary" id="mt-auto">Подобрать порог</button>
+        <button class="ghost" id="mt-reset">Сбросить</button>
+      </div>
+      <p class="muted" style="font-size:13px">«Подобрать порог» две секунды слушает тишину вокруг и ставит черту чуть выше шума. Во время подбора молчи.</p>
+    </div>
   </section>
 
   <!-- WAITING -->
@@ -447,6 +659,7 @@ body.mp .feed,body.alone .feed{display:none!important}
         <span>Котов-ботов</span>
         <div class="stepper"><button id="wb-minus" aria-label="Меньше ботов">−</button><b id="wb-n">0</b><button id="wb-plus" aria-label="Больше ботов">+</button></div>
       </div>
+      <div class="row" id="w-start-row" hidden><span>Старт с сектора</span><div class="startsel" id="w-start"></div></div>
       <button class="primary" id="btn-start" hidden>Взлететь всем экипажем</button>
       <p class="muted" id="w-note"></p>
     </div>
@@ -457,14 +670,16 @@ body.mp .feed,body.alone .feed{display:none!important}
   <section id="scr-game" class="scr" hidden>
     <div class="hud">
       <div class="meter sector"><div class="k">Сектор</div><b id="h-round">1</b></div>
-      <div class="meter run"><div class="k"><span>Взрыв</span><span id="h-gap">отрыв 50</span><span>Прыжок</span></div>
-        <div class="track" id="track"><div class="fire" id="h-fire"></div><div class="portal">🌀</div><div class="ship" id="h-ship" aria-label="Позиция корабля">🚀</div></div>
+      <div class="meter run"><div class="k"><span>Взрыв</span><em class="gapw"><span id="h-gap">отрыв 50</span> <b id="h-combo" class="combo"></b></em><span>Прыжок</span></div>
+        <div class="track" id="track"><div class="fire" id="h-fire"></div><div class="portal">🌀</div><div class="trail" id="h-trail" aria-hidden="true"></div><div class="ship" id="h-ship" aria-label="Позиция корабля">🚀</div></div>
       </div>
       <div class="hud-menu">
         <button class="icon-btn" id="menu-btn" aria-label="Меню" aria-expanded="false">⋯</button>
         <div class="pop" id="pop" hidden>
           <button id="pause-btn">Пауза</button>
+          <button id="expert-game" role="switch" aria-checked="false"><span>Без объяснений</span><i class="mini-sw"></i></button>
           <button id="full-btn" role="switch" aria-checked="false"><span>Полный экран</span><i class="mini-sw"></i></button>
+          <button id="music-btn" role="switch" aria-checked="true"><span>Музыка</span><i class="mini-sw"></i></button>
           <button id="mute">Выключить звук</button>
           <button id="btn-quit" class="danger">Покинуть корабль</button>
         </div>
@@ -480,10 +695,15 @@ body.mp .feed,body.alone .feed{display:none!important}
       <button class="fur" id="fur" hidden>Комок шерсти!<small id="fur-n">Тапни 4 раза</small></button>
     </div>
 
-    <ul class="feed" id="feed"></ul>
 
+    <div class="dbg-bar" id="dbg-bar" hidden>
+      <button class="icon-btn" id="dbg-prev" aria-label="Предыдущий тест">◀</button>
+      <div class="dbg-t"><b id="dbg-title"></b><span id="dbg-hint"></span></div>
+      <button class="icon-btn" id="dbg-next" aria-label="Пропустить тест">▶</button>
+    </div>
     <div class="plate-head"><div class="lbl" id="me-tag">Твой пульт</div><div class="crew" id="crew" aria-label="Экипаж"></div></div>
     <div class="panel" id="panel"></div>
+    <ul class="feed" id="feed"></ul>
 
   </section>
 
@@ -500,6 +720,14 @@ body.mp .feed,body.alone .feed{display:none!important}
       <div><b id="o-ok">0</b><span>приказов выполнено</span></div>
       <div><b id="o-bad">0</b><span>провалено и лишних</span></div>
     </div>
+    <div class="card loot" id="loot" hidden>
+      <h2>Твой улов</h2>
+      <div class="loot-big" id="loot-big">+0 🐟</div>
+      <dl class="fun" id="loot-list"></dl>
+      <div class="prog-top"><b class="rank" id="o-rank"></b><span class="fishc" id="o-fish"></span></div>
+      <div class="xp"><i id="o-xp"></i></div>
+      <ul class="unlocks" id="o-unlocks"></ul>
+    </div>
     <div class="card">
       <h2>Экипаж</h2>
       <div class="pp" role="table" aria-label="Статистика по игрокам">
@@ -512,6 +740,7 @@ body.mp .feed,body.alone .feed{display:none!important}
       <h2>Бортовой журнал</h2>
       <dl class="fun" id="o-fun"></dl>
     </div>
+    <button class="secondary" id="btn-share">📸 Поделиться итогами</button>
     <button class="primary" id="btn-again">Ещё полёт</button>
     <button class="secondary" id="btn-lobby" hidden>Вернуть экипаж в комнату</button>
     <p class="muted" id="o-wait" hidden>Ждём, когда капитан начнёт новый полёт.</p>
@@ -530,8 +759,24 @@ body.mp .feed,body.alone .feed{display:none!important}
   <h2 id="b-title">Сектор 1</h2>
   <div class="warp"></div>
   <p id="b-sub"></p>
+  <div class="brief joke" id="joke" hidden>
+    <h3 id="joke-h">Сектор пройден!</h3>
+    <p class="joke-t" id="joke-t"></p>
+    <button class="primary" id="joke-next">Далее</button>
+  </div>
+  <div class="brief" id="brief" hidden>
+    <h3 id="brief-h">Новое</h3>
+    <ul id="brief-list"></ul>
+    <button class="primary" id="brief-ok">Понятно</button>
+  </div>
 </div>
 <div class="laser-banner" id="laser-banner" hidden>Лазерная точка! Ловите все!</div>
+<div class="flea-layer" id="flea-layer" hidden>
+  <div class="laser-banner flea-banner">Блохи! Тряси телефон!</div>
+  <div class="flea-cat" id="flea-cat" aria-hidden="true">🐈<div class="fleas" id="fleas"></div></div>
+  <div class="lit-count" id="flea-count">0 из 6</div>
+  <p class="flea-hint" id="flea-hint">Нет датчика? Быстро води пальцем или мышкой влево-вправо</p>
+</div>
 <div class="lit-layer" id="lit-layer" hidden>
   <div class="laser-banner lit-banner" id="lit-banner">Лоток! Закопай: проводи сверху вниз</div>
   <div class="lit-arrows" aria-hidden="true"><span>⬇</span><span>⬇</span><span>⬇</span></div>
@@ -545,6 +790,19 @@ body.mp .feed,body.alone .feed{display:none!important}
   <div class="vac" id="vac" aria-hidden="true"><svg viewBox="0 0 64 64" width="64" height="64"><path d="M40 14 C52 2 62 10 58 22" fill="none" stroke="#9a8fb8" stroke-width="5" stroke-linecap="round"/><rect x="8" y="20" width="44" height="30" rx="14" fill="#ff6f9f"/><rect x="14" y="26" width="20" height="10" rx="5" fill="#ffd0e0" opacity=".8"/><circle cx="18" cy="52" r="7" fill="#2b1607"/><circle cx="42" cy="52" r="7" fill="#2b1607"/><circle cx="18" cy="52" r="2.5" fill="#ab9fcc"/><circle cx="42" cy="52" r="2.5" fill="#ab9fcc"/><path d="M50 30 l8 -3 v14 l-8 -3z" fill="#c9631b"/></svg></div>
   <div class="vcat" id="vcat" role="button" aria-label="Кот, тащи его от пылесоса">🐈</div>
 </div>
+<div class="leak-layer" id="leak-layer" hidden>
+  <div class="laser-banner leak-banner">Протечка! Не трогай экран</div>
+  <div class="drops" id="drops" aria-hidden="true"></div>
+  <div class="leak-n" id="leak-n">3</div>
+  <p class="leak-msg" id="leak-msg">Замри и не трогай экран!</p>
+</div>
+<div class="mic-layer" id="mic-layer" hidden>
+  <div class="laser-banner mic-banner">Доклад капитану! Мяукни в микрофон</div>
+  <button class="mic-cat" id="mic-cat" aria-label="Тапнуть кота вместо мяуканья">😺<span class="mic-ic">🎤</span></button>
+  <div class="mic-meter"><i id="mic-lvl"></i></div>
+  <div class="xp mic-prog"><i id="mic-fill"></i></div>
+  <p class="flea-hint" id="mic-hint">Мяукай громче!</p>
+</div>
 <button class="laser" id="laser" hidden aria-label="Поймать лазерную точку"></button>
 <div class="toast" id="toast" hidden></div>
 
@@ -557,7 +815,81 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-const CATS=['🐱','😼','😸','😻','🙀','😺','🐈','🐈‍⬛'];
+const CATS=['🐱','😼','😸','😻','🙀','😺','🐈','🐈‍⬛','🦁','🐯'];
+const CAT_LVL=[0,0,0,0,2,3,4,5,7,9];
+const SHIPS=[['🚀',0],['🛸',2],['🛰️',4],['🐟',6],['🦄',8]];
+const STARTS=[1,3,5,7,9];
+// cosmetics bought with fish: [emoji, price]
+const HATS=[['🎀',15],['🧢',25],['⛑️',35],['🎓',50],['🎩',70],['👑',120]];
+const TRAILS=[['✨',20],['🫧',30],['💫',45],['🔥',60],['🌈',90]];
+const SKINS=[['gold','Золото',0],['silver','Серебро',40],['rose','Розовое',60],['mint','Мятная',60],['cosmo','Космос',100]];
+// game modes: order time, fire speed, damage for a wrong press / failed order / failed hazard, combo boost, fish multiplier
+const MODES={
+  kids:{name:'Котята',dur:1.4,creep:.55,wrong:.25,fail:.9,ev:1.2,combo:1,fish:.5},
+  normal:{name:'Обычный',dur:1,creep:1,wrong:.5,fail:1.3,ev:2,combo:1,fish:1},
+  hard:{name:'Хардкор',dur:.8,creep:1.3,wrong:.8,fail:1.6,ev:2.5,combo:0,fish:1.5}
+};
+let gameMode='normal';
+try{ const m=localStorage.getItem('koto-mode'); if(MODES[m]) gameMode=m; }catch(e){}
+const HOLDS=['Игрушка в зубах','Дверь от собаки','Хвост пистолетом','Замереть','Мурчать'];
+// tester mode (nickname "Тестер"): every mechanic in turn, no timers, no explosion.
+// ctl = test panel, on = indexes of controls that get orders, ok(base) = passed? (this = Host)
+const T_BTN={t:'b',n:'Мурчатель'}, T_TGL={t:'t',n:'Зевательный компенсатор'}, T_ACT={t:'a',n:'Лапка-манипулятор',o:['Погладить','Почесать']}, T_DIAL={t:'d',n:'Тунцовый реактор',o:['Тунец','Курица','Лосось']};
+const T_FOUR=[T_BTN,T_TGL,T_ACT,T_DIAL];
+const okOrders=n=>function(b){ return (this.okc.me||0)-b.ok>=n; };
+const TSTEPS=[
+  {n:'Круглая кнопка',h:'Нажми кнопку из приказа, 2 раза.',ctl:[T_BTN,T_TGL],on:[0],ok:okOrders(2)},
+  {n:'Тумблер',h:'Включай и выключай по приказу, 2 раза.',ctl:[T_TGL,T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Шкала',h:'Ставь шкалу на число из приказа, 2 раза. Здесь 0–6, в игре до 7.',ctl:[{t:'s',n:'Дремотный модуль',m:6},T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Переключатель режимов',h:'Переключай на вариант из приказа, 2 раза.',ctl:[T_DIAL,T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Ползунок',h:'Сдвинь ползунок на число и отпусти палец, 2 раза.',ctl:[{t:'r',n:'Шерсть на одежде',m:7},T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Кнопки-действия',h:'Нажми действие из приказа, 2 раза.',ctl:[T_ACT,T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Цветок',h:'Погрызи или урони цветок по приказу, 2 раза.',ctl:[{t:'a',n:'Фикус',o:['Погрызть','Уронить']},T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Вылизывание',h:'Вылижи то, что сказано, 2 раза.',ctl:[{t:'a',n:'Вылизывание',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',w:1},T_BTN,T_TGL],on:[0],ok:okOrders(2)},
+  {n:'Удержание',h:'Держи кнопку, пока кольцо не заполнится. Отпустишь раньше — не засчитается, но и не ошибка.',ctl:[{t:'h',n:'Дверь от собаки',hd:2},T_TGL],on:[0],ok:okOrders(2)},
+  {n:'Двойной тап',h:'Нажми кнопку «×2» дважды быстро. Одно нажатие ничего не делает.',ctl:[{t:'x',n:'Гравимурр'},T_TGL],on:[0],ok:okOrders(2)},
+  {n:'Лишнее нажатие',h:'Приказа нет. Нажми любую кнопку: должно появиться предупреждение о лишнем действии.',ctl:[T_BTN,T_TGL],on:[],ok:function(b){ return (this.wrc.me||0)>b.wr; }},
+  {n:'Комбо',h:'Выполни 5 приказов подряд без ошибок.',ctl:T_FOUR,on:[0,1,2,3],ok:function(){ return this.combo>=5; }},
+  {n:'Лазерная точка',h:'Поймай красную точку.',go:function(now){ this.dot={k:++this.dotK,x:rnd(.2,.8),y:rnd(.3,.75),until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.dot>b.dot; }},
+  {n:'Комок шерсти',h:'Смахни шерсть с приказа 4 тапами.',ctl:[T_BTN,T_TGL],on:[0],go:function(){ this.hair={p:'me',id:++this.hairId}; },ok:function(){ return this.T.hairOk; }},
+  {n:'Пылесос',h:'Утащи кота за красный круг.',go:function(){ this.vac={k:++this.vacK,x:.5,y:.5,until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.vac>b.vac; }},
+  {n:'Отпавшая панель',h:'Поверни панель по стрелке, пока не защёлкнется.',ctl:T_FOUR,go:function(){ this.dbgCmd('break'); },ok:function(){ return this.T.fixOk; }},
+  {n:'Кот на пультах',h:'Через секунду кот перепутает приборы. Потом выполни 2 приказа.',ctl:T_FOUR,on:[0,1,2,3],go:function(now){ this.T.at=now+1500; },later:function(){ this.fun.shuf++; this.shufflePanels(); this.instr={}; this.T.sb=this.okc.me||0; },ok:function(){ return this.T.sb!=null&&(this.okc.me||0)-this.T.sb>=2; }},
+  {n:'Лоток',h:'Закопай лоток: проводи пальцем сверху вниз.',go:function(){ this.lit={k:++this.litK,n:3,until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.lit>b.lit; }},
+  {n:'Протечка',h:'3 секунды не трогай экран. Можно специально тронуть и проверить, что засчиталось касание.',go:function(now){ this.leak={k:++this.leakK,at:now,until:now+3000,hit:{}}; },ok:function(b){ return this.fun.leaks>b.leaks; }},
+  {n:'Блохи',h:'Потряси телефон или поводи пальцем влево-вправо.',go:function(){ this.flea={k:++this.fleaK,n:6,until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.flea>b.flea; }},
+  {n:'Невесомость',h:'Пульт перевернётся. Выполни 2 приказа вверх ногами.',ctl:T_FOUR,on:[0,1,2,3],go:function(){ this.dbgCmd('flip'); },ok:okOrders(2)},
+  {n:'Зеркальный пульт',h:'Пульт отразится слева направо. Выполни 2 приказа.',ctl:T_FOUR,on:[0,1,2,3],go:function(){ this.dbgCmd('mirror'); },ok:okOrders(2)},
+  {n:'Мяуканье в микрофон',h:'Мяукни погромче или тапни по коту 8 раз.',go:function(){ this.mic={k:++this.micK,until:Infinity,hit:{},bt:{}}; },ok:function(b){ return this.fun.mic>b.mic; }},
+  {n:'Иконки',h:'Приборы показаны эмодзи. Выполни 2 приказа.',ctl:[{t:'b',n:'Мышиный трекер',ic:'🐭'},{t:'t',n:'Кошачья мята',ic:'🪴'},{t:'a',n:'Вылизывание',ic:'👅',o:['Попу','Хвост','Пузико'],tx:'Вылижи {o}',txi:'👅 {o}',w:1}],on:[0,1,2],ok:okOrders(2)},
+  {n:'Иконки в режимах',h:'Варианты переключателя тоже эмодзи. Выполни 2 приказа.',ctl:[{t:'d',n:'Миска с невесомостью',o:['🐟','🍗','🦃','🥛']},T_BTN],on:[0],ok:okOrders(2)},
+  {n:'Пауза',h:'Открой меню ⋯, поставь паузу и продолжи полёт.',ok:function(){ return this.T.resumed; }}
+];
+const RANKS=['Котёнок-юнга','Младший мурлыка','Матрос','Боцман','Штурман','Старпом','Капитан','Адмирал','Космический тигр','Легенда галактики'];
+const needFor=l=>15*l*(l+1)/2;                       // total fish to reach level l
+const levelOf=f=>{ let l=0; while(l<RANKS.length-1&&f>=needFor(l+1)) l++; return l; };
+const ACH=[
+  ['first','Первый полёт','Заверши любой полёт'],
+  ['s3','Третий сектор','Долети до сектора 3'],
+  ['s5','Пятый сектор','Долети до сектора 5'],
+  ['s8','Восьмой сектор','Долети до сектора 8'],
+  ['s10','Десятый сектор','Долети до сектора 10'],
+  ['hard5','Хардкорщик','Долети до сектора 5 в режиме «Хардкор»'],
+  ['dry','Сухие лапки','Ни разу не тронь экран во время протечки, пережив 3 протечки'],
+  ['clean','Чистые лапы','10 верных действий за полёт и ни одного лишнего'],
+  ['master','Мастер приказов','25 верных действий за полёт'],
+  ['combo','Комбо ×10','Экипаж выполнил 10 приказов подряд без ошибок'],
+  ['marathon','Марафонец','Продержись 5 минут'],
+  ['team','Командный кот','Слетай в мультиплеере'],
+  ['fish100','Сотня рыбок','Накопи 100 рыбок'],
+  ['vacs','Гроза пылесосов','Спаси кота от пылесоса 10 раз'],
+  ['digger','Великий копатель','Закопай лоток 10 раз'],
+  ['dots','Ловец точек','Поймай 15 лазерных точек']
+];
+const prog={fish:0,spent:0,best:0,flights:0,ach:[],ship:'🚀',vac:0,lit:0,dot:0,own:[],hat:'',trail:'',skin:'gold'};
+try{ Object.assign(prog,JSON.parse(localStorage.getItem('koto-prog')||'{}')); }catch(e){}
+function saveProg(){ try{ localStorage.setItem('koto-prog',JSON.stringify(prog)); }catch(e){} }
+let startSector=1;
 const BOTS=[['Барсик','😼'],['Мурка','😻'],['Пушок','😸'],['Рыжик','🐈'],['Тиша','🐈‍⬛']];
 const NAMES=['Мурчатель','Вибриссометр','Когтеточка-генератор','Хвостовой стабилизатор','Лоток сингулярности','Клубковый двигатель','Валерьяновый инжектор','Лазерная указка','Мятный ускоритель','Миска антиматерии','Усатый радар','Подушечковый привод','Шерстяной фильтр','Мяукофон','Тунцовый реактор','Пушистый щит','Сметанный конденсатор','Коробка Шрёдингера','Пылесосный отпугиватель','Мышиный трекер','Лапка-манипулятор','Ушной локатор','Дремотный модуль','Фырчатель','Кусь-пушка','Гравимурр','Блохоловитель','Котопривод','Шуршащий пакет','Зевательный компенсатор','Клубок Вселенной','Тыгыдык-ускоритель','Хвостомер','Колбасный навигатор','Тапочный детектор','Кошачья мята','Подоконный телескоп','Мурлыкающий гироскоп','Сосисочный маяк','Пёрышко-дразнилка','Батарейный обогреватель','Кормушка-автомат','Лунный лоток','Хрустящий излучатель','Звёздный лоток','Миска с невесомостью','Космическая коробка','Хвостовой люк'];
 const RANGES=['Шерсть на одежде','Уровень наглости','Громкость мурчания','Пушистость хвоста','Сытость экипажа','Скорость тыгыдыка','Запас валерьянки','Сонливость пилота','Глубина лотка','Яркость лазерной точки','Давление в миске','Мокрость носа','Градус обиды','Плотность усов','Высота прыжка','Запах рыбы'];
@@ -577,6 +909,7 @@ const DIAL_ICONS=[['🐟','🍗','🦃','🥛'],['🌞','🌙','⭐'],['🐭','�
 const isEmoji=t=>/\p{Extended_Pictographic}/u.test(String(t));
 const DIALS=[['Тунец','Курица','Лосось','Индейка'],['Мур','Мяу','Фыр','Ш-ш-ш'],['Сон','Игра','Еда'],['Рыжий','Серый','Чёрный','Белый'],['Лево','Право','Хвост'],['Мышь','Птичка','Муха'],['Утро','Ночь','3:00']];
 const MAXP=6;
+const JOKES=["— Почему кот всегда приземляется на лапы?\n— Потому что потом переворачиваться со спины ему лень.", "Кот три часа сидел у закрытой двери. Ему открыли. Он посмотрел, подумал и ушёл спать на подоконник. Ему было важно знать, что выбор есть.", "Учёные доказали, что кот понимает слово «нельзя». Просто считает его рекомендацией.", "— Барсик, зачем ты уронил чашку?\n— Проверял гравитацию. Работает, можете спать дальше.", "Кот купил себе дорогую лежанку. Спит в коробке из-под неё.", "Объявление: «Отдам кота в хорошие руки. Желательно в руки, которые в пять утра мечтают кого-нибудь покормить».", "— Мурка, как ты попала в космос?\n— Залезла в коробку. Коробка оказалась ракетой.", "Кот никогда не опаздывает. Это все остальные слишком рано приходят к его миске.", "— Доктор, мой кот считает себя капитаном звездолёта.\n— Это лечится?\n— Тише, он отдаёт приказы.", "Кошачий навигатор:\n— Через сто метров поверните на подоконник. Вы прибыли. Спите.", "Кот подобрал пароль от холодильника. Пароль: жалобно мяукнуть в три часа ночи.", "Почему в космосе нет мышей? Коты прилетели раньше.", "— Пушок, сколько будет два плюс два?\n— Мяу.\n— Неправильно.\n— Зато громко.", "Инструкция к коту: включается сам, выключается сам, кнопок нет, гарантия на шторы не распространяется.", "Кот сидит у полной миски и орёт. В одном месте видно дно.", "Сломался робот-пылесос. Кот три дня ходил по квартире и ждал, когда враг вернётся.", "— Почему ты спишь на моей клавиатуре?\n— Я тоже работаю. Отправил твоему начальнику «ыыыыыыыы».", "Кот сел на диету: ест в два раза меньше, но в четыре раза чаще.", "Если кот сидит в коробке, значит, коробка стоила своих денег.", "— Котик, ты меня любишь?\nКот медленно моргает.\n— Это значит «да»?\n— Это значит «сначала покорми, потом обсудим».", "Экипаж кошачьего звездолёта никогда не спорит, кто главный. Главный тот, кто первым лёг на пульт управления.", "В три часа ночи кот устроил тыгыдык. Соседи снизу решили, что над ними репетирует табун лошадей. Почти угадали.", "Кот ответственно подошёл к работе на корабле: проверил каждую коробку. Изнутри. Лёжа.", "Кот столкнул вазу со стола и посмотрел на хозяина:\n— Она сама.\nХозяин поверил. Ваза — нет.", "— Куда летим, капитан?\n— Туда, где светит лазерная точка.\n— А если она погаснет?\n— Тогда туда, где шуршит пакет.", "Кот обиделся на хозяина и ушёл жить под диван. Через десять минут вернулся: под диваном не кормят."];
 
 /* ---------- sound ---------- */
 let AC=null, muted=false;
@@ -601,9 +934,76 @@ try{ const s=JSON.parse(localStorage.getItem('koto-me')||'null'); if(s){ me.name
 if(!me.name) me.name=pick(['Капитан Мур','Штурман Лапка','Кот Бортинженер','Усатый пилот']);
 function saveMe(){ try{ localStorage.setItem('koto-me',JSON.stringify(me)); }catch(e){} }
 $('nick').value=me.name;
-$('nick').addEventListener('input',e=>{ me.name=e.target.value.trim().slice(0,16)||'Котик'; saveMe(); });
-function renderCats(){ const box=$('cats'); box.textContent=''; CATS.forEach(c=>{ const b=document.createElement('button'); b.textContent=c; b.setAttribute('aria-pressed',String(c===me.cat)); b.setAttribute('aria-label','Выбрать кота '+c); b.onclick=()=>{me.cat=c;saveMe();renderCats();SFX.click()}; box.appendChild(b); }); }
-renderCats();
+const isTester=()=>me.name.trim().toLowerCase()==='тестер';
+function syncTester(){ const c=document.getElementById('tester-card'); if(c) c.hidden=!isTester(); }
+$('nick').addEventListener('input',e=>{ me.name=e.target.value.trim().slice(0,16)||'Котик'; saveMe(); syncTester(); });
+syncTester();
+function renderCats(){
+  const box=$('cats'); box.textContent=''; const lv=levelOf(prog.fish);
+  CATS.forEach((c,i)=>{ const b=document.createElement('button'); const need=CAT_LVL[i]||0, open=lv>=need;
+    b.textContent=open?c:'🔒'; b.disabled=!open; b.title=open?'':'Откроется на звании «'+RANKS[need]+'»';
+    b.setAttribute('aria-pressed',String(c===me.cat)); b.setAttribute('aria-label',open?'Выбрать кота '+c:'Кот закрыт до звания '+RANKS[need]);
+    b.onclick=()=>{me.cat=c;saveMe();renderCats();SFX.click()}; box.appendChild(b); });
+}
+function renderProg(){
+  const lv=levelOf(prog.fish), cur=needFor(lv), nxt=needFor(lv+1), top=lv>=RANKS.length-1;
+  $('rank').textContent=RANKS[lv]; $('fish').textContent='🐟 '+prog.fish;
+  $('xp-bar').style.width=(top?100:Math.round(100*(prog.fish-cur)/(nxt-cur)))+'%';
+  $('xp-t').textContent=top?'Высшее звание. Мур!':'До звания «'+RANKS[lv+1]+'»: '+(nxt-prog.fish)+' 🐟';
+  $('best').textContent=prog.best; $('flights').textContent=prog.flights;
+  $('ach-sum').textContent='Достижения '+prog.ach.length+' из '+ACH.length;
+  const al=$('ach-list'); al.textContent='';
+  ACH.forEach(([id,n,d])=>{ const li=document.createElement('li'); const got=prog.ach.includes(id); li.className=got?'got':''; li.textContent=(got?'★ ':'☆ ')+n+' — '+d; al.appendChild(li); });
+  const sh=$('ships'); sh.textContent='';
+  SHIPS.forEach(([e,need])=>{ const b=document.createElement('button'); const open=lv>=need; b.textContent=open?e:'🔒'; b.disabled=!open;
+    b.title=open?'':'Откроется на звании «'+RANKS[need]+'»'; b.setAttribute('aria-pressed',String(prog.ship===e)); b.setAttribute('aria-label',open?'Корабль '+e:'Корабль закрыт до звания '+RANKS[need]);
+    b.onclick=()=>{ prog.ship=e; saveProg(); renderProg(); SFX.click(); }; sh.appendChild(b); });
+  ['solo-start','w-start'].forEach(id=>{ const box=document.getElementById(id); if(!box) return; box.textContent='';
+    STARTS.forEach(n=>{ const b=document.createElement('button'); const open=n===1||prog.best>=n; b.textContent=open?n:'🔒'+n; b.disabled=!open;
+      b.title=open?'':'Долети до сектора '+n+', чтобы стартовать с него'; b.className=startSector===n?'on':''; b.setAttribute('aria-pressed',String(startSector===n));
+      b.onclick=()=>{ startSector=n; renderProg(); SFX.click(); }; box.appendChild(b); }); });
+  renderCats(); renderShop(); renderModes(); applySkin();
+}
+const validHat=h=>HATS.some(x=>x[0]===h)?h:'';
+const validTrail=t=>TRAILS.some(x=>x[0]===t)?t:'';
+function catNode(cat,hat){ const s=document.createElement('span'); s.className='kc'; s.textContent=cat; const h=validHat(hat); if(h){ const k=document.createElement('span'); k.className='kh'; k.textContent=h; s.appendChild(k); } return s; }
+const wallet=()=>Math.max(0,(prog.fish||0)-(prog.spent||0));
+function applySkin(){ const o=document.getElementById('order'); if(!o) return; SKINS.forEach(([id])=>o.classList.remove('skin-'+id)); if(prog.skin&&prog.skin!=='gold') o.classList.add('skin-'+prog.skin); }
+let shopArm=null;
+function shopItem(box,key,label,price,equipped,onEquip,extraClass){
+  const owned=price===0||prog.own.includes(key), b=document.createElement('button');
+  if(extraClass) b.className=extraClass;
+  b.textContent=label; b.setAttribute('aria-pressed',String(equipped));
+  if(!owned){ const p=document.createElement('span'); p.className='pr'; p.textContent=(shopArm===key?'Купить? ':'')+price+'🐟'; b.appendChild(p); if(shopArm===key) b.classList.add('arm'); }
+  b.setAttribute('aria-label',owned?(equipped?label+', надето, нажми чтобы снять':'Надеть '+label):'Купить '+label+' за '+price+' рыбок');
+  b.onclick=()=>{
+    if(owned){ onEquip(); saveProg(); SFX.click(); renderShop(); return; }
+    if(wallet()<price){ toast('Не хватает рыбок: нужно '+price+' 🐟, у тебя '+wallet()); shopArm=null; renderShop(); return; }
+    if(shopArm!==key){ shopArm=key; renderShop(); return; }
+    shopArm=null; prog.spent=(prog.spent||0)+price; prog.own.push(key); onEquip(); saveProg(); SFX.ok(); popText('Куплено!'); renderProg();
+  };
+  box.appendChild(b);
+}
+function renderShop(){
+  const w=document.getElementById('wallet'); if(!w) return; w.textContent='🐟 '+wallet();
+  const hb=$('shop-hats'), tb=$('shop-trails'), sb=$('shop-skins'); hb.textContent=''; tb.textContent=''; sb.textContent='';
+  HATS.forEach(([e,p])=>shopItem(hb,'hat'+e,e,p,prog.hat===e,()=>{ prog.hat=prog.hat===e?'':e; }));
+  TRAILS.forEach(([e,p])=>shopItem(tb,'tr'+e,e,p,prog.trail===e,()=>{ prog.trail=prog.trail===e?'':e; }));
+  SKINS.forEach(([id,n,p])=>shopItem(sb,'sk'+id,n,p,(prog.skin||'gold')===id,()=>{ prog.skin=id; applySkin(); },'sw-'+id));
+}
+function renderModes(){
+  const box=document.getElementById('modesel'); if(!box) return; box.textContent='';
+  [['kids','Котята','полегче'],['normal','Обычный','как всегда'],['hard','Хардкор','×1.5 🐟']].forEach(([id,n,sub])=>{
+    const b=document.createElement('button'); b.setAttribute('role','radio'); b.setAttribute('aria-checked',String(gameMode===id));
+    b.appendChild(document.createTextNode(n)); const sm=document.createElement('small'); sm.textContent=sub; b.appendChild(sm);
+    b.onclick=()=>{ gameMode=id; try{localStorage.setItem('koto-mode',id)}catch(e){} SFX.click(); renderModes(); };
+    box.appendChild(b);
+  });
+  $('mode-hint').textContent=({kids:'Больше времени на приказы, взрыв ползёт медленнее, ошибки почти не страшны. Рыбок вдвое меньше, рекорд не засчитывается.',
+    normal:'Обычный полёт.',
+    hard:'Меньше времени, взрыв быстрее, ошибки отбрасывают сильнее, а комбо не дают рывка. Зато рыбок в полтора раза больше.'})[gameMode];
+}
+renderProg();
 
 let soloBots=2;
 function updSolo(){ $('sb-n').textContent=soloBots; $('sb-minus').disabled=soloBots<=0;
@@ -613,7 +1013,7 @@ $('sb-plus').onclick=()=>{soloBots=Math.min(MAXP-1,soloBots+1);updSolo()};
 updSolo();
 
 /* ---------- screens ---------- */
-function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); ['menu','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
+function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); if(name!=='set') mtStop(); ['menu','set','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); stopFlea(); stopMic(); unflip(); $('leak-layer').hidden=true; $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
 let wakeLock=null;
 function keepAwake(){ try{ if(navigator.wakeLock&&!wakeLock) navigator.wakeLock.request('screen').then(l=>{ wakeLock=l; l.addEventListener('release',()=>wakeLock=null); }).catch(()=>{}); }catch(e){} }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&V.screen==='game') keepAwake(); });
@@ -628,12 +1028,16 @@ function toast(msg){ const t=$('toast'); t.textContent=msg; t.hidden=false; clea
    HOST ENGINE — authoritative game state (runs on one device)
    ========================================================= */
 class Host{
-  constructor(players,out){
-    this.pl=players.map(p=>({...p})); this.out=out;
-    this.round=0; this.pos=50; this.fire=0; this.lastT=Date.now(); this.stats={ok:0,bad:0};
-    this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.fun={drop:0,chew:0,lick:0,vac:0,dot:0,shout:0,lit:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.lit=null; this.litK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
-    this.dead=false;
-    this.nextRound();
+  constructor(players,out,opts){
+    opts=opts||{};
+    this.dbg=!!opts.debug;
+    this.pl=players.map(p=>({...p})); this.out=out; this.ship=opts.ship||'🚀'; this.trail=opts.trail||''; this.combo=0; this.maxCombo=0;
+    this.mode=MODES[opts.mode]?opts.mode:'normal'; this.M=MODES[this.mode];
+    this.lastRes={}; this.panVer=0; this.leak=null; this.leakK=0; this.mic=null; this.micK=0; this.leakTouch={};
+    this.round=Math.max(0,(opts.start||1)-1); this.pos=50; this.fire=0; this.lastT=Date.now(); this.stats={ok:0,bad:0};
+    this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.fun={drop:0,chew:0,lick:0,vac:0,dot:0,shout:0,lit:0,flea:0,leak:0,leaks:0,mic:0,shuf:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.lit=null; this.litK=0; this.flea=null; this.fleaK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
+    this.dead=false; this.startR=this.round+1;
+    if(this.dbg) this.dbgInit(); else this.nextRound();
     this.iv=setInterval(()=>this.step(),150);
   }
   stop(){ this.dead=true; clearInterval(this.iv); }
@@ -641,14 +1045,17 @@ class Host{
   nextRound(){
     const now=Date.now();
     this.round++; this.phase='between'; this.btDur=1500; this.until=Infinity; this.ready={};
-    this.instr={}; this.pending={}; this.progress=0;
+    if(this.startR&&this.round>this.startR){ this.jUsed=this.jUsed||[]; let j; do{ j=Math.floor(Math.random()*JOKES.length); }while(this.jUsed.includes(j)&&this.jUsed.length<JOKES.length); this.jUsed.push(j); this.joke=j; } else this.joke=-1;
+    this.instr={}; this.pending={}; this.progress=0; this.lastRes={};
     const n=this.pl.length;
     this.goal=Math.round(4+2*n+this.round);
-    this.dur=Math.max(6500,15000-1200*(this.round-1));
-    this.dot=null; this.hair=null; this.vac=null; this.lit=null;
+    this.dur=Math.max(6500,15000-1200*(this.round-1))*this.M.dur;
+    this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.flea=null; this.leak=null; this.mic=null;
     this.pos=50; this.fire=0;
     this.stepU=50/Math.max(4,Math.round(this.goal*.7));
-    this.creep=.6+.1*this.round;
+    this.creep=Math.min(1.6,.5+.08*this.round)*this.M.creep*(n===1?.75:1);
+    // pause before the next order shrinks with every sector so late sectors can still be outrun
+    this.gapOk=Math.max(120,600-50*(this.round-1)); this.gapBad=Math.max(300,700-40*(this.round-1));
     this.genPanels();
     this.pl.forEach(p=>{ if(!p.bot) this.sendPanels(p.id); });
     this.emit();
@@ -656,7 +1063,8 @@ class Host{
   genPanels(){
     const chores=shuffle(CHORES.slice()); let ck=0;
     const names=shuffle(NAMES.slice()), rnames=shuffle(RANGES.slice()), icons=shuffle(ICONS.slice()); let k=0, rk=0, ik=0;
-    const iconP=this.round<7?0:Math.min(.5,.15*(this.round-6)), optP=this.round<8?0:Math.min(.5,.2*(this.round-7));
+    const iconP=this.round<12?0:Math.min(.5,.15*(this.round-11)), optP=this.round<13?0:Math.min(.5,.2*(this.round-12));
+    const holds=shuffle(HOLDS.slice()); let hk=0;
     const per=Math.min(2+this.round,7);
     this.panels={}; this.ctrl={}; this.val={};
     this.pl.forEach(p=>{
@@ -665,8 +1073,11 @@ class Host{
         let t=types[i]||pick(['b','a','t','t','s','d','a','r']);
         if('sdr'.includes(t)&&arr.filter(x=>'sdr'.includes(x.t)||x.w).length>=Math.floor(per/2)) t=pick(['b','a','t']);
         if(t==='r'&&rk>=rnames.length) t='s';
+        // from sector 2 some round buttons need a long hold or a double tap
+        if(t==='b'&&this.round>=2){ const q=Math.random(); if(q<.3&&hk<holds.length) t='h'; else if(q<.55) t='x'; }
         const c={id:this.round+'_'+k, n:t==='r'?rnames[rk++]:names[k%names.length], t, owner:p.id}; k++;
-        if(t==='r') c.m=pick([3,3,4,5]);
+        if(t==='r'||t==='s'){ const hi=Math.min(7,3+Math.floor(this.round/2)), lo=Math.max(2,hi-3); c.m=lo+Math.floor(Math.random()*(hi-lo+1)); }
+        if(t==='h'){ c.n=holds[hk++]; c.hd=pick([2,2,3]); }
         if(t==='d') c.o=pick(Math.random()<optP?DIAL_ICONS:DIALS).slice();
         if(ik<icons.length&&Math.random()<iconP) c.ic=icons[ik++];
         if(t==='a'){
@@ -677,15 +1088,32 @@ class Host{
           else c.o=pick(ACTS).slice();
         }
         this.ctrl[c.id]=c; arr.push(c);
-        this.val[c.id]= t==='t'? Math.random()<.5 : t==='s'? Math.floor(Math.random()*5) : t==='r'? Math.floor(Math.random()*(c.m+1)) : t==='d'? Math.floor(Math.random()*c.o.length) : null;
+        this.val[c.id]= t==='t'? Math.random()<.5 : t==='s'? Math.floor(Math.random()*((c.m??4)+1)) : t==='r'? Math.floor(Math.random()*(c.m+1)) : t==='d'? Math.floor(Math.random()*c.o.length) : null;
       }
       this.panels[p.id]=arr;
     });
   }
-  sendPanels(pid){
+  sendPanels(pid,sh){
     const arr=this.panels&&this.panels[pid]; if(!arr) return;
-    this.out.panels(pid,{r:this.round,pid,c:arr.map(c=>({id:c.id,n:c.n,t:c.t,o:c.o,m:c.m,ic:c.ic,w:c.w}))});
+    this.out.panels(pid,{r:this.round,pid,v:this.panVer,sh:sh?1:0,c:arr.map(c=>({id:c.id,n:c.n,t:c.t,o:c.o,m:c.m,ic:c.ic,w:c.w,hd:c.hd}))});
   }
+  // "the cat walked over the panels": controls swap places, and a couple hop to another crew member's panel
+  shufflePanels(){
+    const ids=this.pl.map(p=>p.id).filter(id=>this.panels[id]&&this.panels[id].length);
+    const moves=ids.length>1?Math.min(2,ids.length-1):0;
+    for(let n=0;n<moves;n++){
+      const [a,b]=shuffle(ids.slice()), A=this.panels[a], B=this.panels[b];
+      const i=Math.floor(Math.random()*A.length), j=Math.floor(Math.random()*B.length), ca=A[i], cb=B[j];
+      A[i]=cb; B[j]=ca; ca.owner=b; cb.owner=a;
+      for(const k in this.instr){ const ins=this.instr[k]; if(!ins) continue;
+        if(ins.cid===ca.id){ ins.owner=b; delete ins.botAt; } else if(ins.cid===cb.id){ ins.owner=a; delete ins.botAt; } }
+    }
+    ids.forEach(id=>shuffle(this.panels[id]));
+    this.panVer++;
+    this.pl.forEach(p=>{ if(!p.bot) this.sendPanels(p.id,true); });
+    this.addFeed(null,'Кот прошёлся по пультам! Приборы перепутались');
+  }
+  busy(){ return !!(this.dot||this.vac||this.lit||this.flea||this.leak||this.mic); }
   newInstr(pid){
     const now=Date.now();
     const taken=new Set(Object.values(this.instr).filter(Boolean).map(i=>i.cid));
@@ -693,20 +1121,26 @@ class Host{
     const others=all.filter(c=>c.owner!==pid), own=all.filter(c=>c.owner===pid);
     let pool=(others.length&&(Math.random()<.72||!own.length))?others:own;
     if(!pool.length) pool=all; if(!pool.length) return;
-    const c=pick(pool), cur=this.val[c.id]; let target, text;
-    const L=c.ic||('«'+c.n+'»'), O=o=>isEmoji(o)?o:'«'+o+'»', N=c.ic||c.n;
-    let parts;
-    if(c.t==='b'){ target='press'; text='Нажми '+L; parts=['Нажми',N,'']; }
-    else if(c.t==='a'){ target=Math.floor(Math.random()*c.o.length); const tpl=c.ic&&c.txi?c.txi:c.tx; text=tpl?tpl.replace('{o}',c.o[target].toLowerCase()):c.o[target]+' '+L;
-      parts=c.tx?[c.ic&&c.txi?c.ic:'Вылижи',c.o[target],'']:[c.o[target],N,'']; }
-    else if(c.t==='t'){ target=!cur; const v=target?'Включи':'Выключи'; text=v+' '+L; parts=[v,N,'']; }
-    else if(c.t==='s'){ do{target=Math.floor(Math.random()*5)}while(target===cur); text='Установи '+L+' на '+target; parts=['Установи',N,'на '+target]; }
-    else if(c.t==='r'){ do{target=Math.floor(Math.random()*(c.m+1))}while(target===cur); text='Сдвинь '+L+' на '+target; parts=['Сдвинь',N,'на '+target]; }
-    else { do{target=Math.floor(Math.random()*c.o.length)}while(target===cur); text='Переключи '+L+' на '+O(c.o[target]); parts=['Переключи',N,'на '+O(c.o[target])]; }
+    const c=pick(pool), {target,text,parts}=this.buildInstr(c);
     const i={cid:c.id,target,text,parts,start:now,dur:this.dur,shouted:false,owner:c.owner};
     const src=this.player(pid);
     if(src&&src.bot&&c.owner!==pid) i.shoutAt=now+rnd(700,1900);
     this.instr[pid]=i;
+  }
+  buildInstr(c){
+    const cur=this.val[c.id]; let target, text;
+    const L=c.ic||('«'+c.n+'»'), O=o=>isEmoji(o)?o:'«'+o+'»', N=c.ic||c.n;
+    let parts;
+    if(c.t==='b'){ target='press'; text='Нажми '+L; parts=['Нажми',N,'']; }
+    else if(c.t==='h'){ target='press'; text='Держи '+L+' '+c.hd+' сек'; parts=['Держи',N,c.hd+' сек']; }
+    else if(c.t==='x'){ target='press'; text='Дважды нажми '+L; parts=['Дважды нажми',N,'']; }
+    else if(c.t==='a'){ target=Math.floor(Math.random()*c.o.length); const tpl=c.ic&&c.txi?c.txi:c.tx; text=tpl?tpl.replace('{o}',c.o[target].toLowerCase()):c.o[target]+' '+L;
+      parts=c.tx?[c.ic&&c.txi?c.ic:'Вылижи',c.o[target],'']:[c.o[target],N,'']; }
+    else if(c.t==='t'){ target=!cur; const v=target?'Включи':'Выключи'; text=v+' '+L; parts=[v,N,'']; }
+    else if(c.t==='s'){ const sm=c.m??4; do{target=Math.floor(Math.random()*(sm+1))}while(target===cur); text='Установи '+L+' на '+target; parts=['Установи',N,'на '+target]; }
+    else if(c.t==='r'){ do{target=Math.floor(Math.random()*(c.m+1))}while(target===cur); text='Сдвинь '+L+' на '+target; parts=['Сдвинь',N,'на '+target]; }
+    else { do{target=Math.floor(Math.random()*c.o.length)}while(target===cur); text='Переключи '+L+' на '+O(c.o[target]); parts=['Переключи',N,'на '+O(c.o[target])]; }
+    return {target,text,parts};
   }
   addFeed(f,x,o){ const p=f?this.player(f):null; this.feed.push({k:++this.fk,p:f||null,o:o||null,n:p?p.name:null,c:p?p.cat:null,x,t:Date.now()}); if(this.feed.length>8) this.feed.shift(); }
   shout(pid){
@@ -717,13 +1151,13 @@ class Host{
   apply(pid,cid,v){
     const c=this.ctrl[cid]; if(!c||c.owner!==pid||this.phase!=='play') return;
     let val;
-    if(c.t==='b') val='press';
+    if(c.t==='b'||c.t==='h'||c.t==='x') val='press';
     else if(c.t==='a'){ if(!Number.isInteger(v)||v<0||v>=c.o.length) return; val=v; }
     else if(c.t==='t'){ if(typeof v!=='boolean') return; val=v; }
-    else if(c.t==='s'){ if(!Number.isInteger(v)||v<0||v>4) return; val=v; }
+    else if(c.t==='s'){ if(!Number.isInteger(v)||v<0||v>(c.m??4)) return; val=v; }
     else if(c.t==='r'){ if(!Number.isInteger(v)||v<0||v>c.m) return; val=v; }
     else { if(!Number.isInteger(v)||v<0||v>=c.o.length) return; val=v; }
-    if(c.t!=='b'&&c.t!=='a') this.val[cid]=val;
+    if(val!=='press'&&c.t!=='a') this.val[cid]=val;
     let hit=false;
     for(const k of Object.keys(this.instr)){ const i=this.instr[k]; if(i&&i.cid===cid&&i.target===val){
       if(!hit){ this.doneBy[pid]=(this.doneBy[pid]||0)+1; const opt=c.t==='a'?c.o[val]:''; if(opt==='Уронить') this.fun.drop++; else if(opt==='Погрызть') this.fun.chew++; else if(c.tx) this.fun.lick++; }
@@ -731,26 +1165,32 @@ class Host{
     if(!hit){
       // an action nobody asked for pushes the ship back toward the fire
       this.wrc[pid]=(this.wrc[pid]||0)+1; this.stats.wrong=(this.stats.wrong||0)+1;
-      this.damage(.5);
+      this.damage(this.M.wrong);
     }
   }
   complete(pid){
     this.instr[pid]=null; this.okc[pid]=(this.okc[pid]||0)+1; this.stats.ok++; this.progress++;
-    this.pending[pid]=Date.now()+650;
-    this.pos=Math.min(100,this.pos+this.stepU);
+    this.pending[pid]=Date.now()+(this.gapOk||600); this.lastRes[pid]='ok';
+    this.combo++; this.maxCombo=Math.max(this.maxCombo,this.combo);
+    if(this.dbg){ if(this.combo%5===0) this.addFeed(null,'Комбо ×'+this.combo+'!'); return; }
+    let gain=this.stepU;
+    if(this.combo%5===0&&this.M.combo){ gain+=this.stepU*.6; this.addFeed(null,'Комбо ×'+this.combo+'! Корабль рванул вперёд'); }
+    this.pos=Math.min(100,this.pos+gain);
     if(this.pos>=100) this.nextRound();
   }
   damage(mult){
+    this.combo=0; if(this.dbg) return;
     this.pos=Math.max(0,this.pos-this.stepU*mult);
     this.checkCaught();
   }
   checkCaught(){
-    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.finish(); }
+    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.flea=null; this.leak=null; this.mic=null; this.finish(); }
   }
   finish(){
     const st=this.stats, f=this.fun, secs=Math.round((Date.now()-this.t0)/1000), mins=Math.max(1,Math.round(secs/60));
     st.time=secs;
-    st.pp=this.pl.map(p=>[p.name,p.cat,this.doneBy[p.id]||0,this.wrc[p.id]||0,this.badc[p.id]||0,p.bot?1:0]);
+    st.pp=this.pl.map(p=>[p.name,p.cat,this.doneBy[p.id]||0,this.wrc[p.id]||0,this.badc[p.id]||0,p.bot?1:0,p.id,p.hat||'',this.leakTouch[p.id]||0]);
+    st.mc=this.maxCombo; st.ev={dot:f.dot,vac:f.vac,lit:f.lit,flea:f.flea||0,mic:f.mic||0}; st.start=this.startR||1; st.md=this.mode; st.lks=f.leaks||0; st.dbg=this.dbg?1:0;
     const R=(a,b)=>Math.floor(rnd(a,b+1)), plural=(n,one,few,many)=>{const m10=n%10,m100=n%100;return m10===1&&m100!==11?one:(m10>=2&&m10<=4&&(m100<10||m100>=20)?few:many);};
     const real=[];
     if(f.drop) real.push(['Цветов уронено',f.drop+' '+plural(f.drop,'горшок','горшка','горшков')]);
@@ -758,7 +1198,11 @@ class Host{
     if(f.lick) real.push(['Вылизываний',f.lick+' '+plural(f.lick,'раз','раза','раз')]);
     if(f.vac) real.push(['Котов спасено от пылесоса',String(f.vac*this.pl.length)]);
     if(f.lit) real.push(['Лотков закопано',String(f.lit*this.pl.length)]);
+    if(f.flea) real.push(['Блох стряхнуто',String(f.flea*this.pl.length*R(20,60))]);
     if(f.dot) real.push(['Лазерных точек поймано',String(f.dot)]);
+    if(f.leak) real.push(['Протечек пережито с сухими лапами',String(f.leak)]);
+    if(f.mic) real.push(['Мяуканий в микрофон',String(f.mic*this.pl.length)]);
+    if(f.shuf) real.push(['Прогулок кота по пультам',String(f.shuf)]);
     if(f.shout) real.push(['Мяуканий в эфире',String(f.shout)]);
     const n1=R(2,4)*mins+R(0,3), n2=R(40,400), n3=R(3,30)*mins, n4=R(1,9), n5=R(2,12);
     const fake=[
@@ -784,6 +1228,7 @@ class Host{
   act(pid,a){
     if(!a||typeof a!=='object'||!this.player(pid)) return;
     if(a.type==='need'){ this.sendPanels(pid); return; }
+    if(this.dbg&&this.T){ if(a.type==='dbg'){ if(this.paused) return; this.dbgGo(this.T.i+(a.go<0?-1:1)); this.emit(); return; } if(a.type==='fixdone') this.T.fixOk=true; if(a.type==='hairdone') this.T.hairOk=true; }
     if(a.type==='pause'){ if(this.phase!=='over') this.setPause(!!a.on); this.emit(); return; }
     if(this.paused) return;
     if(a.type==='ready'){
@@ -791,28 +1236,40 @@ class Host{
       this.emit(); return;
     }
     if(this.phase!=='play') return;
+    if(this.leak){
+      // touching the screen during a leak pushes the ship back; everything else is ignored until it ends
+      if(a.type==='leak'&&!this.leak.hit[pid]){ this.leak.hit[pid]=true; this.leakTouch[pid]=(this.leakTouch[pid]||0)+1; const p=this.player(pid); this.addFeed(null,(p?p.name:'Кто-то')+' полез в лужу, корабль отбросило!'); this.damage(this.M.wrong*2); }
+      this.emit(); return;
+    }
     if(a.type==='set'||a.type==='press') this.apply(pid,String(a.cid),a.v);
     else if(a.type==='shout') this.shout(pid);
     else if(a.type==='dot'&&this.dot) this.dot.hit[pid]=true;
     else if(a.type==='vac'&&this.vac) this.vac.hit[pid]=true;
     else if(a.type==='lit'&&this.lit) this.lit.hit[pid]=true;
+    else if(a.type==='flea'&&this.flea) this.flea.hit[pid]=true;
+    else if(a.type==='mic'&&this.mic) this.mic.hit[pid]=true;
     this.emit();
+  }
+  shiftAll(d){
+    const sh=t=>(typeof t==='number'&&isFinite(t))?t+d:t;
+    this.until=sh(this.until); this.lastT=sh(this.lastT); this.t0=sh(this.t0);
+    for(const n of ['nextDot','nextHair','nextVac','nextLit','nextFlea','nextLeak','nextMic','nextShuf']) this[n]=sh(this[n]);
+    for(const k in this.pending) this.pending[k]=sh(this.pending[k]);
+    for(const k in this.instr){ const i=this.instr[k]; if(!i) continue; i.start=sh(i.start); i.shoutAt=sh(i.shoutAt); i.botAt=sh(i.botAt); }
+    for(const ev of [this.dot,this.vac,this.lit,this.flea,this.mic,this.leak]){ if(!ev) continue; ev.until=sh(ev.until); if(ev.at) ev.at=sh(ev.at); for(const k in ev.bt) ev.bt[k]=sh(ev.bt[k]); }
   }
   setPause(on){
     if(on===!!this.paused) return;
+    if(this.dbg&&this.T){ if(on) this.T.sawPause=true; else if(this.T.sawPause) this.T.resumed=true; }
     if(on){ this.paused=true; this.pausedAt=Date.now(); return; }
     const d=Date.now()-this.pausedAt; this.paused=false;
-    const sh=t=>(typeof t==='number'&&isFinite(t))?t+d:t;
-    this.until=sh(this.until); this.lastT=sh(this.lastT); this.t0=sh(this.t0);
-    this.nextDot=sh(this.nextDot); this.nextHair=sh(this.nextHair); this.nextVac=sh(this.nextVac);
-    for(const k in this.pending) this.pending[k]=sh(this.pending[k]);
-    for(const k in this.instr){ const i=this.instr[k]; if(!i) continue; i.start=sh(i.start); i.shoutAt=sh(i.shoutAt); i.botAt=sh(i.botAt); }
-    for(const ev of [this.dot,this.vac,this.lit]){ if(!ev) continue; ev.until=sh(ev.until); for(const k in ev.bt) ev.bt[k]=sh(ev.bt[k]); }
+    this.shiftAll(d);
   }
   step(){
     if(this.dead) return; const now=Date.now();
     if(this.paused){ this.emit(); return; }
     if(this.phase==='over'){ this.emit(); return; }
+    if(this.dbg){ this.dbgStep(now); this.emit(); return; }
     if(this.phase==='between'){
       if(!isFinite(this.until)&&this.pl.filter(p=>!p.bot).every(p=>this.ready[p.id])) this.until=now+this.btDur;
       if(now>=this.until){
@@ -823,9 +1280,21 @@ class Host{
         this.nextDot=this.round>=2?soon(this.nextDot,4000,10000):Infinity;
         this.nextHair=this.round>=3?soon(this.nextHair,4000,10000):Infinity;
         this.nextVac=this.round>=4?soon(this.nextVac,3000,8000):Infinity;
-        this.nextLit=this.round>=6?soon(this.nextLit,3000,8000):Infinity;
+        this.nextShuf=this.round>=6?soon(this.nextShuf,6000,12000):Infinity;
+        this.nextLit=this.round>=7?soon(this.nextLit,3000,8000):Infinity;
+        this.nextLeak=this.round>=8?soon(this.nextLeak,4000,9000):Infinity;
+        this.nextFlea=this.round>=9?soon(this.nextFlea,3000,8000):Infinity;
+        this.nextMic=this.round>=11?soon(this.nextMic,3000,8000):Infinity;
       }
       this.emit(); return;
+    }
+    // water leak: the whole ship freezes for 3 seconds, nobody may touch the screen
+    if(this.leak){
+      if(now>=this.leak.until){
+        const L=this.leak; this.leak=null; this.shiftAll(now-L.at); this.lastT=now; this.fun.leaks++;
+        this.nextLeak=now+rnd(26000,42000);
+        if(!Object.keys(L.hit).length){ this.fun.leak++; this.addFeed(null,'Протечку устранили, все лапы сухие!'); }
+      } else { this.emit(); return; }
     }
     const dt=Math.min(1,(now-this.lastT)/1000); this.lastT=now;
     this.fire=Math.min(100,this.fire+this.creep*dt); this.checkCaught();
@@ -835,7 +1304,7 @@ class Host{
       const i=this.instr[pid]; if(!i) continue;
       if(now>i.start+i.dur){
         this.instr[pid]=null; this.badc[pid]=(this.badc[pid]||0)+1; this.stats.bad++;
-        this.pending[pid]=now+700; this.damage(1.3);
+        this.pending[pid]=now+(this.gapBad||700); this.lastRes[pid]='fail'; this.damage(this.M.fail);
         if(this.phase==='over'){ this.emit(); return; }
       }
     }
@@ -849,7 +1318,7 @@ class Host{
       if(i.botAt!==undefined&&now>=i.botAt){ i.botAt=Infinity; this.apply(i.owner,i.cid,i.target); if(this.phase!=='play'){ this.emit(); return; } }
     }
     // laser dot
-    if(!this.dot&&now>=this.nextDot&&(this.vac||this.lit)) this.nextDot=now+rnd(5000,9000);
+    if(!this.dot&&now>=this.nextDot&&this.busy()) this.nextDot=now+rnd(5000,9000);
     if(!this.dot&&now>=this.nextDot){
       this.dot={k:++this.dotK,x:rnd(.14,.86),y:rnd(.22,.82),until:now+7000,hit:{},bt:{}};
       this.pl.forEach(p=>{ if(p.bot) this.dot.bt[p.id]=now+rnd(700,2600); });
@@ -858,10 +1327,10 @@ class Host{
       const d=this.dot;
       for(const id in d.bt){ if(now>=d.bt[id]) d.hit[id]=true; }
       if(this.pl.every(p=>d.hit[p.id])){ this.dot=null; this.fun.dot++; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка поймана всем экипажем!'); }
-      else if(now>d.until){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка сбежала, корабль отбросило к взрыву!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
+      else if(now>d.until){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка сбежала, корабль отбросило к взрыву!'); this.damage(this.M.ev); if(this.phase==='over'){ this.emit(); return; } }
     }
     // vacuum: every crew member drags their cat away from it
-    if(!this.vac&&now>=this.nextVac&&(this.dot||this.lit)) this.nextVac=now+rnd(5000,9000);
+    if(!this.vac&&now>=this.nextVac&&this.busy()) this.nextVac=now+rnd(5000,9000);
     if(!this.vac&&now>=this.nextVac){
       this.vac={k:++this.vacK,x:rnd(.22,.78),y:rnd(.3,.72),until:now+11000,hit:{},bt:{}};
       this.pl.forEach(p=>{ if(p.bot) this.vac.bt[p.id]=now+rnd(1500,4500); });
@@ -870,10 +1339,10 @@ class Host{
       const v=this.vac;
       for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
       if(this.pl.every(p=>v.hit[p.id])){ this.vac=null; this.fun.vac++; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Все коты спасены от пылесоса!'); }
-      else if(now>v.until){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Пылесос всех перепугал, корабль отбросило к взрыву!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
+      else if(now>v.until){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Пылесос всех перепугал, корабль отбросило к взрыву!'); this.damage(this.M.ev); if(this.phase==='over'){ this.emit(); return; } }
     }
     // litter box: everyone scratches top-to-bottom several times
-    if(!this.lit&&now>=this.nextLit&&(this.dot||this.vac)) this.nextLit=now+rnd(5000,9000);
+    if(!this.lit&&now>=this.nextLit&&this.busy()) this.nextLit=now+rnd(5000,9000);
     if(!this.lit&&now>=this.nextLit){
       this.lit={k:++this.litK,n:3+Math.floor(Math.random()*3),until:now+12000,hit:{},bt:{}};
       this.pl.forEach(p=>{ if(p.bot) this.lit.bt[p.id]=now+rnd(2000,5000); });
@@ -882,8 +1351,42 @@ class Host{
       const v=this.lit;
       for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
       if(this.pl.every(p=>v.hit[p.id])){ this.lit=null; this.fun.lit++; this.nextLit=now+rnd(26000,44000); this.addFeed(null,'Все лотки закопаны!'); }
-      else if(now>v.until){ this.lit=null; this.nextLit=now+rnd(26000,44000); this.addFeed(null,'Кто-то не закопал лоток, корабль отбросило к взрыву!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
+      else if(now>v.until){ this.lit=null; this.nextLit=now+rnd(26000,44000); this.addFeed(null,'Кто-то не закопал лоток, корабль отбросило к взрыву!'); this.damage(this.M.ev); if(this.phase==='over'){ this.emit(); return; } }
     }
+    // fleas: everyone shakes the phone (or wiggles the cat) to shake them off
+    if(!this.flea&&now>=this.nextFlea&&this.busy()) this.nextFlea=now+rnd(5000,9000);
+    if(!this.flea&&now>=this.nextFlea){
+      this.flea={k:++this.fleaK,n:6,until:now+11000,hit:{},bt:{}};
+      this.pl.forEach(p=>{ if(p.bot) this.flea.bt[p.id]=now+rnd(1500,4000); });
+    }
+    if(this.flea){
+      const v=this.flea;
+      for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
+      if(this.pl.every(p=>v.hit[p.id])){ this.flea=null; this.fun.flea++; this.nextFlea=now+rnd(26000,44000); this.addFeed(null,'Все блохи стряхнуты!'); }
+      else if(now>v.until){ this.flea=null; this.nextFlea=now+rnd(26000,44000); this.addFeed(null,'Кто-то чесался вместо полёта, корабль отбросило к взрыву!'); this.damage(this.M.ev); if(this.phase==='over'){ this.emit(); return; } }
+    }
+    // microphone: everyone meows loudly (or taps the cat)
+    if(!this.mic&&now>=this.nextMic&&this.busy()) this.nextMic=now+rnd(5000,9000);
+    if(!this.mic&&now>=this.nextMic){
+      this.mic={k:++this.micK,until:now+11000,hit:{},bt:{}};
+      this.pl.forEach(p=>{ if(p.bot) this.mic.bt[p.id]=now+rnd(1200,3500); });
+      this.addFeed(null,'Капитан требует доклада: мяукните все!');
+    }
+    if(this.mic){
+      const v=this.mic;
+      for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
+      if(this.pl.every(p=>v.hit[p.id])){ this.mic=null; this.fun.mic++; this.nextMic=now+rnd(26000,44000); this.addFeed(null,'Мяу услышано всем экипажем!'); }
+      else if(now>v.until){ this.mic=null; this.nextMic=now+rnd(26000,44000); this.addFeed(null,'Кто-то промолчал, корабль отбросило к взрыву!'); this.damage(this.M.ev); if(this.phase==='over'){ this.emit(); return; } }
+    }
+    // water leak (starts only when no other shared event is on)
+    if(now>=this.nextLeak&&this.busy()) this.nextLeak=now+rnd(4000,8000);
+    if(now>=this.nextLeak){
+      this.leak={k:++this.leakK,at:now,until:now+3000,hit:{}}; this.nextLeak=Infinity;
+      this.addFeed(null,'Протечка! Никто не трогает экран');
+      this.emit(); return;
+    }
+    // the cat walks over everyone's panels
+    if(now>=this.nextShuf){ this.fun.shuf++; this.shufflePanels(); this.nextShuf=now+rnd(22000,36000); }
     // hairball
     if(now>=this.nextHair){
       const humans=this.pl.filter(p=>!p.bot);
@@ -892,18 +1395,64 @@ class Host{
     }
     this.emit();
   }
+  /* ---------- tester mode: no time, every mechanic one after another ---------- */
+  dbgInit(){
+    this.round=1; this.phase='play'; this.ready={}; this.instr={}; this.pending={}; this.progress=0; this.joke=-1;
+    this.dur=1e9; this.pos=50; this.fire=0; this.stepU=5; this.creep=0; this.panels={}; this.ctrl={}; this.val={};
+    for(const n of ['nextDot','nextHair','nextVac','nextLit','nextFlea','nextLeak','nextMic','nextShuf']) this[n]=Infinity;
+    this.T={i:0,cmdK:0}; this.dbgGo(0);
+  }
+  dbgPanel(specs){
+    this.dbgK=(this.dbgK||0)+1; this.ctrl={}; this.val={}; this.instr={}; this.pending={};
+    const arr=specs.map((sp,i)=>{ const c=Object.assign({id:'T'+this.dbgK+'_'+i,owner:'me'},sp); if(c.o) c.o=c.o.slice(); this.ctrl[c.id]=c;
+      this.val[c.id]=c.t==='t'?false:(c.t==='s'||c.t==='r'||c.t==='d')?0:null; return c; });
+    this.panels={me:arr}; this.panVer++; this.sendPanels('me');
+  }
+  dbgOrder(){
+    const st=TSTEPS[this.T.i], arr=(this.panels.me||[]); if(!st||!st.on||!st.on.length||!arr.length) return;
+    // orders go to the tested controls, found by name because the cat may have shuffled them
+    const want=st.on.map(k=>st.ctl[k].n), pool=arr.filter(c=>want.includes(c.n)); if(!pool.length) return;
+    const c=pool[(this.T.oi++)%pool.length], b=this.buildInstr(c);
+    this.instr.me={cid:c.id,target:b.target,text:b.text,parts:b.parts,start:Date.now(),dur:this.dur,shouted:false,owner:'me'};
+  }
+  dbgCmd(c){ this.T.cmd={k:++this.T.cmdK,c}; }
+  dbgGo(i){
+    const now=Date.now();
+    if(i<0) i=0;
+    if(i>=TSTEPS.length){ this.phase='over'; this.instr={}; this.finish(); return; }
+    this.dot=this.vac=this.lit=this.flea=this.mic=this.leak=this.hair=null; this.combo=0;
+    Object.assign(this.T,{i,doneAt:0,oi:0,at:0,sb:null,wet:false,fixOk:false,hairOk:false,sawPause:false,resumed:false,cmd:null,
+      base:{ok:this.okc.me||0,wr:this.wrc.me||0,dot:this.fun.dot,vac:this.fun.vac,lit:this.fun.lit,flea:this.fun.flea,mic:this.fun.mic,leaks:this.fun.leaks}});
+    const st=TSTEPS[i];
+    this.dbgPanel(st.ctl||[{t:'b',n:'Мурчатель'},{t:'t',n:'Зевательный компенсатор'}]);
+    if(st.go) st.go.call(this,now);
+  }
+  dbgStep(now){
+    const T=this.T, st=TSTEPS[T.i]; if(!st) return;
+    if(this.leak&&now>=this.leak.until){ const L=this.leak; this.leak=null; this.shiftAll(now-L.at); this.fun.leaks++; T.wet=Object.keys(L.hit).length>0; }
+    for(const k of ['dot','vac','lit','flea','mic']){ const ev=this[k]; if(ev&&this.pl.every(p=>ev.hit[p.id])){ this[k]=null; this.fun[k]++; } }
+    if(st.later&&T.at&&now>=T.at){ T.at=0; st.later.call(this,now); }
+    if(!T.doneAt&&!this.leak&&st.on&&st.on.length&&!this.instr.me) this.dbgOrder();
+    if(!T.doneAt&&st.ok.call(this,T.base)){ T.doneAt=now; this.instr={}; this.addFeed(null,'Тест «'+st.n+'» пройден'); }
+    if(T.doneAt&&now-T.doneAt>1400) this.dbgGo(T.i+1);
+  }
   state(){
-    const now=this.paused?this.pausedAt:Date.now(), ins={};
+    const real=this.paused?this.pausedAt:Date.now(), now=this.leak?Math.min(real,this.leak.at):real, ins={};
     for(const pid in this.instr){ const i=this.instr[pid]; if(i) ins[pid]={x:i.text,p:i.parts,rem:Math.max(0,i.start+i.dur-now),dur:i.dur}; }
     return {
       ph:this.phase, r:this.round, pz:this.paused?1:0, bt:this.phase==='between'&&isFinite(this.until)?Math.max(0,this.until-now):0, btd:this.btDur||1, rd:Object.keys(this.ready||{}), pos:Math.round(this.pos*10)/10, fire:Math.round(this.fire*10)/10, pr:this.progress,
-      pl:this.pl.map(p=>[p.id,p.name,p.cat,p.bot?1:0]),
-      ins, v:this.val,
+      pl:this.pl.map(p=>[p.id,p.name,p.cat,p.bot?1:0,p.hat||'']),
+      leak:this.leak?{k:this.leak.k,rem:Math.max(0,this.leak.until-real),hit:Object.keys(this.leak.hit)}:null,
+      mic:this.mic?{k:this.mic.k,hit:Object.keys(this.mic.hit)}:null,
+      md:this.mode, tr:this.trail,
+      dbg:this.dbg?1:0, tst:this.dbg&&this.T?{i:this.T.i,n:TSTEPS.length,t:(TSTEPS[this.T.i]||{}).n||'',h:(TSTEPS[this.T.i]||{}).h||'',ok:this.T.doneAt?1:0,cmd:this.T.cmd||null}:null,
+      ins, v:this.val, lr:this.lastRes,
       feed:this.feed.filter(f=>now-f.t<9000).slice(-6).map(f=>({k:f.k,p:f.p,o:f.o,n:f.n,c:f.c,x:f.x})),
       dot:this.dot?{k:this.dot.k,x:this.dot.x,y:this.dot.y,hit:Object.keys(this.dot.hit)}:null,
       vac:this.vac?{k:this.vac.k,x:this.vac.x,y:this.vac.y,hit:Object.keys(this.vac.hit)}:null,
       lit:this.lit?{k:this.lit.k,n:this.lit.n,hit:Object.keys(this.lit.hit)}:null,
-      hair:this.hair, ok:this.okc, bad:this.badc, wr:this.wrc, st:this.stats
+      flea:this.flea?{k:this.flea.k,n:this.flea.n,hit:Object.keys(this.flea.hit)}:null,
+      hair:this.hair, jk:this.phase==='between'?this.joke:-1, cb:this.combo, sh:this.ship, ok:this.okc, bad:this.badc, wr:this.wrc, st:this.stats
     };
   }
   emit(){ if(!this.dead) this.out.tick(this.state()); }
@@ -912,16 +1461,23 @@ class Host{
 /* =========================================================
    VIEW — renders whatever state arrives (local or network)
    ========================================================= */
-const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{},litDone:{},orderSig:''};
-function resetView(){ Object.assign(V,{panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},litDone:{},orderSig:''}); stopVac(); stopLit(); $('panel').textContent=''; $('feed').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
+const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{},litDone:{},fleaDone:{},micDone:{},leakDone:{},leakSeen:0,panV:0,nextFlip:0,flipUntil:0,orderSig:'',lastCb:0};
+function resetView(){ unflip(); stopMic(); $('leak-layer').hidden=true; Object.assign(V,{tstI:-1,tstOk:-1,tstCmd:0,panV:0,nextFlip:0,leakDone:{},leakSeen:0,micDone:{},panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},litDone:{},fleaDone:{},orderSig:''}); stopVac(); stopLit(); stopFlea(); $('panel').textContent=''; $('feed').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
 
 V.onPanels=function(m){
   if(!m||m.pid!==V.myId||!Array.isArray(m.c)) return;
+  const walked=m.sh&&m.r===V.panelR&&(+m.v||0)>(V.panV||0)&&V.screen==='game';
+  V.panV=+m.v||0;
   V.panelR=m.r; V.ctrls=m.c; V.pend={}; buildPanel(); if(V.s) updVals();
+  if(walked){ popText('🐾 Кот прошёлся по пультам!'); const p=$('panel'); p.classList.remove('walk'); void p.offsetWidth; p.classList.add('walk'); try{navigator.vibrate&&navigator.vibrate([30,40,30,40,30])}catch(e){} }
 };
 function curVal(cid){ const p=V.pend[cid]; if(p&&Date.now()-p.t<1200) return p.v; return V.s&&V.s.v?V.s.v[cid]:undefined; }
 function setLocal(cid,v){ if(curVal(cid)===v) return; V.pend[cid]={v,t:Date.now()}; updVals(); V.act({type:'set',cid,v}); SFX.click(); }
+const HOLDING=new Set();
+function cancelHolds(){ [...HOLDING].forEach(f=>f()); HOLDING.clear(); }
 function buildPanel(){
+  cancelHolds();
+  if(V.broken&&V.broken.stop) V.broken.stop();
   const box=$('panel'); box.textContent=''; V.els={}; V.broken=null;
   V.ctrls.forEach(c=>{
     const outer=document.createElement('div'); outer.className='ctl'+(('sdr'.includes(c.t)||c.w)?' wide':'')+(c.t==='a'?' act':'');
@@ -932,6 +1488,34 @@ function buildPanel(){
       d.appendChild(nm);
       const b=document.createElement('button'); b.className='big'; b.setAttribute('aria-label','Нажать '+c.n);
       b.addEventListener('click',()=>{ b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120); SFX.click(); V.act({type:'press',cid:c.id}); });
+      d.appendChild(b);
+    } else if(c.t==='h'){
+      // hold: the ring fills while the finger stays down; letting go early does nothing
+      d.appendChild(nm);
+      const b=document.createElement('button'); b.className='big hold'; b.setAttribute('aria-label','Удерживать '+c.n+' '+c.hd+' секунды');
+      const lab=document.createElement('span'); lab.className='blab'; lab.textContent=c.hd+' с'; b.appendChild(lab);
+      const need=(c.hd||2)*1000; let t0=0, raf=0, pidr=null;
+      const stop=()=>{ cancelAnimationFrame(raf); t0=0; b.classList.remove('hit'); b.style.setProperty('--hp','0'); lab.textContent=c.hd+' с'; HOLDING.delete(stop); };
+      const tick=()=>{ if(!t0) return; const p=Math.min(1,(performance.now()-t0)/need); b.style.setProperty('--hp',String(p));
+        lab.textContent=Math.max(0,Math.ceil((need-(performance.now()-t0))/1000))+' с';
+        if(p>=1){ stop(); SFX.ok(); try{navigator.vibrate&&navigator.vibrate(40)}catch(e){} V.act({type:'press',cid:c.id}); return; }
+        raf=requestAnimationFrame(tick); };
+      b.addEventListener('pointerdown',e=>{ e.preventDefault(); if(t0) return; pidr=e.pointerId; try{b.setPointerCapture(pidr)}catch(_){} t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); tone(330,360,.12,'sine',.04); raf=requestAnimationFrame(tick); });
+      ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>{ if(t0) stop(); }));
+      b.addEventListener('contextmenu',e=>e.preventDefault());
+      b.addEventListener('keydown',e=>{ if((e.key===' '||e.key==='Enter')&&!t0&&!e.repeat){ e.preventDefault(); t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); raf=requestAnimationFrame(tick); } });
+      b.addEventListener('keyup',e=>{ if(e.key===' '||e.key==='Enter') stop(); });
+      d.appendChild(b);
+    } else if(c.t==='x'){
+      // double tap: one tap only arms the button, two quick taps press it
+      d.appendChild(nm);
+      const b=document.createElement('button'); b.className='big dbl'; b.setAttribute('aria-label','Дважды нажать '+c.n);
+      const lab=document.createElement('span'); lab.className='blab'; lab.textContent='×2'; b.appendChild(lab);
+      let last=0;
+      b.addEventListener('click',()=>{ const now=performance.now(); b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),120);
+        if(now-last<480){ last=0; b.classList.remove('armed'); SFX.click(); V.act({type:'press',cid:c.id}); }
+        else { last=now; b.classList.add('armed'); tone(700,760,.04,'square',.03); setTimeout(()=>{ if(performance.now()-last>=470) b.classList.remove('armed'); },480); } });
+      b.addEventListener('dblclick',e=>e.preventDefault());
       d.appendChild(b);
     } else if(c.t==='r'){
       const hd=document.createElement('div'); hd.className='rng-head'; const badge=document.createElement('span'); badge.className='rng-val';
@@ -964,10 +1548,10 @@ function buildPanel(){
     } else {
       d.appendChild(nm);
       const seg=document.createElement('div'); seg.className='seg'+(c.t==='s'?' lv':'');
-      const opts=c.t==='s'?[0,1,2,3,4]:c.o;
+      const sm=Math.max(1,Math.min(7,+c.m||4)), opts=c.t==='s'?Array.from({length:sm+1},(_,i)=>i):c.o;
       el.btns=opts.map((o,idx)=>{
         const b=document.createElement('button');
-        if(c.t==='s'){ const bar=document.createElement('i'); bar.style.height=(4+idx*4)+'px'; b.appendChild(bar); b.appendChild(document.createTextNode(String(o))); }
+        if(c.t==='s'){ const bar=document.createElement('i'); bar.style.height=(4+Math.round(idx*16/sm))+'px'; b.appendChild(bar); b.appendChild(document.createTextNode(String(o))); }
         else { b.textContent=o; if(isEmoji(o)) b.classList.add('emo'); }
         b.setAttribute('aria-label',c.n+': '+o);
         b.addEventListener('click',()=>setLocal(c.id,idx));
@@ -977,6 +1561,8 @@ function buildPanel(){
     }
     V.els[c.id]=el; box.appendChild(outer);
   });
+  const wide=V.ctrls.filter(c=>'sdr'.includes(c.t)||c.w).length, rows=wide+Math.ceil((V.ctrls.length-wide)/2);
+  box.style.setProperty('--pmax',(rows*150+(rows-1)*8)+'px');
 }
 function updVals(){
   for(const id in V.els){
@@ -999,7 +1585,12 @@ V.onTick=function(s){
   // HUD
   $('h-round').textContent=s.r;
   const pos=Math.max(0,Math.min(100,+s.pos||0)), fire=Math.max(0,Math.min(100,+s.fire||0)), gap=Math.max(0,pos-fire);
-  const shipEl=$('h-ship'); shipEl.style.left=(4+pos*.86)+'%'; $('h-fire').style.width=(4+fire*.86)+'%';
+  const shipEl=$('h-ship'); const sh=s.sh||'🚀'; if(shipEl.textContent!==sh){ shipEl.textContent=sh; shipEl.classList.toggle('norot',sh!=='🚀'); }
+  const cb=+s.cb||0; $('h-combo').textContent=cb>=3?'комбо ×'+cb:''; if(cb>V.lastCb&&cb%5===0) popText('Комбо ×'+cb+'!');
+  V.lastCb=cb;
+  shipEl.style.left=(4+pos*.86)+'%'; $('h-fire').style.width=(4+fire*.86)+'%';
+  const trEl=$('h-trail'), tr=typeof s.tr==='string'?s.tr:''; if(trEl.dataset.t!==tr){ trEl.dataset.t=tr; trEl.textContent=tr?tr+tr+tr:''; }
+  trEl.style.left='calc('+(4+pos*.86)+'% - 58px)';
   $('h-gap').textContent='отрыв '+Math.round(gap);
   $('track').classList.toggle('danger',s.ph==='play'&&gap<15);
   if(V.lastHull!==null&&pos<V.lastHull-.5&&V.lastRound===s.r){ jolt(); shipEl.classList.remove('hit'); void shipEl.offsetWidth; shipEl.classList.add('hit'); }
@@ -1007,26 +1598,48 @@ V.onTick=function(s){
   // between
   const bt=$('between');
   if(s.ph==='between'&&V.lastRound!==s.r){
-    // short jump splash, then the panel stays visible for inspection
-    $('b-title').textContent='Сектор '+s.r; $('b-sub').textContent=news(s.r); bt.hidden=false; SFX.warp();
-    clearTimeout(V.btT); V.btT=setTimeout(()=>{ bt.hidden=true; },1700);
+    // jump splash; a sector that brings something new keeps its briefing until "Понятно" (unless expert mode)
+    const b=briefing(s.r,(s.pl||[]).length<=1);
+    bt.hidden=false; SFX.warp(); clearTimeout(V.btT);
+    const showBrief=()=>{
+      $('b-title').textContent='Сектор '+s.r;
+      if(b&&!expert){
+        $('b-sub').hidden=true; $('brief').hidden=false; $('brief-h').textContent=b[0];
+        const ul=$('brief-list'); ul.textContent=''; b[1].forEach(t=>{ const li=document.createElement('li'); li.textContent=t; ul.appendChild(li); });
+        setTimeout(()=>$('brief-ok').focus(),50);
+      } else {
+        $('brief').hidden=true; $('b-sub').hidden=false; $('b-sub').textContent=news(s.r);
+        V.btT=setTimeout(()=>{ bt.hidden=true; },1700);
+      }
+    };
+    const jk=+s.jk;
+    if(jk>=0&&JOKES[jk]){
+      $('b-title').textContent='Прыжок!'; $('b-sub').hidden=true; $('brief').hidden=true;
+      $('joke-h').textContent='Сектор '+(s.r-1)+' пройден!'+(s.r>prog.best?' Новый рекорд!':''); $('joke-t').textContent=JOKES[jk]; $('joke').hidden=false;
+      V.afterJoke=showBrief; setTimeout(()=>$('joke-next').focus(),50);
+    } else { $('joke').hidden=true; showBrief(); }
   } else if(s.ph!=='between') bt.hidden=true;
   $('pause').hidden=!s.pz;
   $('panel').classList.toggle('inspect',s.ph==='between');
-  if(V.lastRound!==s.r) V.nextBreak=Date.now()+rnd(12000,24000);
+  if(V.lastRound!==s.r){ V.nextBreak=Date.now()+rnd(12000,24000); V.nextFlip=Date.now()+rnd(9000,18000); }
+  if(V.lastRound&&s.r>V.lastRound) confetti();
   V.lastRound=s.r;
-  if(s.pz) V.nextBreak=Math.max(V.nextBreak,Date.now()+4000);
+  if(s.pz||s.leak){ V.nextBreak=Math.max(V.nextBreak,Date.now()+4000); V.nextFlip=Math.max(V.nextFlip,Date.now()+4000); if(V.flipUntil) V.flipUntil=Math.max(V.flipUntil,Date.now()+3000); }
+  // zero gravity: the player's own panel turns upside down for a while
+  if(inGame&&!s.pz&&!s.leak&&s.ph==='play'&&s.r>=10&&!V.flipUntil&&V.nextFlip&&Date.now()>=V.nextFlip){ flipPanel(); V.nextFlip=Date.now()+rnd(18000,32000)/(1+.06*(s.r-9)); }
+  if(V.flipUntil&&(Date.now()>=V.flipUntil||s.ph!=='play')) unflip();
   if(inGame&&!s.pz&&s.ph==='play'&&s.r>=5&&!V.broken&&V.nextBreak&&Date.now()>=V.nextBreak){ breakCtl(); V.nextBreak=Date.now()+rnd(16000,32000)/(1+.08*(s.r-2)); }
   // panel request
   if(inGame&&s.r!==V.panelR&&Date.now()-V.lastNeed>1200){ V.lastNeed=Date.now(); V.act({type:'need'}); }
   if(!inGame){ const p=$('panel'); if(!p.querySelector('.spect')){ p.textContent=''; const d=document.createElement('div'); d.className='spect'; d.textContent='Ты в зрителях. Подключишься со следующего полёта.'; p.appendChild(d);} }
-  $('me-tag').textContent=inGame?('Твой пульт · '+meP[2]+' '+meP[1]):'Ты в зрителях';
+  $('me-tag').textContent=inGame?((V.flipUntil?(V.flipKind==='mir'?'🪞 Пульт отражён':'🙃 Пульт вверх ногами'):'Твой пульт')+' · '+meP[2]+(validHat(meP[4])||'')+' '+meP[1]):'Ты в зрителях';
   // instruction
   const ins=s.ins&&s.ins[V.myId];
   renderOrder(s,ins,inGame);
+  renderTester(s);
   // flashes
   const ok=(s.ok&&s.ok[V.myId])||0, bad=(s.bad&&s.bad[V.myId])||0;
-  if(V.seenOk!==null&&ok>V.seenOk){ const o=$('order'); o.classList.remove('ok'); void o.offsetWidth; o.classList.add('ok'); SFX.ok(); }
+  if(V.seenOk!==null&&ok>V.seenOk){ const o=$('order'); o.classList.remove('ok'); void o.offsetWidth; o.classList.add('ok'); SFX.ok(); fishPop(); }
   if(V.seenBad!==null&&bad>V.seenBad){ SFX.bad(); try{navigator.vibrate&&navigator.vibrate(200)}catch(e){} }
   const wr=(s.wr&&s.wr[V.myId])||0;
   if(V.seenWr!=null&&wr>V.seenWr){ tone(160,120,.18,'square',.07); toast('Лишнее действие! Корабль отбросило к взрыву.'); }
@@ -1053,7 +1666,7 @@ V.onTick=function(s){
   // crew
   const csig=pl.map(p=>p.join('|')).join(';');
   if(csig!==V.crewSig){ V.crewSig=csig; const cr=$('crew'); cr.textContent='';
-    pl.forEach(p=>{ if(p[0]===V.myId) return; const sp=document.createElement('span'); if(p[3]) sp.className='bot'; sp.textContent=p[2]; sp.title=p[1]; cr.appendChild(sp); }); }
+    pl.forEach(p=>{ if(p[0]===V.myId) return; const sp=catNode(p[2],p[4]); if(p[3]) sp.classList.add('bot'); sp.title=p[1]; cr.appendChild(sp); }); }
   updVals();
   // laser dot
   const d=s.dot;
@@ -1066,42 +1679,335 @@ V.onTick=function(s){
   const vq=s.vac;
   if(vq&&inGame&&!(vq.hit||[]).includes(V.myId)&&!V.vacDone[vq.k]){ if(VAC.k!==vq.k) startVac(vq); }
   else if(VAC.k!==null) stopVac();
+  // fleas
+  const fq=s.flea;
+  if(fq&&inGame&&!s.pz&&!(fq.hit||[]).includes(V.myId)&&!V.fleaDone[fq.k]){ if(FLEA.k!==fq.k) startFlea(fq); }
+  else if(FLEA.k!==null&&!(fq&&s.pz)) stopFlea();
+  $('flea-layer').hidden=FLEA.k===null||!!s.pz;
   // litter box
   const lq=s.lit;
   if(lq&&inGame&&!s.pz&&!(lq.hit||[]).includes(V.myId)&&!V.litDone[lq.k]){ if(LIT.k!==lq.k) startLit(lq); }
   else if(LIT.k!==null&&!(lq&&s.pz)) stopLit();
   $('lit-layer').hidden=LIT.k===null||!!s.pz;
+  // microphone
+  const mq=s.mic;
+  if(mq&&inGame&&!s.pz&&!(mq.hit||[]).includes(V.myId)&&!V.micDone[mq.k]){ if(MIC.k!==mq.k) startMic(mq); }
+  else if(MIC.k!==null&&!(mq&&s.pz)) stopMic();
+  $('mic-layer').hidden=MIC.k===null||!!s.pz;
+  // water leak
+  const lk=s.leak;
+  if(lk&&inGame&&s.ph==='play'){
+    if(V.leakSeen!==lk.k){ V.leakSeen=lk.k; startLeak(lk); }
+    $('leak-layer').hidden=!!s.pz;
+    $('leak-n').textContent=Math.max(1,Math.ceil((+lk.rem||0)/1000));
+  } else $('leak-layer').hidden=true;
   // hairball
   if(s.hair&&s.hair.p===V.myId&&s.hair.id>V.hairSeen){ V.hairSeen=s.hair.id; V.hairLeft=4; $('fur-n').textContent='Тапни 4 раза'; $('fur').hidden=false; }
 };
+function renderTester(s){
+  const bar=$('dbg-bar'), t=s.dbg&&s.tst; bar.hidden=!t; if(!t) return;
+  $('dbg-title').textContent='Тест '+(t.i+1)+' из '+t.n+' · '+t.t+(t.ok?' ✓':'');
+  $('dbg-hint').textContent=t.ok?'Работает! Следующий тест…':t.h;
+  bar.classList.toggle('ok',!!t.ok); $('dbg-prev').disabled=t.i<=0;
+  if(V.tstI!==t.i){ V.tstI=t.i; unflip(); }
+  if(t.ok&&V.tstOk!==t.i){ V.tstOk=t.i; SFX.ok(); }
+  const c=t.cmd; if(c&&c.k!==V.tstCmd){ V.tstCmd=c.k; setTimeout(()=>{ if(c.c==='break'){ if(!V.broken) breakCtl(); } else if(c.c==='flip') flipPanel('rot'); else if(c.c==='mirror') flipPanel('mir'); },300); }
+}
+$('dbg-prev').addEventListener('click',()=>{ SFX.click(); V.act({type:'dbg',go:-1}); });
+$('dbg-next').addEventListener('click',()=>{ SFX.click(); V.act({type:'dbg',go:1}); });
 let breakHinted=false;
+// broken panel: it hangs from one corner bolt and swings like a pendulum;
+// grab it, turn it round the bolt (any way, any angle) until it is level again
+const FIX_SNAP=7;          // degrees from level at which the panel clicks back into place
 function breakCtl(){
   const ids=Object.keys(V.els); if(!ids.length) return;
-  const el=V.els[pick(ids)], o=el.outer;
-  const left=3; V.broken={id:el.c.id,left};
+  const el=V.els[pick(ids)], o=el.outer, inner=el.root;
   const side=Math.random()<.5?'l':'r';
+  // centre of mass relative to the bolt, in the panel's own coordinates
+  const w=o.offsetWidth||160, h=o.offsetHeight||100, cx=(side==='l'?1:-1)*Math.max(10,w/2-14), cy=Math.max(10,h/2-14);
+  const com=Math.atan2(cy,cx), eq=Math.PI/2-com;               // it comes to rest with its centre right below the bolt
+  const B={id:el.c.id,th:eq*.25,om:0,drag:false,raf:0,last:performance.now(),a0:0,dl:0,dragT:0};
+  V.broken=B;
   o.classList.add('broken','hang-'+side);
+  const pivot=document.createElement('i'); pivot.className='pivot'; o.appendChild(pivot);
   const fix=document.createElement('button'); fix.className='fix';
-  const lab=document.createElement('span'); lab.textContent='Прикрути: '+left; fix.appendChild(lab);
-  fix.setAttribute('aria-label','Прикрутить панель '+el.c.n);
-  fix.addEventListener('click',()=>{
-    if(!V.broken) return; V.broken.left--; tone(300+80*(3-V.broken.left),260,.07,'square',.06);
-    o.classList.remove('tug'); void o.offsetWidth; o.classList.add('tug');
-    if(V.broken.left<=0){ o.classList.remove('broken','hang-l','hang-r','tug'); fix.remove(); V.broken=null; SFX.ok(); o.classList.add('snap'); setTimeout(()=>o.classList.remove('snap'),400); }
-    else lab.textContent='Прикрути: '+V.broken.left;
+  const lab=document.createElement('span'); lab.textContent=(eq>0?'↺':'↻')+' Поверни на место'; fix.appendChild(lab);
+  fix.setAttribute('aria-label','Повернуть панель '+el.c.n+' на место. Стрелками влево и вправо.');
+  const deg=()=>B.th*180/Math.PI;
+  const norm=d=>((d%360)+540)%360-180;
+  const paint=()=>{ inner.style.transform='rotate('+deg().toFixed(1)+'deg)'; lab.style.opacity=B.drag?'.35':''; };
+  const pc=()=>{ const r=pivot.getBoundingClientRect(); return [r.left+r.width/2,r.top+r.height/2]; };
+  const pAng=e=>{ const [x,y]=pc(); return Math.atan2(e.clientY-y,e.clientX-x); };
+  const pDist=e=>{ const [x,y]=pc(); return Math.hypot(e.clientX-x,e.clientY-y); };
+  const mirrored=()=>$('panel').classList.contains('mirror');
+  let lastTick=0, lastStep=null;
+  const ticks=()=>{
+    const step=Math.floor(Math.abs(norm(deg()))/10);
+    if(lastStep!==null&&step!==lastStep){ const now=performance.now(); if(now-lastTick>45){ lastTick=now; tone(420+Math.max(0,60-Math.abs(norm(deg())))*9,380,.03,'square',.035); } }
+    lastStep=step;
+  };
+  const done=()=>{
+    if(V.broken!==B) return; stop(); V.act({type:'fixdone'});
+    inner.style.transform=''; o.classList.remove('broken','hang-l','hang-r'); fix.remove(); pivot.remove();
+    SFX.ok(); try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
+    o.classList.add('snap'); setTimeout(()=>o.classList.remove('snap'),400);
+  };
+  const stop=()=>{ cancelAnimationFrame(B.raf); if(V.broken===B) V.broken=null; };
+  B.stop=()=>{ cancelAnimationFrame(B.raf); };
+  const K=20, DAMP=.7;     // gravity (swing period ~1.4 s) and air friction
+  const loop=now=>{
+    if(V.broken!==B) return;
+    const dt=Math.min(.04,(now-B.last)/1000); B.last=now;
+    if(!B.drag&&!(V.s&&(V.s.pz||V.s.leak))){
+      // pendulum: gravity turns the centre of mass towards straight down
+      B.om+=(K*Math.cos(com+B.th)-DAMP*B.om)*dt;
+      if(Math.abs(B.om)<.25&&Math.random()<dt*.8) B.om+=rnd(-.9,.9);   // a draught on the ship keeps it swinging
+      B.th+=B.om*dt;
+    }
+    paint(); B.raf=requestAnimationFrame(loop);
+  };
+  fix.addEventListener('pointerdown',e=>{
+    e.preventDefault(); if(V.broken!==B) return;
+    B.drag=true; B.a0=pAng(e); B.om=0; B.dragT=performance.now(); try{fix.setPointerCapture(e.pointerId)}catch(_){}
+    tone(260,300,.05,'square',.04);
   });
+  fix.addEventListener('pointermove',e=>{
+    if(!B.drag||V.broken!==B) return;
+    if(pDist(e)<24) return;                          // too close to the bolt: the angle jumps around
+    const a=pAng(e); let d=a-B.a0; d=((d+3*Math.PI)%(2*Math.PI))-Math.PI; B.a0=a;
+    if(mirrored()) d=-d;                             // a mirrored panel turns the other way round
+    const now=performance.now(), dt=Math.max(.008,(now-B.dragT)/1000); B.dragT=now;
+    B.th+=d; B.om=B.om*.6+(d/dt)*.4;
+    ticks();
+    if(Math.abs(norm(deg()))<=FIX_SNAP) done();
+  });
+  const up=()=>{ if(!B.drag) return; B.drag=false; B.om=Math.max(-14,Math.min(14,B.om)); };
+  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>fix.addEventListener(ev,up));
+  fix.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'||e.key==='ArrowRight'){ e.preventDefault(); B.om=0; B.th+=(e.key==='ArrowLeft'?-9:9)*Math.PI/180; ticks(); if(Math.abs(norm(deg()))<=FIX_SNAP) done(); }
+  });
+  fix.addEventListener('contextmenu',e=>e.preventDefault());
   o.appendChild(fix);
+  paint(); B.raf=requestAnimationFrame(loop);
   tone(240,90,.35,'square',.08); try{navigator.vibrate&&navigator.vibrate([60,40,60])}catch(e){}
-  if(!breakHinted){ breakHinted=true; toast('Панель сорвалась с болтов! Тапай по пустому месту, чтобы прикрутить.'); }
+  if(!breakHinted){ breakHinted=true; toast('Панель сорвалась! Схвати её и поверни вокруг болта, пока не встанет ровно.'); }
 }
+// ---- zero gravity: own panel turned upside down or mirrored left-to-right
+function flipPanel(kind){
+  cancelHolds(); unflip();
+  kind=kind||(Math.random()<.5?'rot':'mir');
+  V.flipUntil=Date.now()+rnd(6500,9000); V.flipKind=kind;
+  $('panel').classList.add(kind==='mir'?'mirror':'flip');
+  popText(kind==='mir'?'🪞 Невесомость! Пульт отразился':'🙃 Невесомость! Пульт перевернулся');
+  tone(500,200,.5,'sine',.07); try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}
+}
+function unflip(){ V.flipUntil=0; V.flipKind=null; const p=document.getElementById('panel'); if(p) p.classList.remove('flip','mirror'); }
+// ---- water leak: 3 seconds without touching the screen
+function startLeak(d){
+  cancelHolds(); V.leakAt=performance.now();
+  const L=$('leak-layer'); L.classList.remove('wet'); $('leak-msg').textContent='Замри и не трогай экран!';
+  const box=$('drops'); box.textContent='';
+  for(let i=0;i<14;i++){ const dr=document.createElement('i'); dr.className='drop'; dr.style.left=rnd(4,96)+'%'; dr.style.animationDelay=rnd(0,1.2)+'s'; dr.style.animationDuration=rnd(.7,1.3)+'s'; box.appendChild(dr); }
+  for(let i=0;i<4;i++) setTimeout(()=>tone(1400+Math.random()*500,500,.12,'sine',.07),i*320+Math.random()*200);
+}
+$('leak-layer').addEventListener('pointerdown',e=>{
+  e.preventDefault();
+  const s=V.s; if(!s||!s.leak) return; const k=s.leak.k;
+  if(V.leakDone[k]||performance.now()-(V.leakAt||0)<350) return;   // a tap already in flight when it started doesn't count
+  V.leakDone[k]=true; $('leak-layer').classList.add('wet'); $('leak-msg').textContent='Лапы промокли! Корабль отбросило';
+  SFX.bad(); try{navigator.vibrate&&navigator.vibrate(200)}catch(_){} V.act({type:'leak'});
+});
+// ---- microphone: meow loudly, or tap the cat 8 times
+// microphone threshold (RMS level); the meter shows 0..MIC_MAX
+const MIC_MAX=.25, MIC_DEF=.05;
+let micThr=MIC_DEF;
+try{ const v=parseFloat(localStorage.getItem('koto-mic-thr')); if(v>0&&v<MIC_MAX) micThr=v; }catch(e){}
+// slider 1..100 maps logarithmically to 0.005..0.25 so the quiet end gets finer steps
+const thrToSlider=t=>Math.round(1+99*Math.log(t/.005)/Math.log(MIC_MAX/.005));
+const sliderToThr=v=>.005*Math.pow(MIC_MAX/.005,(v-1)/99);
+function setMicThr(t){ micThr=Math.max(.005,Math.min(MIC_MAX*.95,t)); try{localStorage.setItem('koto-mic-thr',String(micThr))}catch(e){} mtSync(); }
+const MT={stream:null,src:null,an:null,raf:0,loud:0,last:0,doneT:0,cal:null};
+function mtSync(){
+  const r=$('mt-thr'), p=micThr/MIC_MAX; r.value=thrToSlider(micThr); r.style.setProperty('--p',((r.value-1)/99*100)+'%');
+  $('mt-val').textContent=Math.round(p*100)+'%'; $('mt-mark').style.left=(p*100)+'%';
+  const mm=document.querySelector('.mic-meter'); if(mm) mm.style.setProperty('--thr',(p*100)+'%');
+}
+function mtStop(){
+  cancelAnimationFrame(MT.raf); MT.cal=null;
+  try{ if(MT.src) MT.src.disconnect(); }catch(e){}
+  if(MT.stream){ try{ MT.stream.getTracks().forEach(t=>t.stop()); }catch(e){} }
+  MT.stream=MT.src=MT.an=null;
+  const b=document.getElementById('mt-toggle'); if(b){ b.textContent='Проверить микрофон'; $('mt-auto').disabled=false; $('mt-status').textContent='Микрофон выключен'; $('mt-status').className='mt-status'; $('mt-lvl').style.width='0%'; $('mt-prog').style.width='0%'; }
+}
+async function mtStart(){
+  const st=$('mt-status');
+  if(!window.isSecureContext){ st.textContent='Микрофон работает, только когда игра открыта как сайт по https, а не файлом из загрузок. Залей файл на хостинг и открой ссылку.'; st.className='mt-status bad'; return false; }
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){ st.textContent='В этом браузере микрофон недоступен. В игре можно тапать по коту.'; st.className='mt-status bad'; return false; }
+  const a=ac(); if(!a){ st.textContent='Звук в браузере недоступен'; return false; }
+  st.textContent='Ждём разрешения на микрофон…';
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:false,autoGainControl:false}});
+    if(V.screen!=='set'){ stream.getTracks().forEach(t=>t.stop()); return false; }
+    MT.stream=stream; MT.src=a.createMediaStreamSource(stream); MT.an=a.createAnalyser(); MT.an.fftSize=1024; MT.src.connect(MT.an);
+  }catch(e){ st.textContent='Микрофон не разрешён. Разреши его в настройках сайта в браузере и попробуй ещё раз.'; st.className='mt-status bad'; return false; }
+  $('mt-toggle').textContent='Выключить микрофон'; MT.loud=0; MT.doneT=0; MT.last=performance.now();
+  const buf=new Float32Array(MT.an.fftSize);
+  const loop=now=>{
+    if(!MT.an) return;
+    MT.an.getFloatTimeDomainData(buf); let sum=0; for(let i=0;i<buf.length;i++) sum+=buf[i]*buf[i];
+    const rms=Math.sqrt(sum/buf.length), dt=Math.min(100,now-MT.last); MT.last=now;
+    $('mt-lvl').style.width=Math.min(100,rms/MIC_MAX*100)+'%';
+    const over=rms>micThr; $('mt-meter').classList.toggle('over',over);
+    if(MT.cal){
+      MT.cal.v.push(rms);
+      const left=Math.max(0,MT.cal.until-now); st.textContent='Тихо… слушаю шум: '+(left/1000).toFixed(1)+' с'; st.className='mt-status';
+      if(now>=MT.cal.until){
+        // 90th percentile of the noise, so a single cough or click doesn't push the line up
+        const v=MT.cal.v.sort((x,y)=>x-y), noise=v.length?v[Math.floor(v.length*.9)]:0; MT.cal=null; $('mt-auto').disabled=false;
+        const want=Math.max(.012,noise*2.2), cap=MIC_MAX*.5;
+        setMicThr(Math.min(want,cap));
+        if(want>cap){ st.textContent='Вокруг шумно: поставил порог на 50%. Мяукать придётся громко.'; st.className='mt-status bad'; }
+        else { st.textContent='Готово! Порог чуть выше шума вокруг. Теперь мяукни для проверки.'; st.className='mt-status ok'; }
+        MT.doneT=now+2500; }
+    } else if(MT.doneT&&now<MT.doneT){ /* keep the message for a moment */ }
+    else {
+      MT.doneT=0;
+      if(over) MT.loud+=dt; else MT.loud=Math.max(0,MT.loud-dt*.5);
+      $('mt-prog').style.width=Math.min(100,MT.loud/MIC.need*100)+'%';
+      if(MT.loud>=MIC.need){ MT.loud=0; SFX.ok(); st.textContent='Мяу засчитано! 🐈'; st.className='mt-status ok'; MT.doneT=now+1500; $('mt-prog').style.width='100%'; }
+      else { st.textContent=over?'Громко! Держи мяуканье…':'Слушаю. Мяукни!'; st.className='mt-status'+(over?' ok':''); }
+    }
+    MT.raf=requestAnimationFrame(loop);
+  };
+  MT.raf=requestAnimationFrame(loop);
+  return true;
+}
+$('btn-settings').addEventListener('click',()=>{ SFX.click(); show('set'); mtSync(); });
+$('set-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
+$('mt-toggle').addEventListener('click',()=>{ if(MT.stream) mtStop(); else mtStart(); });
+$('mt-thr').addEventListener('input',e=>setMicThr(sliderToThr(+e.target.value)));
+$('mt-reset').addEventListener('click',()=>{ setMicThr(MIC_DEF); SFX.click(); });
+mtSync();
+$('mt-auto').addEventListener('click',async()=>{
+  if(!MT.stream&&!(await mtStart())) return;
+  $('mt-auto').disabled=true; MT.cal={until:performance.now()+2000,v:[]};
+});
+const MIC={k:null,stream:null,an:null,src:null,raf:0,loud:0,last:0,taps:0,need:600};
+function stopMic(){
+  MIC.k=null; cancelAnimationFrame(MIC.raf);
+  try{ if(MIC.src) MIC.src.disconnect(); }catch(e){}
+  if(MIC.stream){ try{ MIC.stream.getTracks().forEach(t=>t.stop()); }catch(e){} }
+  MIC.stream=null; MIC.src=null; MIC.an=null;
+  const l=document.getElementById('mic-layer'); if(l) l.hidden=true;
+}
+function micDone(){ const k=MIC.k; if(k===null) return; V.micDone[k]=true; stopMic(); SFX.ok(); V.act({type:'mic'}); }
+function micProgress(p){ $('mic-fill').style.width=Math.round(Math.min(1,p)*100)+'%'; }
+function startMic(d){
+  stopMic(); MIC.k=d.k; MIC.loud=0; MIC.taps=0; MIC.last=performance.now(); micProgress(0);
+  $('mic-hint').textContent='Нет микрофона? Тапай по коту 8 раз'; $('mic-layer').hidden=false;
+  SFX.meow();
+  const k=d.k;
+  if(!window.isSecureContext){ $('mic-hint').textContent='Микрофон работает только на сайте (https), не из файла: тапай по коту 8 раз'; return; }
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){ $('mic-hint').textContent='Микрофон недоступен: тапай по коту 8 раз'; return; }
+  navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:false,autoGainControl:false}}).then(stream=>{
+    if(MIC.k!==k){ stream.getTracks().forEach(t=>t.stop()); return; }
+    const a=ac(); if(!a){ stream.getTracks().forEach(t=>t.stop()); return; }
+    MIC.stream=stream; MIC.src=a.createMediaStreamSource(stream); MIC.an=a.createAnalyser(); MIC.an.fftSize=1024; MIC.src.connect(MIC.an);
+    const buf=new Float32Array(MIC.an.fftSize); MIC.last=performance.now();
+    const loop=now=>{
+      if(MIC.k!==k||!MIC.an) return;
+      MIC.an.getFloatTimeDomainData(buf); let sum=0; for(let i=0;i<buf.length;i++) sum+=buf[i]*buf[i];
+      const rms=Math.sqrt(sum/buf.length), dt=Math.min(100,now-MIC.last); MIC.last=now;
+      $('mic-lvl').style.transform='scaleY('+Math.min(1,rms/MIC_MAX).toFixed(3)+')';
+      if(rms>micThr&&!(V.s&&V.s.pz)){ MIC.loud+=dt; $('mic-cat').classList.add('loud'); } else $('mic-cat').classList.remove('loud');
+      micProgress(Math.max(MIC.loud/MIC.need,MIC.taps/8));
+      if(MIC.loud>=MIC.need){ micDone(); return; }
+      MIC.raf=requestAnimationFrame(loop);
+    };
+    MIC.raf=requestAnimationFrame(loop);
+    $('mic-hint').textContent='Мяукай громче! Или тапай по коту 8 раз';
+  }).catch(()=>{ if(MIC.k===k) $('mic-hint').textContent='Микрофон не разрешён: тапай по коту 8 раз'; });
+}
+$('mic-cat').addEventListener('click',()=>{
+  if(MIC.k===null) return; MIC.taps++; SFX.meow();
+  const c=$('mic-cat'); c.classList.remove('wob'); void c.offsetWidth; c.classList.add('wob');
+  micProgress(Math.max(MIC.loud/MIC.need,MIC.taps/8));
+  if(MIC.taps>=8) micDone();
+});
+let expert=false;
+try{ expert=localStorage.getItem('koto-expert')==='1'; }catch(e){}
+function setExpert(v){ expert=!!v; try{ localStorage.setItem('koto-expert',expert?'1':'0'); }catch(e){} syncExpert(); }
+function syncExpert(){ ['expert-menu','expert-game'].forEach(id=>{ const b=document.getElementById(id); if(b) b.setAttribute('aria-checked',String(expert)); }); }
+function briefing(r,alone){
+  const fail=alone?'Не успеешь, и корабль отбросит к взрыву.':null;
+  return ({
+    1:['Как летать',[
+      'Сверху золотая панель с твоим приказом: глагол красным, название прибора на тёмной плашке.',
+      alone?'Все приборы на твоём пульте: найди нужный и выполни приказ.':'Нужный прибор часто стоит на чужом пульте. Кричи свой приказ экипажу, а у себя выполняй то, что кричат тебе.',
+      'Выполненный приказ уносит корабль от взрыва звезды. Проваленный приказ и лишнее нажатие отбрасывают к взрыву.',
+      'Перед каждым сектором осмотри пульт и нажми «Готов!».']],
+    2:['Новое: лазерная точка и хитрые кнопки',[
+      'Когда увидите красную точку, нажмите на неё. '+(fail||'Поймать её должен каждый, иначе корабль отбросит к взрыву.'),
+      'Кнопки с секундами внутри надо держать, пока не заполнится кольцо: «Держи Мурчать 3 сек». Отпустишь раньше, ничего не случится.',
+      'Кнопки с «×2» нажимай дважды быстро. Одно нажатие не ошибка, но и не засчитается.']],
+    3:['Новое: комок шерсти',[
+      'Когда приказ залепит шерстью, тапните по нему 4 раза, чтобы смахнуть.',
+      'Пока шерсть на месте, приказа не видно, а таймер идёт.']],
+    4:['Новое: пылесос',[
+      'Когда появится пылесос, схватите кота пальцем и утащите за красный круг.',
+      'Пылесос медленно ползёт за котом, а отпущенный кот возвращается к пылесосу. Тащите одним движением.',
+      fail||'Спасти своего кота должен каждый.']],
+    5:['Новое: срывающиеся панели',[
+      'Иногда прибор срывается с болтов и повисает на одном углу.',
+      'Схватите пальцем место, где был прибор, и поверните панель вокруг болта по стрелке ↺ или ↻. Когда она встанет почти ровно, защёлкнется сама.',
+      'Отпустишь раньше — панель снова провиснет. Пока висит, прибором пользоваться нельзя.']],
+    6:['Новое: кот прошёлся по пультам',[
+      'Время от времени кот топчется по пультам, и приборы меняются местами.',
+      alone?'Заново ищи нужный прибор глазами.':'Иногда прибор даже перескакивает на чужой пульт. Если приказ «пропал» у тебя, крикни, что у тебя теперь новый прибор.']],
+    7:['Новое: лоток',[
+      'Когда увидите лоток, копайте: проведите пальцем сверху вниз столько раз, сколько написано.',
+      fail||'Закопать должен каждый.']],
+    8:['Новое: протечка воды',[
+      'Когда начнёт капать вода, замрите на 3 секунды и не трогайте экран.',
+      'Всё на корабле тоже замирает: таймеры приказов стоят, взрыв не движется, так что ничего не провалится.',
+      'Тронешь экран — лапы промокнут, и корабль отбросит к взрыву.']],
+    9:['Новое: блохи',[
+      'Когда на экране появятся блохи, потрясите телефон, чтобы кот отряхнулся.',
+      'На компьютере или без датчика движения: быстро водите мышкой или пальцем влево-вправо по коту.',
+      fail||'Отряхнуться должен каждый.']],
+    10:['Новое: невесомость',[
+      'Иногда твой пульт переворачивается вверх ногами или отражается слева направо на несколько секунд.',
+      'Приборы работают как обычно, просто ищи их в перевёрнутом виде.']],
+    11:['Новое: доклад капитану',[
+      'Когда появится кот с микрофоном, громко мяукните в телефон. Браузер спросит разрешение на микрофон.',
+      'Без микрофона можно 8 раз тапнуть по коту.',
+      fail||'Мяукнуть должен каждый.']],
+    12:['Новое: иконки',[
+      'Некоторые приборы показаны иконками вместо названий.',
+      alone?'Запоминай, где какая иконка.':'Описывайте их экипажу словами: «рыба», «человек в скафандре», «колючий цветок».']],
+    13:['Новое: иконки в режимах',[
+      'Варианты у переключателей тоже бывают иконками. Описывайте и их.']]
+  })[r]||null;
+}
+$('expert-menu').addEventListener('click',()=>{ SFX.click(); setExpert(!expert); });
+$('expert-game').addEventListener('click',()=>{ setExpert(!expert); });
+syncExpert();
+$('joke-next').addEventListener('click',()=>{ SFX.click(); $('joke').hidden=true; const f=V.afterJoke; V.afterJoke=null; if(f) f(); });
+$('brief-ok').addEventListener('click',()=>{ SFX.click(); $('between').hidden=true; });
 function news(r){
   return ({1:'Позади взрывается звезда! Выполняй приказы, чтобы уйти от взрыва. Нужные рычаги часто у других: кричи приказы экипажу.',
-    2:'Новое: лазерная точка. Когда появится, её должен поймать каждый.',
+    2:'Новое: лазерная точка и кнопки «держи» и «×2».',
     3:'Новое: комок шерсти. Залепит приказ, смахни его тапами.',
     4:'Новое: пылесос. Утащи кота за красный круг.',
-    5:'Новое: панели срываются с болтов. Тапай по пустому месту, чтобы прикрутить.',
-    6:'Новое: лоток. Проведи пальцем сверху вниз несколько раз, чтобы закопать.',
-    7:'Новое: иконки вместо названий. Описывай их экипажу словами.'})[r]||'Взрыв всё ближе: пультов больше, таймеры короче.';
+    5:'Новое: панели срываются с болтов. Поверни панель по стрелке, пока не встанет ровно.',
+    6:'Новое: кот ходит по пультам и путает приборы.',
+    7:'Новое: лоток. Проведи пальцем сверху вниз несколько раз, чтобы закопать.',
+    8:'Новое: протечка. Капает вода — 3 секунды не трогай экран.',
+    9:'Новое: блохи. Тряси телефон, чтобы кот отряхнулся.',
+    10:'Новое: невесомость. Пульт переворачивается или отражается.',
+    11:'Новое: доклад капитану. Мяукни в микрофон.',
+    12:'Новое: иконки вместо названий. Описывай их экипажу словами.',
+    13:'Новое: иконки в режимах переключателей.'})[r]||'Взрыв всё ближе: пультов больше, таймеры короче.';
 }
 function fitOrder(){
   // the order slip keeps a fixed height; long orders shrink their font instead of pushing the panel down
@@ -1117,7 +2023,7 @@ function renderOrder(s,ins,inGame){
   else if(between) sig='bt'+s.r;
   else if(ins&&Array.isArray(ins.p)) sig='p'+ins.p.join('|');
   else if(ins) sig='x'+ins.x;
-  else sig='wait';
+  else sig=s.dbg&&s.tst?'dbg'+s.tst.i+(s.tst.ok?'ok':''):'wait'+((s.lr&&s.lr[V.myId])||'');
   if(sig!==V.orderSig){
     V.orderSig=sig; x.textContent='';
     if(!inGame) x.textContent='Наблюдаем за полётом…';
@@ -1129,6 +2035,8 @@ function renderOrder(s,ins,inGame){
       if(r){ x.appendChild(document.createTextNode(' ')); const c=document.createElement('span'); c.className='rest'; c.textContent=r; x.appendChild(c); }
     }
     else if(ins) x.textContent=ins.x;
+    else if(s.dbg&&s.tst) x.textContent=s.tst.ok?'✓ Работает!':'Тест: '+s.tst.t;
+    else if(s.lr&&s.lr[V.myId]==='fail') x.textContent='Ой! Не успели. Ждём следующий приказ…';
     else x.textContent='Отлично! Ждём следующий приказ…';
   }
   const humans=(s.pl||[]).filter(p=>!p[3]), nReady=humans.filter(p=>(s.rd||[]).includes(p[0])).length;
@@ -1140,13 +2048,31 @@ function renderOrder(s,ins,inGame){
   document.body.classList.toggle('alone',alone);
   shout.hidden=G.mode==='mp'||alone||between||!inGame; shout.disabled=!ins;
 }
-$('ready').addEventListener('click',()=>{ SFX.click(); V.act({type:'ready'}); });
+$('ready').addEventListener('click',()=>{ askMotion(); SFX.click(); V.act({type:'ready'}); });
 $('pause-btn').addEventListener('click',()=>{ $('pop').hidden=true; V.act({type:'pause',on:true}); });
 $('resume').addEventListener('click',()=>{ SFX.click(); V.act({type:'pause',on:false}); });
+function fishPop(){
+  const r=$('order').getBoundingClientRect(); const f=document.createElement('div'); f.className='fishpop'; f.textContent='+1 🐟';
+  f.style.left=(r.right-70)+'px'; f.style.top=(r.top+10)+'px'; document.body.appendChild(f); setTimeout(()=>f.remove(),1000);
+}
+function popText(t){
+  const f=document.createElement('div'); f.className='bigpop'; f.textContent=t; document.body.appendChild(f);
+  tone(520,1040,.25,'triangle',.1); setTimeout(()=>tone(780,1560,.25,'triangle',.08),120); setTimeout(()=>f.remove(),1600);
+}
+function confetti(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c=document.createElement('canvas'); c.className='confetti'; const W=c.width=innerWidth, H=c.height=innerHeight; document.body.appendChild(c);
+  const g=c.getContext('2d'), cols=['#ff9b42','#ff6f9f','#7fe0b4','#f7e8d3','#ffd36b'];
+  const ps=Array.from({length:90},()=>({x:W/2+rnd(-60,60),y:H*.35,vx:rnd(-6,6),vy:rnd(-11,-3),r:rnd(3,7),c:pick(cols),a:rnd(0,6),va:rnd(-.3,.3)}));
+  let t0=performance.now();
+  (function f(now){ const t=(now-t0)/1000; g.clearRect(0,0,W,H);
+    ps.forEach(p=>{ p.vy+=.35; p.x+=p.vx; p.y+=p.vy; p.a+=p.va; g.save(); g.translate(p.x,p.y); g.rotate(p.a); g.fillStyle=p.c; g.globalAlpha=Math.max(0,1-t/1.6); g.fillRect(-p.r,-p.r/2,p.r*2,p.r); g.restore(); });
+    if(t<1.6) requestAnimationFrame(f); else c.remove(); })(t0);
+}
 function jolt(){ const a=$('app'); a.classList.remove('shake'); document.body.classList.remove('redflash'); void a.offsetWidth; a.classList.add('shake'); document.body.classList.add('redflash'); setTimeout(()=>{a.classList.remove('shake');document.body.classList.remove('redflash')},460); }
 
 $('laser').addEventListener('click',()=>{ const k=+$('laser').dataset.k; V.dotDone[k]=true; $('laser').hidden=true; SFX.ok(); V.act({type:'dot'}); });
-$('fur').addEventListener('click',()=>{ V.hairLeft--; SFX.click(); if(V.hairLeft<=0) $('fur').hidden=true; else $('fur-n').textContent='Ещё '+V.hairLeft; });
+$('fur').addEventListener('click',()=>{ V.hairLeft--; SFX.click(); if(V.hairLeft<=0){ $('fur').hidden=true; V.act({type:'hairdone'}); } else $('fur-n').textContent='Ещё '+V.hairLeft; });
 $('shout').addEventListener('click',()=>{ SFX.meow(); V.act({type:'shout'}); });
 $('mute').addEventListener('click',()=>{ muted=!muted; $('mute').textContent=muted?'Включить звук':'Выключить звук'; $('pop').hidden=true; });
 function syncFull(){ const b=$('full-btn'); b.disabled=!canFull; b.setAttribute('aria-checked',String(isFull())); b.firstChild.textContent=canFull?'Полный экран':'Полный экран недоступен'; }
@@ -1187,6 +2113,66 @@ function scrape(){
     src.connect(f); f.connect(g); g.connect(a.destination); src.start();
   }catch(e){}
 }
+// ---- fleas: shake the phone (device motion) or wiggle left-right
+const FLEA_SHAKE=9;     // m/s² — how hard a shake has to be
+const FLEA={k:null,n:6,done:0,last:0,lx:null,ext:null,dir:0,motion:false};
+let motionAsked=false;
+function askMotion(){
+  // iOS asks for motion access only from a tap; Android just delivers events
+  if(motionAsked) return; motionAsked=true;
+  try{ if(window.DeviceMotionEvent&&typeof DeviceMotionEvent.requestPermission==='function') DeviceMotionEvent.requestPermission().catch(()=>{}); }catch(e){}
+}
+function stopFlea(){ FLEA.k=null; const l=document.getElementById('flea-layer'); if(l) l.hidden=true; }
+function startFlea(d){
+  FLEA.k=d.k; FLEA.n=Math.max(1,+d.n||6); FLEA.done=0; FLEA.lx=null; FLEA.ext=null; FLEA.st=null; FLEA.dir=0;
+  $('flea-count').textContent='0 из '+FLEA.n;
+  const box=$('fleas'); box.textContent='';
+  for(let i=0;i<FLEA.n*3;i++){ const f=document.createElement('i'); f.className='flea'; f.style.left=rnd(15,85)+'%'; f.style.top=rnd(20,85)+'%'; f.style.animationDelay=rnd(0,.5)+'s'; box.appendChild(f); }
+  $('flea-hint').textContent=!window.isSecureContext?'Датчик движения работает только на сайте (https), не из файла. Води пальцем влево-вправо':'Тряси телефон! Или быстро води пальцем влево-вправо';
+  $('flea-hint').hidden=false; $('flea-layer').hidden=false; tone(1800,2400,.08,'square',.04); setTimeout(()=>tone(2000,2600,.08,'square',.04),110);
+}
+function fleaShake(){
+  if(FLEA.k===null) return;
+  FLEA.done++; $('flea-count').textContent=Math.min(FLEA.done,FLEA.n)+' из '+FLEA.n;
+  const cat=$('flea-cat'); cat.classList.remove('wob'); void cat.offsetWidth; cat.classList.add('wob');
+  const on=[...document.querySelectorAll('#fleas .flea:not(.off)')];
+  for(let i=0;i<3&&on.length;i++){ const f=on.splice(Math.floor(Math.random()*on.length),1)[0]; f.style.setProperty('--fx',rnd(-160,160)+'px'); f.style.setProperty('--fy',rnd(-140,60)+'px'); f.classList.add('off'); }
+  tone(240,140,.09,'triangle',.07);
+  try{ navigator.vibrate&&navigator.vibrate(30); }catch(e){}
+  if(FLEA.done>=FLEA.n){ const k=FLEA.k; V.fleaDone[k]=true; stopFlea(); SFX.ok(); V.act({type:'flea'}); }
+}
+addEventListener('devicemotion',e=>{
+  // Android phones differ: some report only acceleration with gravity, some report zeros for one of the two.
+  // A shake is either a strong push (acceleration without gravity) or a sharp jump of the gravity vector.
+  const a=e.acceleration, g=e.accelerationIncludingGravity;
+  let m=0, got=false;
+  if(a&&a.x!=null){ got=true; m=Math.max(m,Math.hypot(a.x,a.y||0,a.z||0)); }
+  if(g&&g.x!=null){ got=true; const gv=[g.x,g.y||0,g.z||0];
+    if(FLEA.g){ m=Math.max(m,Math.hypot(gv[0]-FLEA.g[0],gv[1]-FLEA.g[1],gv[2]-FLEA.g[2])*.8); }
+    FLEA.g=gv; }
+  if(!got) return;
+  FLEA.motion=true; FLEA.lastEv=performance.now(); if(FLEA.k===null) return;
+  const now=performance.now();
+  if(m>FLEA_SHAKE&&now-FLEA.last>200){ FLEA.last=now; fleaShake(); }
+});
+(function(){
+  // fallback: every change of horizontal direction after at least 30 px counts as one shake
+  const L=$('flea-layer');
+  L.addEventListener('pointermove',e=>{
+    if(FLEA.k===null) return;
+    if(FLEA.lx===null){ FLEA.lx=e.clientX; FLEA.ext=e.clientX; FLEA.st=e.clientX; return; }
+    const dx=e.clientX-FLEA.lx; FLEA.lx=e.clientX; if(Math.abs(dx)<1) return;
+    const d=dx>0?1:-1;
+    if(FLEA.dir===0) FLEA.dir=d;
+    if(d!==FLEA.dir){
+      // turning point: the stroke that just ended counts if it was long enough
+      if(Math.abs(FLEA.ext-FLEA.st)>30){ const now=performance.now(); if(now-FLEA.last>100){ FLEA.last=now; fleaShake(); } }
+      FLEA.st=FLEA.ext; FLEA.dir=d; FLEA.ext=e.clientX;
+    }
+    else if((d>0&&e.clientX>FLEA.ext)||(d<0&&e.clientX<FLEA.ext)) FLEA.ext=e.clientX;
+  });
+  L.addEventListener('pointerdown',e=>{ e.preventDefault(); FLEA.lx=e.clientX; FLEA.ext=e.clientX; FLEA.st=e.clientX; FLEA.dir=0; try{L.setPointerCapture(e.pointerId)}catch(_){} });
+})();
 function stopLit(){ LIT.k=null; LIT.y0=null; const l=document.getElementById('lit-layer'); if(l) l.hidden=true; }
 function startLit(d){
   LIT.k=d.k; LIT.n=Math.max(1,+d.n||4); LIT.done=0; LIT.y0=null;
@@ -1214,12 +2200,12 @@ function startLit(d){
 })();
 function vacFrame(now){
   if(VAC.k===null) return;
-  if(V.s&&V.s.pz){ VAC.t=now; return; }
+  if(V.s&&(V.s.pz||V.s.leak)){ VAC.t=now; return; }
   const dt=Math.min(.05,(now-VAC.t)/1000); VAC.t=now;
   const W=innerWidth,H=innerHeight;
   let dx=VAC.cx-VAC.vx, dy=VAC.cy-VAC.vy, dist=Math.hypot(dx,dy)||1;
   // the vacuum crawls after the cat, and pulls it in whenever nobody holds it
-  if(dist>72){ VAC.vx+=dx/dist*34*dt; VAC.vy+=dy/dist*34*dt; }
+  if(dist>60){ VAC.vx+=dx/dist*28*dt; VAC.vy+=dy/dist*28*dt; }
   if(!VAC.drag&&dist>80){ VAC.cx-=dx/dist*36*dt; VAC.cy-=dy/dist*36*dt; }
   VAC.vx=Math.max(32,Math.min(W-32,VAC.vx)); VAC.vy=Math.max(32,Math.min(H-32,VAC.vy));
   VAC.cx=Math.max(30,Math.min(W-30,VAC.cx)); VAC.cy=Math.max(30,Math.min(H-30,VAC.cy));
@@ -1233,7 +2219,7 @@ function frame(){
   const s=V.s;
   vacFrame(performance.now());
   if(s&&V.screen==='game'){
-    const ins=s.ins&&s.ins[V.myId]; const t=$('timer'); const el=s.pz?0:performance.now()-V.sAt;
+    const ins=s.ins&&s.ins[V.myId]; const t=$('timer'); const el=(s.pz||s.leak)?0:performance.now()-V.sAt;
     if(s.ph==='between'){ const p=s.bt?Math.max(0,s.bt-el)/(s.btd||1):0; t.style.width=(p*100)+'%'; t.classList.remove('urgent'); }
     else if(ins){ const rem=Math.max(0,ins.rem-el); const p=rem/ins.dur; t.style.width=(p*100)+'%'; t.classList.toggle('urgent',p<.3); }
     else t.style.width='0%';
@@ -1242,8 +2228,53 @@ function frame(){
 }
 requestAnimationFrame(frame);
 
+function award(s){
+  if(s.st&&s.st.dbg){ $('loot').hidden=true; return; }
+  const st=s.st||{}, pp=Array.isArray(st.pp)?st.pp:[], mine=pp.find(r=>r[6]===V.myId), box=$('loot');
+  if(!mine){ box.hidden=true; return; }
+  const sig=(st.time||0)+':'+s.r+':'+(st.ok||0); if(V.awardSig===sig){ return; } V.awardSig=sig;
+  const done=+mine[2]||0, wrong=+mine[3]||0, ev=st.ev||{}, startR=+st.start||1;
+  const lines=[]; let total=0;
+  const add=(k,v)=>{ if(v>0){ lines.push([k,'+'+v]); total+=v; } };
+  add('За полёт',2);
+  add('Верные действия',done);
+  add('Пройденные сектора',3*Math.max(0,s.r-startR));
+  add('Общие напасти',(ev.dot||0)+(ev.vac||0)+(ev.lit||0));
+  add('Без лишних нажатий',(wrong===0&&done>=5)?5:0);
+  add('Лучшее комбо',Math.floor((+st.mc||0)/5)*2);
+  const md=MODES[st.md]?st.md:'normal', mult=MODES[md].fish;
+  if(mult!==1){ const nt=Math.max(1,Math.round(total*mult)); lines.push([MODES[md].name+' ×'+String(mult).replace('.',','),(nt>=total?'+':'')+(nt-total)]); total=nt; }
+  const lv0=levelOf(prog.fish), best0=prog.best;
+  prog.fish+=total; prog.flights++; if(md!=='kids') prog.best=Math.max(prog.best,s.r);
+  const myTouch=+mine[8]||0; if((+st.lks||0)>0&&!myTouch) prog.dry=(prog.dry||0)+(+st.lks||0);
+  prog.dot+=(ev.dot||0); prog.vac+=(ev.vac||0); prog.lit+=(ev.lit||0);
+  const got=[]; const gain=id=>{ if(!prog.ach.includes(id)){ prog.ach.push(id); got.push(id); } };
+  gain('first'); if(md!=='kids'){ if(s.r>=3) gain('s3'); if(s.r>=5) gain('s5'); if(s.r>=8) gain('s8'); if(s.r>=10) gain('s10'); } if(md==='hard'&&s.r>=5) gain('hard5'); if((prog.dry||0)>=3) gain('dry');
+  if(done>=10&&wrong===0) gain('clean'); if(done>=25) gain('master'); if((+st.mc||0)>=10) gain('combo');
+  if((+st.time||0)>=300) gain('marathon'); if(G.mode==='mp') gain('team'); if(prog.fish>=100) gain('fish100');
+  if(prog.vac>=10) gain('vacs'); if(prog.lit>=10) gain('digger'); if(prog.dot>=15) gain('dots');
+  saveProg();
+  box.hidden=false; $('loot-big').textContent='+'+total+' 🐟';
+  const ll=$('loot-list'); ll.textContent=''; lines.forEach(([k,v])=>{ const dt=document.createElement('dt'); dt.textContent=k; const dd=document.createElement('dd'); dd.textContent=v; ll.appendChild(dt); ll.appendChild(dd); });
+  const lv=levelOf(prog.fish), cur=needFor(lv), nxt=needFor(lv+1);
+  $('o-rank').textContent=RANKS[lv]; $('o-fish').textContent='🐟 '+prog.fish;
+  const xp=$('o-xp'); xp.style.transition='none'; xp.style.width='0%'; requestAnimationFrame(()=>{ xp.style.transition='width 1.2s ease-out'; xp.style.width=(lv>=RANKS.length-1?100:Math.round(100*(prog.fish-cur)/(nxt-cur)))+'%'; });
+  const ul=$('o-unlocks'); ul.textContent='';
+  const note=t=>{ const li=document.createElement('li'); li.textContent=t; ul.appendChild(li); };
+  if(lv>lv0){
+    note('Новое звание: '+RANKS[lv]+'!');
+    CATS.forEach((c,i)=>{ if(CAT_LVL[i]>lv0&&CAT_LVL[i]<=lv) note('Открыт кот '+c); });
+    SHIPS.forEach(([e,n])=>{ if(n>lv0&&n<=lv) note('Открыт корабль '+e); });
+    setTimeout(()=>{ confetti(); popText('Новое звание!'); },600);
+  }
+  if(md!=='kids'&&s.r>best0&&best0>0) note('Новый рекорд: сектор '+s.r+'!');
+  STARTS.forEach(n=>{ if(n>1&&best0<n&&prog.best>=n) note('Теперь можно стартовать с сектора '+n); });
+  got.forEach(id=>{ const a=ACH.find(x=>x[0]===id); if(a) note('Достижение: '+a[1]); });
+  renderProg();
+}
 function showOver(s){
   show('over');
+  award(s);
   const st=s.st||{}, secs=+st.time||0;
   $('o-time').textContent=Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0');
   const ppBox=$('o-pp'); ppBox.textContent='';
@@ -1251,7 +2282,7 @@ function showOver(s){
   pp.sort((a,b)=>(b[2]-b[3])-(a[2]-a[3]));
   pp.forEach(r=>{
     const row=document.createElement('div'); row.className='pp-row'; row.setAttribute('role','row');
-    const who=document.createElement('span'); who.className='who'; who.textContent=(r[1]||'🐱')+' '+r[0]+(r[5]?' · бот':''); row.appendChild(who);
+    const who=document.createElement('span'); who.className='who'; who.appendChild(catNode(r[1]||'🐱',r[7])); who.appendChild(document.createTextNode(' '+r[0]+(r[5]?' · бот':''))); row.appendChild(who);
     [[r[2],'good'],[r[3],'badv'],[r[4],'badv']].forEach(([v,cl])=>{ const c=document.createElement('span'); c.className=v?cl:'zero'; c.textContent=v; row.appendChild(c); });
     ppBox.appendChild(row);
   });
@@ -1260,11 +2291,118 @@ function showOver(s){
   (Array.isArray(st.fun)?st.fun:[]).forEach(([k,v])=>{ const dt=document.createElement('dt'); dt.textContent=k; const dd=document.createElement('dd'); dd.textContent=v; fun.appendChild(dt); fun.appendChild(dd); });
   $('o-r').textContent=s.r; $('o-ok').textContent=(s.st&&s.st.ok)||0; $('o-bad').textContent=((s.st&&s.st.bad)||0)+((s.st&&s.st.wrong)||0);
   $('o-title').textContent=s.r>=4?'Легендарный полёт':'Взрыв настиг корабль';
-  $('o-sub').textContent='Экипаж добрался до сектора '+s.r+'. Взрыв звезды догнал корабль, но все коты успели выпрыгнуть и приземлились на лапы.';
+  $('o-sub').textContent=(st.md&&st.md!=='normal'&&MODES[st.md]?'Режим «'+MODES[st.md].name+'». ':'')+'Экипаж добрался до сектора '+s.r+'. Взрыв звезды догнал корабль, но все коты успели выпрыгнуть и приземлились на лапы.';
+  V.overS=s;
+  if(st.dbg){ $('o-title').textContent='Проверка завершена'; $('o-sub').textContent='Все механики пройдены. Рыбки и рекорды в режиме тестера не начисляются.'; }
   const isHost=G.mode==='solo'||(G.net&&G.net.host);
   $('btn-again').hidden=!isHost; $('btn-lobby').hidden=!(G.mode==='mp'&&G.net&&G.net.host); $('o-wait').hidden=isHost;
   SFX.bad();
 }
+
+/* ---------- share card: a picture of the flight results ---------- */
+function wrapText(g,text,x,y,maxW,lh){
+  const words=String(text).split(' '); let line='', n=0;
+  for(const w of words){ const t=line?line+' '+w:w; if(g.measureText(t).width>maxW&&line){ g.fillText(line,x,y+n*lh); n++; line=w; } else line=t; }
+  if(line){ g.fillText(line,x,y+n*lh); n++; } return n;
+}
+function rrect(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+async function drawShare(s){
+  try{ await document.fonts.ready; }catch(e){}
+  const W=1080,H=1350,c=document.createElement('canvas'); c.width=W; c.height=H; const g=c.getContext('2d');
+  const st=s.st||{}, D="'Unbounded',system-ui,sans-serif", B="'Nunito',system-ui,sans-serif";
+  const bg=g.createLinearGradient(0,0,W,H); bg.addColorStop(0,'#241a3f'); bg.addColorStop(1,'#1a1230'); g.fillStyle=bg; g.fillRect(0,0,W,H);
+  let glow=g.createRadialGradient(W*.9,0,0,W*.9,0,700); glow.addColorStop(0,'rgba(255,111,159,.28)'); glow.addColorStop(1,'rgba(255,111,159,0)'); g.fillStyle=glow; g.fillRect(0,0,W,H);
+  glow=g.createRadialGradient(0,H,0,0,H,700); glow.addColorStop(0,'rgba(255,155,66,.22)'); glow.addColorStop(1,'rgba(255,155,66,0)'); g.fillStyle=glow; g.fillRect(0,0,W,H);
+  for(let i=0;i<90;i++){ g.fillStyle=Math.random()<.5?'#f7e8d3':'#ab9fcc'; g.globalAlpha=rnd(.3,.9); g.beginPath(); g.arc(rnd(0,W),rnd(0,H),rnd(1,3),0,7); g.fill(); } g.globalAlpha=1;
+  const P=80;
+  g.font='900 64px '+D; g.fillStyle='#f7e8d3'; g.textBaseline='alphabetic'; g.fillText('Кото',P,140); const kw=g.measureText('Кото').width; g.fillStyle='#ff9b42'; g.fillText('корабль',P+kw,140);
+  g.font='700 30px '+B; g.fillStyle='#ab9fcc';
+  const md=MODES[st.md]&&st.md!=='normal'?' · '+MODES[st.md].name:''; g.fillText('Бортовой журнал полёта'+md,P,192);
+  g.font='900 168px '+D; g.fillStyle='#ff9b42'; g.fillText('Сектор '+s.r,P,380);
+  g.font='800 36px '+B; g.fillStyle='#f7e8d3'; wrapText(g,s.r>=4?'Легендарный полёт! Все коты приземлились на лапы.':'Взрыв догнал корабль, но все коты приземлились на лапы.',P,446,W-2*P,46);
+  const secs=+st.time||0, tiles=[[Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0'),'продержались'],[String(st.ok||0),'приказов'],[String((st.bad||0)+(st.wrong||0)),'ошибок'],['×'+(st.mc||0),'лучшее комбо']];
+  const tw=(W-2*P-3*20)/4; tiles.forEach(([v,k],i)=>{ const x=P+i*(tw+20), y=540; rrect(g,x,y,tw,150,26); g.fillStyle='#2f2450'; g.fill(); g.strokeStyle='#4a3d74'; g.lineWidth=2; g.stroke();
+    g.font='900 50px '+D; g.fillStyle='#ff9b42'; g.fillText(v,x+20,y+80); let fs=26; g.font='700 '+fs+'px '+B; while(g.measureText(k).width>tw-36&&fs>16){ fs--; g.font='700 '+fs+'px '+B; } g.fillStyle='#ab9fcc'; g.fillText(k,x+20,y+122); });
+  let y=760; g.font='700 26px '+D; g.fillStyle='#ab9fcc'; g.fillText('ЭКИПАЖ',P,y); y+=20;
+  const pp=(Array.isArray(st.pp)?st.pp.slice():[]).sort((a,b)=>(b[2]-b[3])-(a[2]-a[3])).slice(0,6);
+  pp.forEach((r,i)=>{ const yy=y+i*62; rrect(g,P,yy,W-2*P,52,16); g.fillStyle=i===0?'rgba(255,155,66,.22)':'rgba(47,36,80,.85)'; g.fill();
+    g.font='40px '+B; g.fillStyle='#fff'; g.fillText((r[1]||'🐱')+(validHat(r[7])||''),P+16,yy+40);
+    g.font='800 30px '+B; g.fillStyle='#f7e8d3'; g.fillText(String(r[0]).slice(0,22)+(r[5]?' · бот':''),P+140,yy+36);
+    g.textAlign='right'; g.fillStyle='#7fe0b4'; g.fillText('✓ '+(r[2]||0),W-P-130,yy+36); g.fillStyle='#ff5d6c'; g.fillText('✗ '+((r[3]||0)+(r[4]||0)),W-P-20,yy+36); g.textAlign='left'; });
+  y+=pp.length*62+40;
+  const fun=(Array.isArray(st.fun)?st.fun:[]).slice(0,3);
+  g.font='700 26px '+D; g.fillStyle='#ab9fcc'; if(fun.length&&y<H-260){ g.fillText('ИЗ БОРТОВОГО ЖУРНАЛА',P,y); y+=50; }
+  fun.forEach(([k,v])=>{ if(y>H-150) return; g.font='700 32px '+B; g.fillStyle='#ab9fcc'; g.fillText(k,P,y); g.textAlign='right'; g.font='900 32px '+B; g.fillStyle='#f7e8d3'; g.fillText(v,W-P,y); g.textAlign='left'; y+=48; });
+  g.fillStyle='#ff9b42'; g.fillRect(0,H-90,W,90);
+  g.font='900 34px '+D; g.fillStyle='#2b1607'; g.fillText('Сможете дальше? Мяу!',P,H-32);
+  g.textAlign='right'; g.font='44px '+B; g.fillText((s.sh||'🚀')+'🐈',W-P,H-28); g.textAlign='left';
+  return c;
+}
+async function shareResults(){
+  const s=V.overS; if(!s) return;
+  const btn=$('btn-share'); btn.disabled=true;
+  try{
+    const c=await drawShare(s);
+    const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+    if(!blob) throw new Error('no blob');
+    const file=new File([blob],'kotokorabl-sector-'+s.r+'.png',{type:'image/png'});
+    const text='Котокорабль: долетели до сектора '+s.r+'! 🐈🚀';
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file],text}); }catch(e){ if(e&&e.name!=='AbortError') throw e; }
+    } else {
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=file.name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500);
+      toast('Картинка сохранена, отправь её друзьям');
+    }
+  }catch(e){ toast('Не получилось сделать картинку'); }
+  btn.disabled=false;
+}
+$('btn-share').addEventListener('click',()=>{ SFX.click(); shareResults(); });
+
+/* ---------- music: a small generative loop that speeds up as the explosion gets closer ---------- */
+let musicOn=true;
+try{ musicOn=localStorage.getItem('koto-music')!=='0'; }catch(e){}
+const MUS={next:0,step:0,bar:0,bus:null,hat:null};
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+function musNote(a,t,midi,dur,type,vol){
+  const o=a.createOscillator(), g=a.createGain(); o.type=type; o.frequency.setValueAtTime(mtof(midi),t);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.01); g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+  o.connect(g); g.connect(MUS.bus); o.start(t); o.stop(t+dur+.02);
+}
+function musHat(a,t,vol){
+  if(!MUS.hat){ MUS.hat=a.createBuffer(1,Math.floor(a.sampleRate*.05),a.sampleRate); const d=MUS.hat.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); }
+  const src=a.createBufferSource(); src.buffer=MUS.hat; const f=a.createBiquadFilter(); f.type='highpass'; f.frequency.value=6500; const g=a.createGain(); g.gain.value=vol;
+  src.connect(f); f.connect(g); g.connect(MUS.bus); src.start(t);
+}
+const ROOTS=[45,41,43,40], SCALE=[0,3,5,7,10,12,15];
+setInterval(()=>{
+  const s=V.s, playing=musicOn&&!muted&&AC&&V.screen==='game'&&s&&s.ph==='play'&&!s.pz&&!s.leak;
+  if(!playing){ MUS.next=0; return; }
+  const a=AC; if(a.state!=='running') return;
+  if(!MUS.bus){ MUS.bus=a.createGain(); MUS.bus.gain.value=.55; MUS.bus.connect(a.destination); }
+  const gap=Math.max(0,(+s.pos||0)-(+s.fire||0)), danger=Math.max(0,Math.min(1,1-gap/45));
+  const bpm=92+3*Math.min(10,s.r||1)+50*danger, sp=60/bpm/4;
+  if(!MUS.next||MUS.next<a.currentTime) MUS.next=a.currentTime+.05;
+  while(MUS.next<a.currentTime+.2){
+    const t=MUS.next, st=MUS.step%16, root=ROOTS[MUS.bar%4];
+    if(st===0||st===6||st===8||st===14) musNote(a,t,root-12+(st===14?7:0),sp*2.2,'triangle',.11);
+    if(st%2===0) musHat(a,t,st%4===0?.05:.025);
+    if(st%4===2||(danger>.6&&st%2===1)) musNote(a,t,root+12+pick(SCALE),sp*1.6,'square',.018+.012*danger);
+    if(danger>.5&&(st===0||st===8)) musNote(a,t,30,.18,'sine',.16);   // heartbeat when the fire is close
+    MUS.next+=sp; MUS.step++; if(MUS.step%16===0) MUS.bar++;
+  }
+},50);
+function syncMusic(){ const b=$('music-btn'); b.setAttribute('aria-checked',String(musicOn)); }
+$('music-btn').addEventListener('click',()=>{ musicOn=!musicOn; try{localStorage.setItem('koto-music',musicOn?'1':'0')}catch(e){} syncMusic(); });
+syncMusic();
+
+/* ---------- auto-pause when the app goes to the background ---------- */
+function autoPause(){
+  if(document.visibilityState!=='hidden') return;
+  const s=V.s; if(V.screen!=='game'||!s||s.ph==='over'||s.pz) return;
+  V.act({type:'pause',on:true});
+}
+document.addEventListener('visibilitychange',autoPause);
+addEventListener('pagehide',()=>{ if(V.screen==='game'&&V.s&&!V.s.pz&&V.s.ph!=='over') V.act({type:'pause',on:true}); });
 
 /* =========================================================
    GAME CONTROL: solo + multiplayer transport
@@ -1282,15 +2420,17 @@ function stopAll(){
   }
   G.mode=null; clearTimeout(netTimer); netTimer=null; netPending=null;
 }
-function startSolo(){
-  goFull(); ac(); stopAll(); G.mode='solo'; resetView(); V.myId='me';
-  const players=[{id:'me',name:me.name,cat:me.cat,bot:false}];
-  for(let i=0;i<soloBots;i++) players.push({id:'b'+i,name:BOTS[i][0],cat:BOTS[i][1],bot:true});
+function startSolo(dbg){
+  dbg=dbg===true;
+  askMotion(); goFull(); ac(); stopAll(); G.mode='solo'; G.dbg=dbg; resetView(); V.myId='me';
+  const players=[{id:'me',name:me.name,cat:me.cat,hat:validHat(prog.hat)||'',bot:false}];
+  for(let i=0;i<(dbg?0:soloBots);i++) players.push({id:'b'+i,name:BOTS[i][0],cat:BOTS[i][1],bot:true});
   V.act=a=>{ if(G.host) G.host.act('me',a); };
   show('game');
-  G.host=new Host(players,{tick:s=>V.onTick(s),panels:(pid,m)=>{ if(pid==='me') V.onPanels(m); }});
+  G.host=new Host(players,{tick:s=>V.onTick(s),panels:(pid,m)=>{ if(pid==='me') V.onPanels(m); }},{start:dbg?1:startSector,ship:prog.ship,trail:validTrail(prog.trail),mode:gameMode,debug:dbg});
 }
-$('btn-solo').onclick=startSolo;
+$('btn-solo').onclick=()=>startSolo(false);
+$('btn-tester').onclick=()=>startSolo(true);
 
 /* --- Firebase Realtime Database network --- */
 let FB_CONFIG=window.FIREBASE_CONFIG||null, CFG_EMBEDDED=!!window.FIREBASE_CONFIG, DB=null;
@@ -1347,7 +2487,7 @@ function inviteLink(code){
 
 async function mpJoin(code,asHost){
   if(!DB){ toast('Мультиплеер не настроен'); return; }
-  goFull(); ac(); stopAll();
+  askMotion(); goFull(); ac(); stopAll();
   const TS=firebase.database.ServerValue.TIMESTAMP;
   const room=DB.ref('cats/'+code), pid=myPid;
   try{
@@ -1361,7 +2501,7 @@ async function mpJoin(code,asHost){
       if(!m.exists()){ toast('Комнаты '+code+' нет. Проверь код или попроси новую ссылку.'); return; }
     }
     const meRef=room.child('players/'+pid);
-    await meRef.set({n:me.name,c:me.cat,h:asHost?1:0,b:0,t:TS});
+    await meRef.set({n:me.name,c:me.cat,ht:validHat(prog.hat)||'',h:asHost?1:0,b:0,t:TS});
     meRef.onDisconnect().remove();
   }catch(e){
     toast(e&&String(e.code||e.message).toUpperCase().includes('PERMISSION')?'Firebase отклонил запись: проверь правила Realtime Database.':'Не удалось подключиться: '+((e&&e.message)||'ошибка'));
@@ -1402,7 +2542,7 @@ function renderWait(){
   const bots=host?G.mpBots:Math.max(0,Math.min(BOTS.length,(hostP&&+hostP[1].b)||0));
   ps.forEach(([id,pr])=>{
     const li=document.createElement('li');
-    const av=document.createElement('span'); av.className='av'; av.textContent=safeCat(pr.c);
+    const av=document.createElement('span'); av.className='av'; av.appendChild(catNode(safeCat(pr.c),pr.ht));
     const nm=document.createElement('span'); nm.className='nm'; nm.textContent=String(pr.n).slice(0,16)+(id===G.net.pid?' (ты)':'');
     li.appendChild(av); li.appendChild(nm);
     if(pr.h){ const t=document.createElement('span'); t.className='pill cap'; t.textContent='капитан'; li.appendChild(t); }
@@ -1410,7 +2550,7 @@ function renderWait(){
   });
   for(let i=0;i<bots;i++){ const li=document.createElement('li'); const av=document.createElement('span'); av.className='av'; av.textContent=BOTS[i][1]; const nm=document.createElement('span'); nm.className='nm'; nm.textContent=BOTS[i][0]; const t=document.createElement('span'); t.className='pill'; t.textContent='бот'; li.appendChild(av); li.appendChild(nm); li.appendChild(t); list.appendChild(li); }
   const humans=ps.length;
-  $('w-host').hidden=!host; $('btn-start').hidden=!host;
+  $('w-host').hidden=!host; $('btn-start').hidden=!host; $('w-start-row').hidden=!host;
   $('wb-n').textContent=G.mpBots; $('wb-minus').disabled=G.mpBots<=0; $('wb-plus').disabled=humans+G.mpBots>=MAXP||G.mpBots>=BOTS.length;
   $('w-note').textContent=host?(humans>MAXP?'На борту больше '+MAXP+' котов: лишние будут зрителями.':'Можно начинать в любой момент. Боты добавят пульты и приказы.'):'Ждём, когда капитан нажмёт «Взлететь».';
 }
@@ -1424,7 +2564,7 @@ function mpStart(){
   if(!G.net||!G.net.host) return; goFull(); ac();
   const pid=G.net.pid;
   const ps=Object.entries(G.net.players).filter(([,p])=>p&&p.n).sort((a,b)=>(b[0]===pid)-(a[0]===pid)||(a[1].t||0)-(b[1].t||0));
-  const players=ps.slice(0,MAXP).map(([id,p])=>({id,name:String(p.n).slice(0,16),cat:safeCat(p.c),bot:false}));
+  const players=ps.slice(0,MAXP).map(([id,p])=>({id,name:String(p.n).slice(0,16),cat:safeCat(p.c),hat:validHat(p.ht)||'',bot:false}));
   for(let i=0;i<G.mpBots&&players.length<MAXP;i++) players.push({id:'bot'+i,name:BOTS[i][0],cat:BOTS[i][1],bot:true});
   if(G.host) G.host.stop();
   resetView(); V.myId=pid; show('game');
@@ -1432,7 +2572,7 @@ function mpStart(){
   G.host=new Host(players,{
     tick:s=>{ V.onTick(s); netTick(s); },
     panels:(id,m)=>{ if(id===V.myId) V.onPanels(m); else room.child('panels/'+id).set(clean(m)).catch(()=>{}); }
-  });
+  },{start:startSector,ship:prog.ship,trail:validTrail(prog.trail),mode:gameMode});
 }
 $('btn-start').onclick=mpStart;
 $('btn-create').onclick=()=>mpJoin(String(Math.floor(1000+Math.random()*9000)),true);
@@ -1440,8 +2580,8 @@ $('btn-join').onclick=()=>{ const c=$('code').value.trim(); if(!/^\d{4}$/.test(c
 $('code').addEventListener('keydown',e=>{ if(e.key==='Enter') $('btn-join').click(); });
 $('btn-wait-leave').onclick=()=>{ stopAll(); show('menu'); };
 $('btn-quit').onclick=()=>{ stopAll(); show('menu'); };
-$('btn-menu').onclick=()=>{ stopAll(); show('menu'); };
-$('btn-again').onclick=()=>{ if(G.mode==='solo') startSolo(); else mpStart(); };
+$('btn-menu').onclick=()=>{ stopAll(); show('menu'); renderProg(); };
+$('btn-again').onclick=()=>{ if(G.mode==='solo') startSolo(!!G.dbg); else mpStart(); };
 $('btn-lobby').onclick=()=>{ if(G.host){ G.host.stop(); G.host=null; } if(G.net){ clearTimeout(netTimer); netTimer=null; netPending=null; G.net.room.child('state').set({ph:'lobby'}).catch(()=>{}); G.net.room.child('panels').remove().catch(()=>{}); } resetView(); V.myId=G.net&&G.net.pid; showWait(); };
 })();
 </script>
