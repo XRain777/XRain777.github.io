@@ -285,7 +285,17 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 
 .over-hero{display:flex;flex-direction:column;gap:8px;padding-block:20px 6px}
 .over-hero h1{font-size:clamp(28px,8vw,40px);font-weight:900}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.pp{display:flex;flex-direction:column;gap:4px;font-variant-numeric:tabular-nums}
+.pp-row{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px 44px;gap:4px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--plate)}
+.pp-head{background:none;padding-block:0;font-size:10px;font-family:var(--display);letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
+.pp-row span:not(:first-child){text-align:center;font-weight:900}
+.pp-row .who{display:flex;gap:6px;align-items:center;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pp-row .good{color:var(--mint)} .pp-row .badv{color:var(--danger)} .pp-row .zero{color:var(--dim);font-weight:700}
+#o-pp{display:flex;flex-direction:column;gap:4px}
+.fun{display:grid;grid-template-columns:1fr auto;gap:8px 12px;margin:0}
+.fun dt{color:var(--dim)} .fun dd{margin:0;font-weight:900;text-align:right;color:var(--cream);font-variant-numeric:tabular-nums}
+@media (min-width:480px){ .stats{grid-template-columns:repeat(4,1fr)} }
 .stats div{background:var(--hull);border:1px solid var(--edge);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:2px}
 .stats b{font-family:var(--display);font-size:26px;color:var(--tabby);font-variant-numeric:tabular-nums}
 .stats span{font-size:12px;color:var(--dim)}
@@ -436,9 +446,22 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
       <p class="muted" id="o-sub"></p>
     </div>
     <div class="stats">
+      <div><b id="o-time">0:00</b><span>продержались</span></div>
       <div><b id="o-r">1</b><span>сектор</span></div>
       <div><b id="o-ok">0</b><span>приказов выполнено</span></div>
       <div><b id="o-bad">0</b><span>провалено и лишних</span></div>
+    </div>
+    <div class="card">
+      <h2>Экипаж</h2>
+      <div class="pp" role="table" aria-label="Статистика по игрокам">
+        <div class="pp-row pp-head" role="row"><span role="columnheader">Кот</span><span role="columnheader" title="Верных действий">Верно</span><span role="columnheader" title="Лишних действий">Лишн.</span><span role="columnheader" title="Своих приказов провалено">Провал</span></div>
+        <div id="o-pp"></div>
+      </div>
+      <p class="muted" id="o-mvp"></p>
+    </div>
+    <div class="card">
+      <h2>Бортовой журнал</h2>
+      <dl class="fun" id="o-fun"></dl>
     </div>
     <button class="primary" id="btn-again">Ещё полёт</button>
     <button class="secondary" id="btn-lobby" hidden>Вернуть экипаж в комнату</button>
@@ -545,7 +568,7 @@ class Host{
   constructor(players,out){
     this.pl=players.map(p=>({...p})); this.out=out;
     this.round=0; this.pos=50; this.fire=0; this.lastT=Date.now(); this.stats={ok:0,bad:0};
-    this.okc={}; this.badc={}; this.wrc={}; this.vac=null; this.vacK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
+    this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.fun={drop:0,chew:0,lick:0,vac:0,dot:0,shout:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
     this.dead=false;
     this.nextRound();
     this.iv=setInterval(()=>this.step(),150);
@@ -624,7 +647,7 @@ class Host{
   shout(pid){
     const i=this.instr[pid]; if(!i) return; const now=Date.now();
     if(i.shoutT&&now-i.shoutT<2500) return;
-    i.shouted=true; i.shoutT=now; this.addFeed(pid,i.text+'!',i.owner);
+    i.shouted=true; i.shoutT=now; this.fun.shout++; this.addFeed(pid,i.text+'!',i.owner);
   }
   apply(pid,cid,v){
     const c=this.ctrl[cid]; if(!c||c.owner!==pid||this.phase!=='play') return;
@@ -637,7 +660,9 @@ class Host{
     else { if(!Number.isInteger(v)||v<0||v>=c.o.length) return; val=v; }
     if(c.t!=='b'&&c.t!=='a') this.val[cid]=val;
     let hit=false;
-    for(const k of Object.keys(this.instr)){ const i=this.instr[k]; if(i&&i.cid===cid&&i.target===val){ hit=true; this.complete(k); if(this.phase!=='play') return; } }
+    for(const k of Object.keys(this.instr)){ const i=this.instr[k]; if(i&&i.cid===cid&&i.target===val){
+      if(!hit){ this.doneBy[pid]=(this.doneBy[pid]||0)+1; const opt=c.t==='a'?c.o[val]:''; if(opt==='Уронить') this.fun.drop++; else if(opt==='Погрызть') this.fun.chew++; else if(c.tx) this.fun.lick++; }
+      hit=true; this.complete(k); if(this.phase!=='play') return; } }
     if(!hit){
       // an action nobody asked for pushes the ship back toward the fire
       this.wrc[pid]=(this.wrc[pid]||0)+1; this.stats.wrong=(this.stats.wrong||0)+1;
@@ -655,7 +680,34 @@ class Host{
     this.checkCaught();
   }
   checkCaught(){
-    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; }
+    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; this.vac=null; this.finish(); }
+  }
+  finish(){
+    const st=this.stats, f=this.fun, secs=Math.round((Date.now()-this.t0)/1000), mins=Math.max(1,Math.round(secs/60));
+    st.time=secs;
+    st.pp=this.pl.map(p=>[p.name,p.cat,this.doneBy[p.id]||0,this.wrc[p.id]||0,this.badc[p.id]||0,p.bot?1:0]);
+    const R=(a,b)=>Math.floor(rnd(a,b+1)), plural=(n,one,few,many)=>{const m10=n%10,m100=n%100;return m10===1&&m100!==11?one:(m10>=2&&m10<=4&&(m100<10||m100>=20)?few:many);};
+    const real=[];
+    if(f.drop) real.push(['Цветов уронено',f.drop+' '+plural(f.drop,'горшок','горшка','горшков')]);
+    if(f.chew) real.push(['Листьев погрызено',String(f.chew*R(2,5))]);
+    if(f.lick) real.push(['Вылизываний',f.lick+' '+plural(f.lick,'раз','раза','раз')]);
+    if(f.vac) real.push(['Котов спасено от пылесоса',String(f.vac*this.pl.length)]);
+    if(f.dot) real.push(['Лазерных точек поймано',String(f.dot)]);
+    if(f.shout) real.push(['Мяуканий в эфире',String(f.shout)]);
+    const n1=R(2,4)*mins+R(0,3), n2=R(40,400), n3=R(3,30)*mins, n4=R(1,9), n5=R(2,12);
+    const fake=[
+      ['Корма съедено',n1+' '+plural(n1,'миска','миски','мисок')],
+      ['Шерсти потеряно',n2+' г'],
+      ['Мурчаний на борту',String(n3)],
+      ['Коробок занято',String(n5)],
+      ['Тыгыдыков в 3 часа ночи',String(R(2,12))],
+      ['Приземлений на лапы',this.pl.length+' из '+this.pl.length],
+      ['Чихов в невесомости',String(R(1,15))],
+      ['Тапочек испорчено',n4+' '+plural(n4,'пара','пары','пар')],
+      ['Минут сна в лотке',String(R(5,90))],
+      ['Носков украдено',String(R(1,7))]
+    ];
+    st.fun=shuffle(real).slice(0,3).concat(shuffle(fake).slice(0,6-Math.min(3,real.length)));
   }
   toBot(pid){
     const p=this.player(pid); if(!p||p.bot) return;
@@ -680,9 +732,11 @@ class Host{
       if(now>=this.until){
         this.phase='play'; this.lastT=now;
         this.pl.forEach(p=>this.pending[p.id]=now+rnd(150,1400));
-        this.nextDot=now+(this.round===1?rnd(28000,40000):rnd(14000,26000));
-        this.nextHair=this.round>=2?now+rnd(9000,20000):Infinity;
-        this.nextVac=this.round>=2?now+rnd(14000,28000):Infinity;
+        // event timers carry over between sectors, so short sectors don't keep pushing them back
+        const soon=(t,a,b)=>(t===undefined||t===Infinity)?now+rnd(a,b):Math.max(t,now+rnd(2500,5000));
+        this.nextDot=soon(this.nextDot,this.round===1?18000:6000,this.round===1?28000:15000);
+        this.nextHair=this.round>=2?soon(this.nextHair,6000,14000):Infinity;
+        this.nextVac=this.round>=2?soon(this.nextVac,3000,8000):Infinity;
       }
       this.emit(); return;
     }
@@ -716,7 +770,7 @@ class Host{
     if(this.dot){
       const d=this.dot;
       for(const id in d.bt){ if(now>=d.bt[id]) d.hit[id]=true; }
-      if(this.pl.every(p=>d.hit[p.id])){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка поймана всем экипажем!'); }
+      if(this.pl.every(p=>d.hit[p.id])){ this.dot=null; this.fun.dot++; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка поймана всем экипажем!'); }
       else if(now>d.until){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка сбежала, корабль отбросило к огню!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
     }
     // vacuum: every crew member drags their cat away from it
@@ -728,7 +782,7 @@ class Host{
     if(this.vac){
       const v=this.vac;
       for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
-      if(this.pl.every(p=>v.hit[p.id])){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Все коты спасены от пылесоса!'); }
+      if(this.pl.every(p=>v.hit[p.id])){ this.vac=null; this.fun.vac++; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Все коты спасены от пылесоса!'); }
       else if(now>v.until){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Пылесос всех перепугал, корабль отбросило к огню!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
     }
     // hairball
@@ -991,9 +1045,23 @@ requestAnimationFrame(frame);
 
 function showOver(s){
   show('over');
+  const st=s.st||{}, secs=+st.time||0;
+  $('o-time').textContent=Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0');
+  const ppBox=$('o-pp'); ppBox.textContent='';
+  const pp=Array.isArray(st.pp)?st.pp.slice():[];
+  pp.sort((a,b)=>(b[2]-b[3])-(a[2]-a[3]));
+  pp.forEach(r=>{
+    const row=document.createElement('div'); row.className='pp-row'; row.setAttribute('role','row');
+    const who=document.createElement('span'); who.className='who'; who.textContent=(r[1]||'🐱')+' '+r[0]+(r[5]?' · бот':''); row.appendChild(who);
+    [[r[2],'good'],[r[3],'badv'],[r[4],'badv']].forEach(([v,cl])=>{ const c=document.createElement('span'); c.className=v?cl:'zero'; c.textContent=v; row.appendChild(c); });
+    ppBox.appendChild(row);
+  });
+  const best=pp[0]; $('o-mvp').textContent=best&&best[2]>0?'Лучший кот полёта: '+(best[1]||'')+' '+best[0]+'. Ему двойная порция тунца.':'';
+  const fun=$('o-fun'); fun.textContent='';
+  (Array.isArray(st.fun)?st.fun:[]).forEach(([k,v])=>{ const dt=document.createElement('dt'); dt.textContent=k; const dd=document.createElement('dd'); dd.textContent=v; fun.appendChild(dt); fun.appendChild(dd); });
   $('o-r').textContent=s.r; $('o-ok').textContent=(s.st&&s.st.ok)||0; $('o-bad').textContent=((s.st&&s.st.bad)||0)+((s.st&&s.st.wrong)||0);
   $('o-title').textContent=s.r>=4?'Легендарный полёт':'Огонь настиг корабль';
-  $('o-sub').textContent='Экипаж добрался до сектора '+s.r+'. Огонь догнал корабль, но все коты успели выпрыгнуть и приземлились на лапы.';
+  $('o-sub').textContent='Экипаж добрался до сектора '+s.r+'. Огонь догнал корабль, но все коты успели выпрыгнуть.';
   const isHost=G.mode==='solo'||(G.net&&G.net.host);
   $('btn-again').hidden=!isHost; $('btn-lobby').hidden=!(G.mode==='mp'&&G.net&&G.net.host); $('o-wait').hidden=isHost;
   SFX.bad();
