@@ -184,7 +184,8 @@ const DEFAULT_LEVELS=`100/100
 50000/100000/100000
 100000/200000/200000`;
 
-const STREETS=["Префлоп","Флоп","Тёрн","Ривер"];
+const VERSION="1.4", VERSION_DATE="15.10.2026";
+const STREETS=["Префлоп","Флоп","Тёрн","Ривер","Кубик"];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
@@ -274,6 +275,7 @@ function knock(){
   thudAt(ctx,t,0.9);thudAt(ctx,t+0.17,0.75);
 }
 
+
 /* ---------- levels ---------- */
 function parseLevels(text){
   const lines=String(text||"").split(/\n|;/).map(l=>l.trim()).filter(Boolean);
@@ -361,6 +363,7 @@ function startHand(s){
   else{sbI=nextIdx(s,s.dealer,p=>p.inHand);bbI=nextIdx(s,sbI,p=>p.inHand)}
   s.sbI=sbI;s.bbI=bbI;
   s.hand=(s.hand||0)+1;s.pot=0;s.street=0;s.phase="betting";
+  s.diceRolled=false;
   if(!s.clockStarted) clockResume(s);
   log(s,`Раздача №${s.hand}, блайнды ${blindsStr(L)}. Дилер — <b>${esc(P(s,s.dealer).name)}</b>.`);
   if(s.ante&&s.anteMode==="all"){
@@ -438,13 +441,35 @@ function advance(s){
   }
   s.players.forEach(p=>{s.pot+=p.bet;p.bet=0;p.acted=false});
   s.currentBet=0;s.minRaise=Math.max(s.bb||0,UNIT);
-  if(s.street>=3||s.players.filter(canAct).length<=1){
-    s.phase="showdown";s.turn=-1;
-    log(s,s.street>=3?`Ривер сыгран. Вскрытие: выберите победителя.`:`Торговаться больше некому. Докладывайте карты до ривера и выберите победителя.`);
+  const noBetting=s.players.filter(canAct).length<=1;
+  if(s.street>=3||noBetting){
+    s.turn=-1;
+    if(s.dice&&!s.diceRolled){
+      s.phase="dice";
+      log(s,noBetting?`Торговаться больше некому. Докладывайте карты до ривера, бросайте кубик и меняйте карту.`:`Ривер сыгран. Бросайте кубик и меняйте карту.`);
+    }else{
+      s.phase="showdown";
+      log(s,s.street>=3&&!noBetting?`${s.street===4?"Торговля после кубика окончена":"Ривер сыгран"}. Вскрытие: выберите победителя.`:`Торговаться больше некому. ${s.street<3?"Докладывайте карты до ривера и выберите":"Выберите"} победителя.`);
+    }
   }else{
     s.street++;
     s.turn=nextIdx(s,s.dealer,canAct);
     log(s,`— ${STREETS[s.street]} —`);
+  }
+}
+
+function afterDice(s,who,bet){
+  if(s.phase!=="dice") throw new Error("Уже продолжили.");
+  s.diceRolled=true;
+  const canBet=bet&&s.street===3&&s.players.filter(canAct).length>=2;
+  if(canBet){
+    s.street=4;s.phase="betting";s.currentBet=0;s.minRaise=Math.max(s.bb||0,UNIT);
+    s.players.forEach(p=>p.acted=false);
+    s.turn=nextIdx(s,s.dealer,canAct);
+    log(s,`<b>${esc(who)}</b>: кубик брошен, карта заменена. — Торговля после кубика —`);
+  }else{
+    s.phase="showdown";s.turn=-1;
+    log(s,`<b>${esc(who)}</b>: кубик брошен${bet?", карта заменена":", карты без изменений"}. Вскрытие: выберите победителя.`);
   }
 }
 
@@ -504,13 +529,13 @@ function rememberRoom(code,title){
 function recentRooms(){try{return JSON.parse(ls.get("pk_recent")||"[]").filter(r=>Date.now()-r.t<36e5*48)}catch(e){return[]}}
 
 async function createRoom(){
-  const name=$("#cName").value.trim(), bal=Math.floor(+$("#cBal").value), mins=+$("#cMin").value, anteMode=$("#cAnte").value;
+  const name=$("#cName").value.trim(), bal=Math.floor(+$("#cBal").value), mins=+$("#cMin").value, anteMode=$("#cAnte").value, dice=$("#cDice").value==="on";
   let levels;
   if(!name){uiErr="Введите своё имя.";return render()}
   if(!(bal>0)||bal%UNIT){uiErr=`Стартовый стек должен быть кратен ${UNIT}.`;return render()}
   if(!(mins>0)){uiErr="Длительность уровня должна быть больше нуля.";return render()}
   try{levels=parseLevels($("#cLevels").value)}catch(e){uiErr=e.message;return render()}
-  ls.set("pk_name",name);ls.set("pk_levels",$("#cLevels").value);ls.set("pk_mins",String(mins));ls.set("pk_stack",String(bal));
+  ls.set("pk_name",name);ls.set("pk_levels",$("#cLevels").value);ls.set("pk_mins",String(mins));ls.set("pk_stack",String(bal));ls.set("pk_dice",dice?"on":"off");
   let code=genCode();
   try{for(let i=0;i<5;i++){const s=await fdb.ref("rooms/"+code).get();if(!s.exists())break;code=genCode()}}
   catch(e){uiErr="Нет связи с базой. Проверьте настройки Firebase и правила доступа.";return render()}
@@ -518,7 +543,7 @@ async function createRoom(){
   const levelMs=Math.round(mins*60000);
   await run(code,cur=>{
     if(cur&&cur.code) throw new Error("Такой код уже занят, попробуйте ещё раз.");
-    const s={code,title,createdAt:Date.now(),hostId:myId,startBalance:bal,levels,level:0,levelMs,paused:true,remaining:levelMs,levelEnds:0,clockStarted:false,anteMode,
+    const s={code,title,createdAt:Date.now(),hostId:myId,startBalance:bal,levels,level:0,levelMs,paused:true,remaining:levelMs,levelEnds:0,clockStarted:false,anteMode,dice,
       sb:levels[0].sb,bb:levels[0].bb,ante:levels[0].ante,players:[{id:myId,name,stack:bal,bet:0}],phase:"waiting",street:0,pot:0,currentBet:0,minRaise:Math.max(levels[0].bb,UNIT),turn:-1,dealer:-1,hand:0,log:[]};
     log(s,`<b>${esc(name)}</b> открыл стол. Стек ${fmt(bal)}, уровень ${mins} мин, первые блайнды ${blindsStr(levels[0])}.`);
     return s;
@@ -578,7 +603,7 @@ async function leaveTable(){
       p.gone=true;
       if(live(p)){
         if(s.phase==="betting"&&s.turn===i){act(s,"fold")}
-        else{p.folded=true;log(s,`<b>${esc(p.name)}</b>: фолд`);if(s.phase==="betting")advance(s)}
+        else{p.folded=true;log(s,`<b>${esc(p.name)}</b>: фолд`);if(s.phase==="betting"||s.players.filter(live).length===1)advance(s)}
       }
       log(s,`<b>${esc(p.name)}</b> уходит после раздачи.`);
     }
@@ -594,7 +619,7 @@ function render(){
   const app=$("#app");
   const active=document.activeElement&&document.activeElement.id;
   if(!fdb){app.innerHTML=BRAND+`<div class="panel"><h2>Нужна настройка</h2><div>Откройте этот файл в текстовом редакторе и вставьте конфиг вашего проекта Firebase в блок <b>firebaseConfig</b> в начале скрипта. Поле <b>databaseURL</b> обязательно.</div></div>`;hideRail();return}
-  if(!roomCode){app.innerHTML=BRAND+lobbyHtml();hideRail();bindLobby();restoreFocus(active);return}
+  if(!roomCode){app.innerHTML=BRAND+lobbyHtml()+`<div class="hint" style="text-align:center">Версия ${VERSION} от ${VERSION_DATE}</div>`;hideRail();bindLobby();restoreFocus(active);return}
   if(!room){app.innerHTML=BRAND+`<div class="panel"><div class="hint">${roomLoaded?`Стола ${esc(roomCode)} больше нет.`:`Загружаем стол ${esc(roomCode)}…`}</div>${uiErr?`<div class="err">${esc(uiErr)}</div>`:""}<div><button id="back">К началу</button></div></div>`;$("#back").onclick=leaveView;hideRail();return}
   app.innerHTML=roomHtml();bindRoom();renderRail();tick();restoreFocus(active);
 }
@@ -615,6 +640,9 @@ function lobbyHtml(){
       <label class="f"><span class="lbl">Стартовый стек</span><input id="cBal" type="number" min="100" step="100" value="${esc(ls.get("pk_stack")||DEFAULT_STACK)}" inputmode="numeric"></label>
       <label class="f"><span class="lbl">Минут на уровень</span><input id="cMin" type="number" min="1" step="1" value="${esc(ls.get("pk_mins")||DEFAULT_MINUTES)}" inputmode="numeric"></label>
       <label class="f"><span class="lbl">Кто платит анте</span><select id="cAnte"><option value="bb">Большой блайнд за всех</option><option value="all">Каждый игрок</option></select></label>
+    </div>
+    <div class="row">
+      <label class="f"><span class="lbl">Кубик после ривера</span><select id="cDice"><option value="off">Без кубика</option><option value="on" ${ls.get("pk_dice")==="on"?"selected":""}>Играем с кубиком — ещё один круг ставок</option></select></label>
     </div>
     <details>
       <summary>Структура блайндов: ${parseLevelsSafe().length} уровней, первые ${blindsStr(parseLevelsSafe()[0]||{sb:100,bb:100})}</summary>
@@ -702,7 +730,15 @@ function roomHtml(){
       <div class="row"><div class="grow"><div style="font-weight:600">${s.hand?"Раздача окончена":"Ждём игроков"}</div><div class="hint">Код для друзей: <span class="code">${esc(s.code)}</span>. Сыграть могут ${ready} из ${s.players.length}.${!s.clockStarted?" Таймер блайндов запустится с первой раздачей.":""}</div></div>
       ${me?`<button class="primary" id="deal" ${busy||ready<2?"disabled":""}>${s.hand?"Следующая раздача":"Начать игру"}</button>`:""}</div>
       ${!s.hand?`<div class="row"><input id="shareUrl" class="grow" readonly value="${esc(shareLink())}" aria-label="Ссылка на стол"><button class="small" id="copy">Скопировать ссылку</button></div>`:""}
+      ${me?`<div class="row"><div class="grow hint">${s.dice?"С кубиком: после ривера бросаете кубик, меняете карту и торгуетесь ещё круг.":"Без кубика."}</div><button class="small" id="diceToggle" ${busy?"disabled":""}>${s.dice?"Убрать кубик":"Добавить кубик"}</button></div>`:""}
       ${me&&me.stack===0?`<div class="row"><div class="grow hint">У вас закончились фишки.</div><button id="rebuy">Докупиться на ${fmt(s.startBalance)}</button></div>`:""}
+    </div>`;
+  }else if(s.phase==="dice"){
+    const canBet=s.street===3&&s.players.filter(canAct).length>=2;
+    controls=`<div class="panel">
+      <h2>Кубик</h2>
+      <div class="hint">Бросьте кубик и замените карту на столе. ${canBet?"Потом будет ещё один круг ставок.":"Ставить больше некому — после замены сразу вскрытие."}</div>
+      ${me?`<div class="row"><button class="primary grow" id="diceDone" ${busy?"disabled":""}>${canBet?"Карта заменена — ставки":"Карта заменена — вскрытие"}</button>${canBet?`<button id="diceSkip" ${busy?"disabled":""}>Без замены — вскрытие</button>`:""}</div>`:`<div class="hint">Продолжить могут игроки за столом.</div>`}
     </div>`;
   }else if(s.phase==="showdown"){
     const cands=s.players.filter(live);
@@ -724,7 +760,8 @@ function roomHtml(){
     <span class="lbl">${s.phase==="waiting"?(s.hand?`После раздачи №${s.hand}`:"Банк"):`Раздача №${s.hand} · банк`}</span>
     <div class="pot num">${fmt(s.pot)}${betsOnTable?`<span style="font-size:1.2rem;color:var(--brass)"> + ${fmt(betsOnTable)} в ставках</span>`:""}</div>
     ${s.pot?stacksHtml(s.pot,40):""}
-    ${s.phase!=="waiting"?`<div class="street">${STREETS.map((n,i)=>`<span class="st ${i===s.street?"on":""}">${n}</span>`).join("")}</div>`:""}
+    ${s.phase!=="waiting"?`<div class="street">${STREETS.slice(0,s.dice?5:4).map((n,i)=>`<span class="st ${i===s.street||(i===4&&s.phase==="dice")?"on":""}">${n}</span>`).join("")}</div>`:""}
+
     <span class="hint">старт ${fmt(s.startBalance)}${s.phase==="betting"&&s.currentBet?` · ставка ${fmt(s.currentBet)}`:""}</span>
   </div>
   ${uiErr?`<div class="err">${esc(uiErr)}</div>`:""}
@@ -738,6 +775,10 @@ function roomHtml(){
 function bindRoom(){
   const on=(id,f)=>{const el=document.getElementById(id);if(el)el.onclick=f};
   on("back",leaveView);
+  const myName=()=>(room.players.find(p=>p.id===myId)||{}).name||"Игрок";
+  on("diceDone",()=>{const nm=myName();run(roomCode,s=>{afterDice(s,nm,true);return s})});
+  on("diceSkip",()=>{const nm=myName();run(roomCode,s=>{afterDice(s,nm,false);return s})});
+  on("diceToggle",()=>run(roomCode,s=>{if(s.phase!=="waiting")return null;s.dice=!s.dice;log(s,s.dice?"Теперь играем с кубиком после ривера.":"Кубик убран.");return s}));
   on("sound",()=>{soundOn=!soundOn;ls.set("pk_sound",soundOn?"on":"off");if(soundOn)chipClick(1000);render()});
   on("deal",()=>run(roomCode,s=>{if(s.phase!=="waiting")return null;startHand(s);return s}));
   on("rebuy",()=>run(roomCode,s=>{const p=s.players.find(q=>q.id===myId);if(!p||p.stack>0||s.phase!=="waiting")return null;p.stack=s.startBalance;log(s,`<b>${esc(p.name)}</b> докупается на ${fmt(s.startBalance)}.`);return s}));
