@@ -223,7 +223,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 /* broken panel: the plate hangs from one bolt and swings until screwed back */
 .ctl{position:relative}
 .ctl.broken{overflow:visible;z-index:6;background:repeating-linear-gradient(-45deg,var(--void) 0 7px,color-mix(in srgb,var(--hull) 80%,var(--void)) 7px 14px);border-style:dashed}
-.ctl.broken .ctl-in{background:var(--plate);border:1px solid var(--edge);border-radius:14px;box-shadow:0 10px 18px rgba(0,0,0,.45);pointer-events:none}
+.ctl.broken .ctl-in{background:var(--plate);border:1px solid var(--edge);border-radius:14px;box-shadow:0 10px 18px rgba(0,0,0,.45);pointer-events:auto;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
 .ctl.hang-l .ctl-in{transform-origin:14px 14px}
 .ctl.hang-r .ctl-in{transform-origin:calc(100% - 14px) 14px}
 .ctl .pivot{position:absolute;top:13px;width:2px;height:2px;pointer-events:none}
@@ -528,6 +528,16 @@ body.mp .feed,body.alone .feed{display:none!important}
 .dbg-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}
 .dbg-t b{font-family:var(--display);font-size:12px;color:var(--mint)}
 .dbg-t span{font-size:13px;font-weight:700;color:var(--cream)}
+.pager{display:flex;align-items:center;gap:8px;margin-top:auto}   /* stays at the bottom, so the thumb finds it in the same place */
+.pg-btn{flex:none;width:64px;height:44px;border-radius:12px;background:var(--plate);border:1px solid var(--edge);font-size:28px;font-weight:900;line-height:1;color:var(--cream);display:grid;place-items:center;padding:0 0 4px}
+.pg-btn:active{background:var(--tabby);color:var(--ink)}
+.pg-mid{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--display);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.pg-dots{display:flex;gap:6px}
+.pg-dots i{width:8px;height:8px;border-radius:50%;background:var(--edge)}
+.pg-dots i.on{background:var(--tabby)}
+#panel.turn-r{animation:turnr .22s ease-out} #panel.turn-l{animation:turnl .22s ease-out}
+@keyframes turnr{from{opacity:.3;translate:24px 0}} @keyframes turnl{from{opacity:.3;translate:-24px 0}}
+.ctl.broken .ctl-in *{pointer-events:none!important}
 </style>
 </head>
 <body>
@@ -618,7 +628,7 @@ body.mp .feed,body.alone .feed{display:none!important}
         <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
       </ol>
     </details>
-    <p class="muted" style="text-align:center;font-size:12px">Версия 16.6 · 14:25</p>
+    <p class="muted" style="text-align:center;font-size:12px">Версия 16.8 · 14:35</p>
   </section>
 
   <!-- SETTINGS -->
@@ -703,6 +713,11 @@ body.mp .feed,body.alone .feed{display:none!important}
     </div>
     <div class="plate-head"><div class="lbl" id="me-tag">Твой пульт</div><div class="crew" id="crew" aria-label="Экипаж"></div></div>
     <div class="panel" id="panel"></div>
+    <div class="pager" id="pager" hidden>
+      <button class="pg-btn" id="pg-prev" aria-label="Предыдущая страница пульта">‹</button>
+      <div class="pg-mid"><span id="pg-t">Страница 1 из 2</span><span class="pg-dots" id="pg-dots" aria-hidden="true"></span></div>
+      <button class="pg-btn" id="pg-next" aria-label="Следующая страница пульта">›</button>
+    </div>
     <ul class="feed" id="feed"></ul>
 
   </section>
@@ -1468,6 +1483,7 @@ V.onPanels=function(m){
   if(!m||m.pid!==V.myId||!Array.isArray(m.c)) return;
   const walked=m.sh&&m.r===V.panelR&&(+m.v||0)>(V.panV||0)&&V.screen==='game';
   V.panV=+m.v||0;
+  if(m.r!==V.panelR) V.page=0;
   V.panelR=m.r; V.ctrls=m.c; V.pend={}; buildPanel(); if(V.s) updVals();
   if(walked){ popText('🐾 Кот прошёлся по пультам!'); const p=$('panel'); p.classList.remove('walk'); void p.offsetWidth; p.classList.add('walk'); try{navigator.vibrate&&navigator.vibrate([30,40,30,40,30])}catch(e){} }
 };
@@ -1561,9 +1577,51 @@ function buildPanel(){
     }
     V.els[c.id]=el; box.appendChild(outer);
   });
-  const wide=V.ctrls.filter(c=>'sdr'.includes(c.t)||c.w).length, rows=wide+Math.ceil((V.ctrls.length-wide)/2);
-  box.style.setProperty('--pmax',(rows*150+(rows-1)*8)+'px');
+  layoutPages();
 }
+/* ---------- multi-page panel: as many rows per page as fit on the screen ---------- */
+const MINROW=116, PGAP=8;   // smallest comfortable row height, px
+function panelRows(){
+  // two narrow controls share a row, a wide one takes a whole row (same as the grid places them)
+  const rows=[]; let half=null;
+  V.ctrls.forEach(c=>{ const wide='sdr'.includes(c.t)||c.w; if(wide) rows.push([c.id]); else if(half){ half.push(c.id); half=null; } else { half=[c.id]; rows.push(half); } });
+  return rows;
+}
+function panelSpace(){
+  const box=$('panel'); box.style.setProperty('--pmax','none');
+  // the panel takes the free height; as a fallback also measure up to the bottom of the screen
+  let below=10;
+  for(let el=box.nextElementSibling; el; el=el.nextElementSibling){ if(el.offsetParent!==null) below+=el.offsetHeight+PGAP; }
+  return Math.max(0,Math.min(box.clientHeight,innerHeight-box.getBoundingClientRect().top-below));
+}
+function layoutPages(){
+  const bar=$('pager');
+  if(!V.ctrls.length||!Object.keys(V.els).length){ bar.hidden=true; V.pages=[]; return; }
+  const rows=panelRows();
+  bar.hidden=true;
+  let per=Math.max(1,Math.floor((panelSpace()+PGAP)/(MINROW+PGAP)));
+  if(rows.length>per){ bar.hidden=false; per=Math.max(1,Math.floor((panelSpace()+PGAP)/(MINROW+PGAP))); }
+  per=Math.ceil(rows.length/Math.ceil(rows.length/per));   // spread rows evenly: 5 rows → 3+2, not 4+1
+  const pages=[]; for(let i=0;i<rows.length;i+=per) pages.push(rows.slice(i,i+per));
+  V.pages=pages; V.page=Math.max(0,Math.min(V.page||0,pages.length-1));
+  showPage();
+}
+function showPage(){
+  const box=$('panel'), pg=(V.pages||[])[V.page]||[], ids=new Set(pg.flat());
+  for(const id in V.els) V.els[id].outer.hidden=!ids.has(id);
+  const n=Math.max(1,pg.length); box.style.setProperty('--pmax',(n*150+(n-1)*PGAP)+'px');
+  const total=(V.pages||[]).length;
+  $('pg-t').textContent='Страница '+(V.page+1)+' из '+total;
+  const dots=$('pg-dots'); dots.textContent='';
+  for(let i=0;i<total;i++){ const d=document.createElement('i'); if(i===V.page) d.className='on'; dots.appendChild(d); }
+}
+function turnPage(d){
+  const total=(V.pages||[]).length; if(total<2) return;
+  cancelHolds(); V.page=(V.page+d+total)%total; showPage(); tone(520+d*60,560,.05,'triangle',.05);
+  const box=$('panel'); box.classList.remove('turn-l','turn-r'); void box.offsetWidth; box.classList.add(d>0?'turn-r':'turn-l');
+}
+$('pg-prev').addEventListener('click',()=>turnPage(-1));
+$('pg-next').addEventListener('click',()=>turnPage(1));
 function updVals(){
   for(const id in V.els){
     const el=V.els[id], v=curVal(id);
@@ -1636,6 +1694,9 @@ V.onTick=function(s){
   // instruction
   const ins=s.ins&&s.ins[V.myId];
   renderOrder(s,ins,inGame);
+  // re-split the panel into pages whenever the free space changes (rotation, feed shown/hidden, order slip height)
+  { const p=$('panel'), fd=$('feed'), key=innerHeight+'|'+Math.round(p.getBoundingClientRect().top)+'|'+(fd.offsetParent?fd.offsetHeight:0)+'|'+V.ctrls.length;
+    if(key!==V.pgKey){ V.pgKey=key; layoutPages(); } }
   renderTester(s);
   // flashes
   const ok=(s.ok&&s.ok[V.myId])||0, bad=(s.bad&&s.bad[V.myId])||0;
@@ -1720,7 +1781,7 @@ let breakHinted=false;
 // grab it, turn it round the bolt (any way, any angle) until it is level again
 const FIX_SNAP=7;          // degrees from level at which the panel clicks back into place
 function breakCtl(){
-  const ids=Object.keys(V.els); if(!ids.length) return;
+  const ids=Object.keys(V.els).filter(id=>!V.els[id].outer.hidden); if(!ids.length) return;
   const el=V.els[pick(ids)], o=el.outer, inner=el.root;
   const side=Math.random()<.5?'l':'r';
   // centre of mass relative to the bolt, in the panel's own coordinates
@@ -1752,8 +1813,10 @@ function breakCtl(){
     SFX.ok(); try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
     o.classList.add('snap'); setTimeout(()=>o.classList.remove('snap'),400);
   };
-  const stop=()=>{ cancelAnimationFrame(B.raf); if(V.broken===B) V.broken=null; };
-  B.stop=()=>{ cancelAnimationFrame(B.raf); };
+  // the hanging plate itself is grabbable too; these listeners go away once it is fixed
+  const grab=new AbortController();
+  const stop=()=>{ cancelAnimationFrame(B.raf); grab.abort(); if(V.broken===B) V.broken=null; };
+  B.stop=()=>{ cancelAnimationFrame(B.raf); grab.abort(); };
   const K=20, DAMP=.7;     // gravity (swing period ~1.4 s) and air friction
   const loop=now=>{
     if(V.broken!==B) return;
@@ -1766,12 +1829,12 @@ function breakCtl(){
     }
     paint(); B.raf=requestAnimationFrame(loop);
   };
-  fix.addEventListener('pointerdown',e=>{
+  const onDown=e=>{
     e.preventDefault(); if(V.broken!==B) return;
-    B.drag=true; B.a0=pAng(e); B.om=0; B.dragT=performance.now(); try{fix.setPointerCapture(e.pointerId)}catch(_){}
+    B.drag=true; B.a0=pAng(e); B.om=0; B.dragT=performance.now(); try{e.currentTarget.setPointerCapture(e.pointerId)}catch(_){}
     tone(260,300,.05,'square',.04);
-  });
-  fix.addEventListener('pointermove',e=>{
+  };
+  const onMove=e=>{
     if(!B.drag||V.broken!==B) return;
     if(pDist(e)<24) return;                          // too close to the bolt: the angle jumps around
     const a=pAng(e); let d=a-B.a0; d=((d+3*Math.PI)%(2*Math.PI))-Math.PI; B.a0=a;
@@ -1780,9 +1843,13 @@ function breakCtl(){
     B.th+=d; B.om=B.om*.6+(d/dt)*.4;
     ticks();
     if(Math.abs(norm(deg()))<=FIX_SNAP) done();
-  });
+  };
   const up=()=>{ if(!B.drag) return; B.drag=false; B.om=Math.max(-14,Math.min(14,B.om)); };
-  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>fix.addEventListener(ev,up));
+  for(const t of [fix,inner]){
+    t.addEventListener('pointerdown',onDown,{signal:grab.signal});
+    t.addEventListener('pointermove',onMove,{signal:grab.signal});
+    ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>t.addEventListener(ev,up,{signal:grab.signal}));
+  }
   fix.addEventListener('keydown',e=>{
     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){ e.preventDefault(); B.om=0; B.th+=(e.key==='ArrowLeft'?-9:9)*Math.PI/180; ticks(); if(Math.abs(norm(deg()))<=FIX_SNAP) done(); }
   });
@@ -2014,7 +2081,7 @@ function fitOrder(){
   const x=$('order-x'); x.style.fontSize=''; let fs=parseFloat(getComputedStyle(x).fontSize), n=0;
   while(x.scrollHeight>x.clientHeight+1&&fs>11&&n<14){ fs-=1; x.style.fontSize=fs+'px'; n++; }
 }
-addEventListener('resize',()=>{ if(V.screen==='game') fitOrder(); });
+addEventListener('resize',()=>{ if(V.screen==='game'){ fitOrder(); layoutPages(); } });
 function renderOrder(s,ins,inGame){
   const k=$('order-k'), x=$('order-x'), sub=$('order-sub'), ready=$('ready'), shout=$('shout');
   const between=s.ph==='between', iAmReady=(s.rd||[]).includes(V.myId);
