@@ -178,7 +178,8 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .pop button[aria-checked=true] .mini-sw::after{left:18px;background:var(--mint)}
 .pop button:disabled{opacity:.5}
 .order-k{position:relative;z-index:1;font-family:var(--display);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#5b3f0b}
-.order-x{font-family:var(--display);font-weight:700;font-size:clamp(16px,4.6vw,21px);line-height:1.2;min-height:2.4em;text-wrap:balance;position:relative;z-index:1}
+.order-x{--ofs:clamp(16px,4.6vw,21px);font-family:var(--display);font-weight:700;font-size:var(--ofs);line-height:1.2;height:calc(var(--ofs) * 2.45);overflow:hidden;text-wrap:balance;position:relative;z-index:1}
+.order-x .news{display:block;margin-top:2px;font-family:var(--body);font-weight:800;font-size:.72em;line-height:1.25}
 .order-row{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
 .timer{flex:1;height:9px;border-radius:99px;background:rgba(70,45,5,.25);box-shadow:inset 0 1px 2px rgba(0,0,0,.3);overflow:hidden}
 .timer i{display:block;height:100%;width:0;background:#6e4c10;border-radius:99px}
@@ -194,7 +195,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .fur small{font-family:var(--body);font-weight:800;font-size:13px}
 
 /* feed */
-.feed{display:flex;flex-direction:column;gap:4px;min-height:44px;max-height:118px;overflow:hidden;margin:0;padding:0;list-style:none}
+.feed{display:flex;flex-direction:column;gap:4px;height:108px;overflow:hidden;margin:0;padding:0;list-style:none}
 .feed li{display:flex;gap:8px;align-items:flex-start;font-size:14px;line-height:1.25;padding:5px 8px;border-radius:10px;border:1px solid transparent;animation:fade 9s forwards}
 .feed li.mine{background:color-mix(in srgb,var(--tabby) 16%,var(--void));border-color:var(--tabby);animation:none}
 .feed li.other{opacity:.8}
@@ -295,6 +296,21 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .laser{position:fixed;z-index:15;width:84px;height:84px;margin:-42px 0 0 -42px;border:0;border-radius:50%;background:transparent;padding:0}
 .laser::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#fff 0 9%,var(--pink) 18%,color-mix(in srgb,var(--pink) 40%,transparent) 40%,transparent 70%);animation:jit .35s steps(2) infinite}
 @keyframes jit{0%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}100%{transform:translate(-1px,-3px)}}
+.lit-layer{position:fixed;inset:0;z-index:15;touch-action:none;user-select:none;-webkit-user-select:none;background:color-mix(in srgb,var(--void) 55%,transparent);cursor:ns-resize}
+.laser-banner.lit-banner{background:#e6c27a}
+.lit-arrows{position:absolute;left:0;right:0;top:22%;display:flex;justify-content:center;gap:28px;font-size:34px;color:var(--cream);opacity:.85}
+.lit-arrows span{animation:litdown 1s ease-in infinite}
+.lit-arrows span:nth-child(2){animation-delay:.15s} .lit-arrows span:nth-child(3){animation-delay:.3s}
+@keyframes litdown{0%{transform:translateY(-14px);opacity:0}40%{opacity:1}100%{transform:translateY(40px);opacity:0}}
+.lit-count{position:absolute;left:0;right:0;top:40%;text-align:center;font-family:var(--display);font-weight:900;font-size:clamp(28px,9vw,44px);color:var(--cream);text-shadow:0 3px 0 rgba(0,0,0,.4)}
+.lit-box{position:absolute;left:50%;bottom:calc(8% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(320px,80vw);height:120px}
+.lit-rim{position:absolute;inset:0;border-radius:18px 18px 26px 26px;border:8px solid #9e7bd8;border-top-width:6px;background:transparent;box-shadow:0 8px 0 #5f4596}
+.lit-sand{position:absolute;left:8px;right:8px;bottom:8px;height:58%;border-radius:12px 12px 18px 18px;background:radial-gradient(circle at 20% 30%,#f3d9a4 0 3px,transparent 4px) 0 0/18px 14px,radial-gradient(circle at 70% 60%,#d6b26e 0 2px,transparent 3px) 0 0/14px 12px,#e6c27a;transition:height .25s}
+.lit-sand.shake{animation:sandshake .2s}
+@keyframes sandshake{50%{transform:translateY(-3px) scaleY(1.04)}}
+.lit-marks{position:absolute;inset:0;pointer-events:none}
+.lit-mark{position:absolute;width:5px;border-radius:3px;background:linear-gradient(#f3d9a4,#c9a15b);opacity:.9;animation:markfade .9s forwards}
+@keyframes markfade{to{opacity:0}}
 .vac-layer{position:fixed;inset:0;z-index:15;pointer-events:none;background:color-mix(in srgb,var(--void) 25%,transparent)}
 .laser-banner.vac-banner{background:var(--tabby)}
 .vac,.vcat,.vac-ring{position:absolute;left:0;top:0;will-change:transform}
@@ -347,8 +363,9 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   .sw{--h:min(44px,calc(100cqh - 18px),19cqw)}
   .sw::before{display:none}
 }
-@media (max-height:740px){ .feed .cmd{flex-basis:auto} .feed{min-height:34px} }
-@media (max-height:640px){ .order-x{min-height:0;font-size:clamp(15px,4.2vw,18px)} .order-k{display:none} }
+@media (max-height:740px){ .feed .cmd{flex-basis:auto} .feed{height:54px} }
+body.mp .feed,body.alone .feed{display:none!important}
+@media (max-height:640px){ .order-x{--ofs:clamp(15px,4.2vw,18px)} .order:not(.btw) .order-k{display:none} }
 @media (max-width:360px){ .hud{gap:6px} .meter.sector b{font-size:20px} .run .k span:first-child,.run .k span:last-child{display:none} }
 @media (prefers-reduced-motion:reduce){ *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important} }
 .cfg textarea{width:100%;min-height:120px;background:var(--void);border:1px solid var(--edge);border-radius:12px;color:var(--cream);font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:10px}
@@ -377,8 +394,8 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     </div>
 
     <div class="card">
-      <h2>Соло-тест с ботами</h2>
-      <p class="muted">Боты сами выкрикивают свои приказы. Твои приказы они выполнят, только если ты мяукнешь их экипажу.</p>
+      <h2>Соло</h2>
+      <p class="muted" id="solo-hint">Боты сами выкрикивают свои приказы. Твои приказы они выполнят, только если ты мяукнешь их экипажу.</p>
       <div class="row"><span>Котов-ботов</span>
         <div class="stepper"><button id="sb-minus" aria-label="Меньше ботов">−</button><b id="sb-n">2</b><button id="sb-plus" aria-label="Больше ботов">+</button></div>
       </div>
@@ -388,11 +405,11 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     <div class="card">
       <h2>Мультиплеер</h2>
       <p class="muted" id="mp-status">Подключаемся к бортовой связи…</p>
-      <button class="primary" id="btn-create" disabled>Создать комнату</button>
       <div class="row">
         <input type="text" id="code" inputmode="numeric" maxlength="4" placeholder="Код из 4 цифр" autocomplete="off">
-        <button class="secondary" id="btn-join" disabled>Войти</button>
+        <button class="primary" id="btn-join" disabled>Войти</button>
       </div>
+      <button class="secondary" id="btn-create" disabled>Создать новую комнату</button>
       <details class="cfg" id="cfg-box">
         <summary id="cfg-sum">Подключение Firebase</summary>
         <p class="muted" style="margin-bottom:8px">Вставь firebaseConfig из консоли Firebase (нужен databaseURL от Realtime Database). Сохранится в этом браузере, а друзьям уйдёт в ссылке-приглашении.</p>
@@ -406,8 +423,9 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
       <ol>
         <li>На карточке сверху твой приказ. Он может касаться любого прибора на корабле.</li>
         <li>Если прибор на твоём пульте, выполни сам. Если нет, нажми «Мяукнуть экипажу» (или просто крикни вслух, если сидите рядом).</li>
-        <li>Корабль спасается бегством от шторма метеоров. Выполненный приказ продвигает его вперёд, проваленный отбрасывает к опасности, лишнее нажатие (которого никто не просил) тоже отбрасывает немного назад, а шторм сам медленно ползёт следом. Долетели до портала: прыжок в следующий сектор. Шторм догнал: конец полёта.</li>
-        <li>С каждым сектором добавляется по одной напасти: лазерная точка, комок шерсти, пылесос, срывающиеся панели, иконки вместо названий.</li>
+        <li>Перед каждым сектором осмотри свой пульт и нажми «Готов!». Сектор начнётся, когда готовы все.</li>
+        <li>Корабль спасается от взрыва звезды. Выполненный приказ уносит его вперёд, проваленный отбрасывает к взрыву, лишнее нажатие (которого никто не просил) тоже отбрасывает немного назад, а взрыв сам расползается следом. Долетели до портала: прыжок в следующий сектор. Взрыв догнал: конец полёта.</li>
+        <li>С каждым сектором добавляется по одной напасти: лазерная точка, комок шерсти, пылесос, срывающиеся панели, лоток, иконки вместо названий.</li>
         <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
       </ol>
     </details>
@@ -439,7 +457,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   <section id="scr-game" class="scr" hidden>
     <div class="hud">
       <div class="meter sector"><div class="k">Сектор</div><b id="h-round">1</b></div>
-      <div class="meter run"><div class="k"><span>Огонь</span><span id="h-gap">отрыв 50</span><span>Прыжок</span></div>
+      <div class="meter run"><div class="k"><span>Взрыв</span><span id="h-gap">отрыв 50</span><span>Прыжок</span></div>
         <div class="track" id="track"><div class="fire" id="h-fire"></div><div class="portal">🌀</div><div class="ship" id="h-ship" aria-label="Позиция корабля">🚀</div></div>
       </div>
       <div class="hud-menu">
@@ -504,7 +522,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 <div class="pause" id="pause" hidden>
   <div class="k">Полёт на паузе</div>
   <h2>Пауза</h2>
-  <p>Корабль завис, шторм тоже ждёт.</p>
+  <p>Корабль завис, взрыв звезды тоже замер.</p>
   <button class="primary" id="resume">Продолжить полёт</button>
 </div>
 <div class="between" id="between" hidden>
@@ -514,6 +532,13 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
   <p id="b-sub"></p>
 </div>
 <div class="laser-banner" id="laser-banner" hidden>Лазерная точка! Ловите все!</div>
+<div class="lit-layer" id="lit-layer" hidden>
+  <div class="laser-banner lit-banner" id="lit-banner">Лоток! Закопай: проводи сверху вниз</div>
+  <div class="lit-arrows" aria-hidden="true"><span>⬇</span><span>⬇</span><span>⬇</span></div>
+  <div class="lit-count" id="lit-count">0 из 4</div>
+  <div class="lit-box" aria-hidden="true"><div class="lit-sand" id="lit-sand"></div><div class="lit-rim"></div></div>
+  <div class="lit-marks" id="lit-marks"></div>
+</div>
 <div class="vac-layer" id="vac-layer" hidden>
   <div class="laser-banner vac-banner">Пылесос! Оттащи кота из круга</div>
   <div class="vac-ring" id="vac-ring"></div>
@@ -581,13 +606,14 @@ function renderCats(){ const box=$('cats'); box.textContent=''; CATS.forEach(c=>
 renderCats();
 
 let soloBots=2;
-function updSolo(){ $('sb-n').textContent=soloBots; $('sb-minus').disabled=soloBots<=1; $('sb-plus').disabled=soloBots>=MAXP-1; }
-$('sb-minus').onclick=()=>{soloBots=Math.max(1,soloBots-1);updSolo()};
+function updSolo(){ $('sb-n').textContent=soloBots; $('sb-minus').disabled=soloBots<=0;
+  $('solo-hint').textContent=soloBots?'Боты сами выкрикивают свои приказы. Твои приказы они выполнят, только если ты мяукнешь их экипажу.':'Только ты и корабль. Все приказы относятся к твоему пульту, успевай сам.'; $('sb-plus').disabled=soloBots>=MAXP-1; }
+$('sb-minus').onclick=()=>{soloBots=Math.max(0,soloBots-1);updSolo()};
 $('sb-plus').onclick=()=>{soloBots=Math.min(MAXP-1,soloBots+1);updSolo()};
 updSolo();
 
 /* ---------- screens ---------- */
-function show(name){ document.body.classList.toggle('ingame',name==='game'); $('pop').hidden=true; if(name==='game') keepAwake(); ['menu','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
+function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); ['menu','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
 let wakeLock=null;
 function keepAwake(){ try{ if(navigator.wakeLock&&!wakeLock) navigator.wakeLock.request('screen').then(l=>{ wakeLock=l; l.addEventListener('release',()=>wakeLock=null); }).catch(()=>{}); }catch(e){} }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&V.screen==='game') keepAwake(); });
@@ -605,7 +631,7 @@ class Host{
   constructor(players,out){
     this.pl=players.map(p=>({...p})); this.out=out;
     this.round=0; this.pos=50; this.fire=0; this.lastT=Date.now(); this.stats={ok:0,bad:0};
-    this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.fun={drop:0,chew:0,lick:0,vac:0,dot:0,shout:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
+    this.okc={}; this.badc={}; this.wrc={}; this.doneBy={}; this.fun={drop:0,chew:0,lick:0,vac:0,dot:0,shout:0,lit:0}; this.t0=Date.now(); this.vac=null; this.vacK=0; this.lit=null; this.litK=0; this.feed=[]; this.fk=0; this.hairId=0; this.hair=null; this.dot=null; this.dotK=0;
     this.dead=false;
     this.nextRound();
     this.iv=setInterval(()=>this.step(),150);
@@ -614,12 +640,12 @@ class Host{
   player(id){ return this.pl.find(p=>p.id===id); }
   nextRound(){
     const now=Date.now();
-    this.round++; this.phase='between'; this.btDur=this.round===1?10000:5000; this.until=now+this.btDur; this.ready={};
+    this.round++; this.phase='between'; this.btDur=1500; this.until=Infinity; this.ready={};
     this.instr={}; this.pending={}; this.progress=0;
     const n=this.pl.length;
     this.goal=Math.round(4+2*n+this.round);
     this.dur=Math.max(6500,15000-1200*(this.round-1));
-    this.dot=null; this.hair=null; this.vac=null;
+    this.dot=null; this.hair=null; this.vac=null; this.lit=null;
     this.pos=50; this.fire=0;
     this.stepU=50/Math.max(4,Math.round(this.goal*.7));
     this.creep=.6+.1*this.round;
@@ -630,7 +656,7 @@ class Host{
   genPanels(){
     const chores=shuffle(CHORES.slice()); let ck=0;
     const names=shuffle(NAMES.slice()), rnames=shuffle(RANGES.slice()), icons=shuffle(ICONS.slice()); let k=0, rk=0, ik=0;
-    const iconP=this.round<6?0:Math.min(.5,.15*(this.round-5)), optP=this.round<7?0:Math.min(.5,.2*(this.round-6));
+    const iconP=this.round<7?0:Math.min(.5,.15*(this.round-6)), optP=this.round<8?0:Math.min(.5,.2*(this.round-7));
     const per=Math.min(2+this.round,7);
     this.panels={}; this.ctrl={}; this.val={};
     this.pl.forEach(p=>{
@@ -719,7 +745,7 @@ class Host{
     this.checkCaught();
   }
   checkCaught(){
-    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; this.vac=null; this.finish(); }
+    if(this.phase==='play'&&this.pos<=this.fire){ this.phase='over'; this.instr={}; this.dot=null; this.hair=null; this.vac=null; this.lit=null; this.finish(); }
   }
   finish(){
     const st=this.stats, f=this.fun, secs=Math.round((Date.now()-this.t0)/1000), mins=Math.max(1,Math.round(secs/60));
@@ -731,6 +757,7 @@ class Host{
     if(f.chew) real.push(['Листьев погрызено',String(f.chew*R(2,5))]);
     if(f.lick) real.push(['Вылизываний',f.lick+' '+plural(f.lick,'раз','раза','раз')]);
     if(f.vac) real.push(['Котов спасено от пылесоса',String(f.vac*this.pl.length)]);
+    if(f.lit) real.push(['Лотков закопано',String(f.lit*this.pl.length)]);
     if(f.dot) real.push(['Лазерных точек поймано',String(f.dot)]);
     if(f.shout) real.push(['Мяуканий в эфире',String(f.shout)]);
     const n1=R(2,4)*mins+R(0,3), n2=R(40,400), n3=R(3,30)*mins, n4=R(1,9), n5=R(2,12);
@@ -768,6 +795,7 @@ class Host{
     else if(a.type==='shout') this.shout(pid);
     else if(a.type==='dot'&&this.dot) this.dot.hit[pid]=true;
     else if(a.type==='vac'&&this.vac) this.vac.hit[pid]=true;
+    else if(a.type==='lit'&&this.lit) this.lit.hit[pid]=true;
     this.emit();
   }
   setPause(on){
@@ -779,13 +807,14 @@ class Host{
     this.nextDot=sh(this.nextDot); this.nextHair=sh(this.nextHair); this.nextVac=sh(this.nextVac);
     for(const k in this.pending) this.pending[k]=sh(this.pending[k]);
     for(const k in this.instr){ const i=this.instr[k]; if(!i) continue; i.start=sh(i.start); i.shoutAt=sh(i.shoutAt); i.botAt=sh(i.botAt); }
-    for(const ev of [this.dot,this.vac]){ if(!ev) continue; ev.until=sh(ev.until); for(const k in ev.bt) ev.bt[k]=sh(ev.bt[k]); }
+    for(const ev of [this.dot,this.vac,this.lit]){ if(!ev) continue; ev.until=sh(ev.until); for(const k in ev.bt) ev.bt[k]=sh(ev.bt[k]); }
   }
   step(){
     if(this.dead) return; const now=Date.now();
     if(this.paused){ this.emit(); return; }
     if(this.phase==='over'){ this.emit(); return; }
     if(this.phase==='between'){
+      if(!isFinite(this.until)&&this.pl.filter(p=>!p.bot).every(p=>this.ready[p.id])) this.until=now+this.btDur;
       if(now>=this.until){
         this.phase='play'; this.lastT=now;
         this.pl.forEach(p=>this.pending[p.id]=now+rnd(150,1400));
@@ -794,6 +823,7 @@ class Host{
         this.nextDot=this.round>=2?soon(this.nextDot,4000,10000):Infinity;
         this.nextHair=this.round>=3?soon(this.nextHair,4000,10000):Infinity;
         this.nextVac=this.round>=4?soon(this.nextVac,3000,8000):Infinity;
+        this.nextLit=this.round>=6?soon(this.nextLit,3000,8000):Infinity;
       }
       this.emit(); return;
     }
@@ -819,7 +849,7 @@ class Host{
       if(i.botAt!==undefined&&now>=i.botAt){ i.botAt=Infinity; this.apply(i.owner,i.cid,i.target); if(this.phase!=='play'){ this.emit(); return; } }
     }
     // laser dot
-    if(!this.dot&&now>=this.nextDot&&this.vac) this.nextDot=now+rnd(5000,9000);
+    if(!this.dot&&now>=this.nextDot&&(this.vac||this.lit)) this.nextDot=now+rnd(5000,9000);
     if(!this.dot&&now>=this.nextDot){
       this.dot={k:++this.dotK,x:rnd(.14,.86),y:rnd(.22,.82),until:now+7000,hit:{},bt:{}};
       this.pl.forEach(p=>{ if(p.bot) this.dot.bt[p.id]=now+rnd(700,2600); });
@@ -828,10 +858,10 @@ class Host{
       const d=this.dot;
       for(const id in d.bt){ if(now>=d.bt[id]) d.hit[id]=true; }
       if(this.pl.every(p=>d.hit[p.id])){ this.dot=null; this.fun.dot++; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка поймана всем экипажем!'); }
-      else if(now>d.until){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка сбежала, корабль отбросило к огню!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
+      else if(now>d.until){ this.dot=null; this.nextDot=now+rnd(22000,40000); this.addFeed(null,'Точка сбежала, корабль отбросило к взрыву!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
     }
     // vacuum: every crew member drags their cat away from it
-    if(!this.vac&&now>=this.nextVac&&this.dot) this.nextVac=now+rnd(5000,9000);
+    if(!this.vac&&now>=this.nextVac&&(this.dot||this.lit)) this.nextVac=now+rnd(5000,9000);
     if(!this.vac&&now>=this.nextVac){
       this.vac={k:++this.vacK,x:rnd(.22,.78),y:rnd(.3,.72),until:now+11000,hit:{},bt:{}};
       this.pl.forEach(p=>{ if(p.bot) this.vac.bt[p.id]=now+rnd(1500,4500); });
@@ -840,7 +870,19 @@ class Host{
       const v=this.vac;
       for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
       if(this.pl.every(p=>v.hit[p.id])){ this.vac=null; this.fun.vac++; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Все коты спасены от пылесоса!'); }
-      else if(now>v.until){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Пылесос всех перепугал, корабль отбросило к огню!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
+      else if(now>v.until){ this.vac=null; this.nextVac=now+rnd(24000,42000); this.addFeed(null,'Пылесос всех перепугал, корабль отбросило к взрыву!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
+    }
+    // litter box: everyone scratches top-to-bottom several times
+    if(!this.lit&&now>=this.nextLit&&(this.dot||this.vac)) this.nextLit=now+rnd(5000,9000);
+    if(!this.lit&&now>=this.nextLit){
+      this.lit={k:++this.litK,n:3+Math.floor(Math.random()*3),until:now+12000,hit:{},bt:{}};
+      this.pl.forEach(p=>{ if(p.bot) this.lit.bt[p.id]=now+rnd(2000,5000); });
+    }
+    if(this.lit){
+      const v=this.lit;
+      for(const id in v.bt){ if(now>=v.bt[id]) v.hit[id]=true; }
+      if(this.pl.every(p=>v.hit[p.id])){ this.lit=null; this.fun.lit++; this.nextLit=now+rnd(26000,44000); this.addFeed(null,'Все лотки закопаны!'); }
+      else if(now>v.until){ this.lit=null; this.nextLit=now+rnd(26000,44000); this.addFeed(null,'Кто-то не закопал лоток, корабль отбросило к взрыву!'); this.damage(2); if(this.phase==='over'){ this.emit(); return; } }
     }
     // hairball
     if(now>=this.nextHair){
@@ -854,12 +896,13 @@ class Host{
     const now=this.paused?this.pausedAt:Date.now(), ins={};
     for(const pid in this.instr){ const i=this.instr[pid]; if(i) ins[pid]={x:i.text,p:i.parts,rem:Math.max(0,i.start+i.dur-now),dur:i.dur}; }
     return {
-      ph:this.phase, r:this.round, pz:this.paused?1:0, bt:this.phase==='between'?Math.max(0,this.until-now):0, btd:this.btDur||1, rd:Object.keys(this.ready||{}), pos:Math.round(this.pos*10)/10, fire:Math.round(this.fire*10)/10, pr:this.progress,
+      ph:this.phase, r:this.round, pz:this.paused?1:0, bt:this.phase==='between'&&isFinite(this.until)?Math.max(0,this.until-now):0, btd:this.btDur||1, rd:Object.keys(this.ready||{}), pos:Math.round(this.pos*10)/10, fire:Math.round(this.fire*10)/10, pr:this.progress,
       pl:this.pl.map(p=>[p.id,p.name,p.cat,p.bot?1:0]),
       ins, v:this.val,
       feed:this.feed.filter(f=>now-f.t<9000).slice(-6).map(f=>({k:f.k,p:f.p,o:f.o,n:f.n,c:f.c,x:f.x})),
       dot:this.dot?{k:this.dot.k,x:this.dot.x,y:this.dot.y,hit:Object.keys(this.dot.hit)}:null,
       vac:this.vac?{k:this.vac.k,x:this.vac.x,y:this.vac.y,hit:Object.keys(this.vac.hit)}:null,
+      lit:this.lit?{k:this.lit.k,n:this.lit.n,hit:Object.keys(this.lit.hit)}:null,
       hair:this.hair, ok:this.okc, bad:this.badc, wr:this.wrc, st:this.stats
     };
   }
@@ -869,8 +912,8 @@ class Host{
 /* =========================================================
    VIEW — renders whatever state arrives (local or network)
    ========================================================= */
-const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{},orderSig:''};
-function resetView(){ Object.assign(V,{panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},orderSig:''}); stopVac(); $('panel').textContent=''; $('feed').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
+const V={screen:'menu',myId:null,panelR:-1,ctrls:[],els:{},pend:{},s:null,sAt:0,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},lastNeed:0,feedSig:'',crewSig:'',lastRound:0,act:()=>{},nextBreak:0,broken:null,vacDone:{},litDone:{},orderSig:''};
+function resetView(){ Object.assign(V,{panelR:-1,ctrls:[],els:{},pend:{},s:null,seenOk:null,seenBad:null,lastHull:null,hairSeen:0,hairLeft:0,dotDone:{},feedSig:'',crewSig:'',lastRound:0,nextBreak:0,broken:null,seenWr:null,vacDone:{},litDone:{},orderSig:''}); stopVac(); stopLit(); $('panel').textContent=''; $('feed').textContent=''; $('fur').hidden=true; $('order-x').textContent='Готовимся…'; }
 
 V.onPanels=function(m){
   if(!m||m.pid!==V.myId||!Array.isArray(m.c)) return;
@@ -986,7 +1029,7 @@ V.onTick=function(s){
   if(V.seenOk!==null&&ok>V.seenOk){ const o=$('order'); o.classList.remove('ok'); void o.offsetWidth; o.classList.add('ok'); SFX.ok(); }
   if(V.seenBad!==null&&bad>V.seenBad){ SFX.bad(); try{navigator.vibrate&&navigator.vibrate(200)}catch(e){} }
   const wr=(s.wr&&s.wr[V.myId])||0;
-  if(V.seenWr!=null&&wr>V.seenWr){ tone(160,120,.18,'square',.07); toast('Лишнее действие! Корабль отбросило к огню.'); }
+  if(V.seenWr!=null&&wr>V.seenWr){ tone(160,120,.18,'square',.07); toast('Лишнее действие! Корабль отбросило к взрыву.'); }
   V.seenOk=ok; V.seenBad=bad; V.seenWr=wr;
   // feed
   const feedAll=Array.isArray(s.feed)?s.feed:[];
@@ -1023,6 +1066,11 @@ V.onTick=function(s){
   const vq=s.vac;
   if(vq&&inGame&&!(vq.hit||[]).includes(V.myId)&&!V.vacDone[vq.k]){ if(VAC.k!==vq.k) startVac(vq); }
   else if(VAC.k!==null) stopVac();
+  // litter box
+  const lq=s.lit;
+  if(lq&&inGame&&!s.pz&&!(lq.hit||[]).includes(V.myId)&&!V.litDone[lq.k]){ if(LIT.k!==lq.k) startLit(lq); }
+  else if(LIT.k!==null&&!(lq&&s.pz)) stopLit();
+  $('lit-layer').hidden=LIT.k===null||!!s.pz;
   // hairball
   if(s.hair&&s.hair.p===V.myId&&s.hair.id>V.hairSeen){ V.hairSeen=s.hair.id; V.hairLeft=4; $('fur-n').textContent='Тапни 4 раза'; $('fur').hidden=false; }
 };
@@ -1047,13 +1095,20 @@ function breakCtl(){
   if(!breakHinted){ breakHinted=true; toast('Панель сорвалась с болтов! Тапай по пустому месту, чтобы прикрутить.'); }
 }
 function news(r){
-  return ({1:'Приказы приходят тебе, а нужные рычаги часто у других. Кричи приказы экипажу!',
+  return ({1:'Позади взрывается звезда! Выполняй приказы, чтобы уйти от взрыва. Нужные рычаги часто у других: кричи приказы экипажу.',
     2:'Новое: лазерная точка. Когда появится, её должен поймать каждый.',
     3:'Новое: комок шерсти. Залепит приказ, смахни его тапами.',
     4:'Новое: пылесос. Утащи кота за красный круг.',
     5:'Новое: панели срываются с болтов. Тапай по пустому месту, чтобы прикрутить.',
-    6:'Новое: иконки вместо названий. Описывай их экипажу словами.'})[r]||'Пультов больше, таймеры короче.';
+    6:'Новое: лоток. Проведи пальцем сверху вниз несколько раз, чтобы закопать.',
+    7:'Новое: иконки вместо названий. Описывай их экипажу словами.'})[r]||'Взрыв всё ближе: пультов больше, таймеры короче.';
 }
+function fitOrder(){
+  // the order slip keeps a fixed height; long orders shrink their font instead of pushing the panel down
+  const x=$('order-x'); x.style.fontSize=''; let fs=parseFloat(getComputedStyle(x).fontSize), n=0;
+  while(x.scrollHeight>x.clientHeight+1&&fs>11&&n<14){ fs-=1; x.style.fontSize=fs+'px'; n++; }
+}
+addEventListener('resize',()=>{ if(V.screen==='game') fitOrder(); });
 function renderOrder(s,ins,inGame){
   const k=$('order-k'), x=$('order-x'), sub=$('order-sub'), ready=$('ready'), shout=$('shout');
   const between=s.ph==='between', iAmReady=(s.rd||[]).includes(V.myId);
@@ -1066,7 +1121,7 @@ function renderOrder(s,ins,inGame){
   if(sig!==V.orderSig){
     V.orderSig=sig; x.textContent='';
     if(!inGame) x.textContent='Наблюдаем за полётом…';
-    else if(between){ x.textContent='Осмотри свой пульт'; }
+    else if(between){ x.textContent='Осмотри пульт и жми «Готов!» '; const n=document.createElement('span'); n.className='news'; n.textContent=news(s.r); x.appendChild(n); }
     else if(ins&&Array.isArray(ins.p)){
       const [v,n,r]=ins.p;
       const a=document.createElement('span'); a.className='verb'; a.textContent=v; x.appendChild(a); x.appendChild(document.createTextNode(' '));
@@ -1076,10 +1131,14 @@ function renderOrder(s,ins,inGame){
     else if(ins) x.textContent=ins.x;
     else x.textContent='Отлично! Ждём следующий приказ…';
   }
-  k.textContent=between?'Сектор '+s.r+' · подготовка':'Приказ на мостик';
-  sub.hidden=!(between&&inGame); if(between) sub.textContent=news(s.r);
+  const humans=(s.pl||[]).filter(p=>!p[3]), nReady=humans.filter(p=>(s.rd||[]).includes(p[0])).length;
+  k.textContent=between?('Сектор '+s.r+' · готовы '+nReady+' из '+humans.length):'Приказ на мостик';
+  sub.hidden=true; $('order').classList.toggle('btw',between);
+  if(sig!==V.fitSig){ V.fitSig=sig; fitOrder(); }
   ready.hidden=!(between&&inGame); ready.disabled=iAmReady; ready.textContent=iAmReady?'Ждём остальных…':'Готов!';
-  shout.hidden=G.mode==='mp'||between||!inGame; shout.disabled=!ins;
+  const alone=(s.pl||[]).length<=1;
+  document.body.classList.toggle('alone',alone);
+  shout.hidden=G.mode==='mp'||alone||between||!inGame; shout.disabled=!ins;
 }
 $('ready').addEventListener('click',()=>{ SFX.click(); V.act({type:'ready'}); });
 $('pause-btn').addEventListener('click',()=>{ $('pop').hidden=true; V.act({type:'pause',on:true}); });
@@ -1115,6 +1174,44 @@ function startVac(d){
   const up=()=>{ VAC.drag=false; c.classList.remove('drag'); };
   c.addEventListener('pointerup',up); c.addEventListener('pointercancel',up);
 })();
+// ---- litter box: scratch top-to-bottom N times, with a scraping noise
+const LIT={k:null,n:4,done:0,y0:null,x0:0,counted:false,lastScr:0};
+let noiseBuf=null;
+function scrape(){
+  if(muted) return; const a=ac(); if(!a) return;
+  try{
+    if(!noiseBuf){ noiseBuf=a.createBuffer(1,Math.floor(a.sampleRate*.12),a.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); }
+    const src=a.createBufferSource(); src.buffer=noiseBuf; src.playbackRate.value=.7+Math.random()*.6;
+    const f=a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=1400+Math.random()*1600; f.Q.value=1.2;
+    const g=a.createGain(); g.gain.value=.35;
+    src.connect(f); f.connect(g); g.connect(a.destination); src.start();
+  }catch(e){}
+}
+function stopLit(){ LIT.k=null; LIT.y0=null; const l=document.getElementById('lit-layer'); if(l) l.hidden=true; }
+function startLit(d){
+  LIT.k=d.k; LIT.n=Math.max(1,+d.n||4); LIT.done=0; LIT.y0=null;
+  $('lit-count').textContent='0 из '+LIT.n; $('lit-banner').textContent='Лоток! Закопай: '+LIT.n+' раз сверху вниз';
+  $('lit-sand').style.height='58%'; $('lit-marks').textContent='';
+  $('lit-layer').hidden=false; scrape();
+}
+(function(){
+  const L=$('lit-layer');
+  L.addEventListener('pointerdown',e=>{ if(LIT.k===null) return; e.preventDefault(); LIT.y0=e.clientY; LIT.x0=e.clientX; LIT.counted=false; try{L.setPointerCapture(e.pointerId)}catch(_){} });
+  L.addEventListener('pointermove',e=>{
+    if(LIT.k===null||LIT.y0===null) return;
+    const dy=e.clientY-LIT.y0, now=performance.now();
+    if(dy>8&&now-LIT.lastScr>70){ LIT.lastScr=now; scrape();
+      const m=document.createElement('div'); m.className='lit-mark'; m.style.left=(e.clientX-2)+'px'; m.style.top=(e.clientY-26)+'px'; m.style.height='28px'; $('lit-marks').appendChild(m); setTimeout(()=>m.remove(),900); }
+    if(!LIT.counted&&dy>innerHeight*.28){
+      LIT.counted=true; LIT.done++;
+      const sand=$('lit-sand'); sand.style.height=(58+LIT.done/LIT.n*30)+'%'; sand.classList.remove('shake'); void sand.offsetWidth; sand.classList.add('shake');
+      $('lit-count').textContent=LIT.done+' из '+LIT.n; tone(300,180,.08,'triangle',.05);
+      if(LIT.done>=LIT.n){ const k=LIT.k; V.litDone[k]=true; stopLit(); SFX.ok(); V.act({type:'lit'}); }
+    }
+  });
+  const up=()=>{ LIT.y0=null; };
+  L.addEventListener('pointerup',up); L.addEventListener('pointercancel',up);
+})();
 function vacFrame(now){
   if(VAC.k===null) return;
   if(V.s&&V.s.pz){ VAC.t=now; return; }
@@ -1137,7 +1234,7 @@ function frame(){
   vacFrame(performance.now());
   if(s&&V.screen==='game'){
     const ins=s.ins&&s.ins[V.myId]; const t=$('timer'); const el=s.pz?0:performance.now()-V.sAt;
-    if(s.ph==='between'){ const p=Math.max(0,(s.bt||0)-el)/(s.btd||1); t.style.width=(p*100)+'%'; t.classList.remove('urgent'); }
+    if(s.ph==='between'){ const p=s.bt?Math.max(0,s.bt-el)/(s.btd||1):0; t.style.width=(p*100)+'%'; t.classList.remove('urgent'); }
     else if(ins){ const rem=Math.max(0,ins.rem-el); const p=rem/ins.dur; t.style.width=(p*100)+'%'; t.classList.toggle('urgent',p<.3); }
     else t.style.width='0%';
   }
@@ -1162,8 +1259,8 @@ function showOver(s){
   const fun=$('o-fun'); fun.textContent='';
   (Array.isArray(st.fun)?st.fun:[]).forEach(([k,v])=>{ const dt=document.createElement('dt'); dt.textContent=k; const dd=document.createElement('dd'); dd.textContent=v; fun.appendChild(dt); fun.appendChild(dd); });
   $('o-r').textContent=s.r; $('o-ok').textContent=(s.st&&s.st.ok)||0; $('o-bad').textContent=((s.st&&s.st.bad)||0)+((s.st&&s.st.wrong)||0);
-  $('o-title').textContent=s.r>=4?'Легендарный полёт':'Огонь настиг корабль';
-  $('o-sub').textContent='Экипаж добрался до сектора '+s.r+'. Огонь догнал корабль, но все коты успели выпрыгнуть и приземлились на лапы.';
+  $('o-title').textContent=s.r>=4?'Легендарный полёт':'Взрыв настиг корабль';
+  $('o-sub').textContent='Экипаж добрался до сектора '+s.r+'. Взрыв звезды догнал корабль, но все коты успели выпрыгнуть и приземлились на лапы.';
   const isHost=G.mode==='solo'||(G.net&&G.net.host);
   $('btn-again').hidden=!isHost; $('btn-lobby').hidden=!(G.mode==='mp'&&G.net&&G.net.host); $('o-wait').hidden=isHost;
   SFX.bad();
