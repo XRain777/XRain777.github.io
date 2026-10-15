@@ -411,6 +411,7 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
         <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
       </ol>
     </details>
+    <p class="muted" style="text-align:center;font-size:12px">Версия 15.10 · 12:05</p>
   </section>
 
   <!-- WAITING -->
@@ -1162,7 +1163,7 @@ function showOver(s){
   (Array.isArray(st.fun)?st.fun:[]).forEach(([k,v])=>{ const dt=document.createElement('dt'); dt.textContent=k; const dd=document.createElement('dd'); dd.textContent=v; fun.appendChild(dt); fun.appendChild(dd); });
   $('o-r').textContent=s.r; $('o-ok').textContent=(s.st&&s.st.ok)||0; $('o-bad').textContent=((s.st&&s.st.bad)||0)+((s.st&&s.st.wrong)||0);
   $('o-title').textContent=s.r>=4?'Легендарный полёт':'Огонь настиг корабль';
-  $('o-sub').textContent='Экипаж добрался до сектора '+s.r+'. Огонь догнал корабль, но все коты успели выпрыгнуть.';
+  $('o-sub').textContent='Экипаж добрался до сектора '+s.r+'. Огонь догнал корабль, но все коты успели выпрыгнуть и приземлились на лапы.';
   const isHost=G.mode==='solo'||(G.net&&G.net.host);
   $('btn-again').hidden=!isHost; $('btn-lobby').hidden=!(G.mode==='mp'&&G.net&&G.net.host); $('o-wait').hidden=isHost;
   SFX.bad();
