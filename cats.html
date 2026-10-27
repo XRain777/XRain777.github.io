@@ -430,6 +430,9 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .cfg[open] summary{margin-bottom:10px}
 .invite{display:flex;gap:8px;align-items:stretch}
 .invite input{flex:1;min-width:0;font-size:13px!important;font-weight:600!important}
+.qr{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px;text-align:center;font-size:13px}
+.qr canvas{width:min(220px,62vw);height:auto;aspect-ratio:1;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.4);image-rendering:pixelated;background:#fff}
+.qr[hidden]{display:none}
 
 /* hold and double-tap buttons */
 .big .blab{position:absolute;inset:0;display:grid;place-items:center;z-index:2;font-family:var(--display);font-weight:900;font-size:clamp(12px,28%,18px);color:var(--ink);pointer-events:none;font-variant-numeric:tabular-nums}
@@ -825,8 +828,9 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     <header class="brand">
       <div class="lbl">Код комнаты</div>
       <div class="code" id="w-code">0000</div>
-      <p class="muted">Отправь друзьям ссылку: код подставится сам. Или пусть откроют страницу и введут код.</p>
+      <p class="muted">Отправь друзьям ссылку или покажи QR-код: код подставится сам. Или пусть откроют страницу и введут код.</p>
       <div class="invite"><input type="text" id="w-link" readonly aria-label="Ссылка-приглашение"><button class="secondary" id="w-copy">Копировать</button></div>
+      <div class="qr" id="w-qrbox"><canvas id="w-qr" role="img" aria-label="QR-код со ссылкой-приглашением"></canvas><span class="muted">Или наведи камеру друга на QR-код</span></div>
     </header>
     <div class="card">
       <h2>Экипаж</h2>
@@ -1006,7 +1010,7 @@ const CATS=['🐱','😼','😸','😻','🙀','😺','🐈','🐈‍⬛','🦁'
 const CAT_LVL=[0,0,0,0,2,3,4,5,7,9];
 const SHIPS=[['🚀',0],['🛸',2],['🛰️',4],['🐟',6],['🦄',8]];
 const r1=x=>Math.round((+x||0)*10)/10;
-const GAME_VER='19.8', GAME_BUILD='21:50';
+const GAME_VER='19.9', GAME_BUILD='14:10';
 const STARTS=[1,3,5,7,9];
 // cosmetics bought with fish: [emoji, price]
 const HATS=[['🎀',15],['🧢',25],['⛑️',35],['🎓',50],['🎩',70],['👑',120]];
@@ -1329,7 +1333,7 @@ class Host{
     const now=Date.now();
     this.round++; this.phase='between'; this.btDur=1500; this.until=Infinity; this.ready={};
     if(this.startR&&this.round>this.startR){ this.jUsed=this.jUsed||[]; let j; do{ j=Math.floor(Math.random()*JOKES.length); }while(this.jUsed.includes(j)&&this.jUsed.length<JOKES.length); this.jUsed.push(j); this.joke=j; } else this.joke=-1;
-    this.instr={}; this.pending={}; this.progress=0; this.lastRes={}; this.lastHit={};
+    this.instr={}; this.pending={}; this.progress=0; this.lastRes={}; this.lastHit={}; this.holding={};
     const n=this.pl.length;
     this.goal=Math.round(4+2*n+this.round);
     // a crew has to shout and search other panels: their order time shrinks more slowly and stops at a higher floor
@@ -1449,6 +1453,7 @@ class Host{
   }
   apply(pid,cid,v){
     const c=this.ctrl[cid]; if(!c||c.owner!==pid||this.phase!=='play') return;
+    if(c.t==='h'&&this.holding) delete this.holding[cid];
     if(c.n==='Бастет') this.fun.bastet=(this.fun.bastet||0)+1;
     let val;
     if(c.t==='b'||c.t==='h'||c.t==='x') val='press';
@@ -1557,6 +1562,14 @@ class Host{
       this.emit(); return;
     }
     if(a.type==='set'||a.type==='press') this.apply(pid,String(a.cid),a.v);
+    else if(a.type==='holdstart'||a.type==='holdend'){
+      // a finger is down on a hold button: an order for it that runs out of time is not failed while the finger stays down
+      const cid=String(a.cid), c=this.ctrl[cid], H=this.holding||(this.holding={});
+      if(c&&c.t==='h'&&c.owner===pid){
+        if(a.type==='holdstart') H[cid]={p:pid,until:Date.now()+(c.hd||2)*1000+2500};
+        else if(H[cid]&&H[cid].p===pid) delete H[cid];
+      }
+    }
     else if(a.type==='shout') this.shout(pid);
     else if(a.type==='dot'&&this.dot) this.dot.hit[pid]=true;
     else if(a.type==='vac'&&this.vac) this.vac.hit[pid]=true;
@@ -1572,6 +1585,7 @@ class Host{
     for(const k in this.pending) this.pending[k]=sh(this.pending[k]);
     for(const k in this.instr){ const i=this.instr[k]; if(!i) continue; i.start=sh(i.start); i.shoutAt=sh(i.shoutAt); i.botAt=sh(i.botAt); }
     this.taskAt=sh(this.taskAt);
+    for(const k in (this.holding||{})) this.holding[k].until=sh(this.holding[k].until);
     for(const ev of [this.dot,this.vac,this.lit,this.flea,this.mic,this.leak,this.task]){ if(!ev) continue; ev.until=sh(ev.until); if(ev.at) ev.at=sh(ev.at); for(const k in ev.bt) ev.bt[k]=sh(ev.bt[k]); }
   }
   setPause(on){
@@ -1629,6 +1643,9 @@ class Host{
     for(const pid of Object.keys(this.instr)){
       const i=this.instr[pid]; if(!i) continue;
       if(now>i.start+i.dur){
+        // the cat is still holding the right button: the order is not failed, the finished hold will count
+        const hh=this.holding&&this.holding[i.cid];
+        if(hh&&hh.p===i.owner&&now<hh.until&&i.target==='press'){ if(!i.heldOver){ i.heldOver=1; this.L('hold',{p:pid,c:i.cid}); } continue; }
         this.L('to',{p:pid,c:i.cid,t:(this.ctrl[i.cid]||{}).t}); this.lastHit[i.cid]=now; this.instr[pid]=null; this.badc[pid]=(this.badc[pid]||0)+1; this.stats.bad++;
         this.pending[pid]=now+(this.gapBad||700); this.lastRes[pid]='fail'; this.damage(this.M.fail);
         if(this.phase==='over'){ this.emit(); return; }
@@ -1732,11 +1749,17 @@ class Host{
   evDone(now){ this.calmUntil=(now||Date.now())+rnd(10000,14000); for(const n of ['nextDot','nextHair','nextVac','nextLit','nextFlea','nextLeak','nextMic','nextShuf']) this[n]=Infinity; }
   surprise(now){
     // [kind, from sector, weight]: loose panels are common, zero gravity / leak / litter are rare
-    const r=this.round, pool=SURPRISES.filter(x=>r>=x[1]&&x[0]!==this.lastSurprise), humans=this.pl.filter(p=>!p.bot);
+    const r=this.round, humans=this.pl.filter(p=>!p.bot);
+    // loose panels get more frequent with every sector: heavier weight, may repeat back to back from sector 8
+    const wt=x=>x[0]==='break'?Math.min(10,x[2]+Math.max(0,r-x[1])*.8):x[2];
+    const pool=SURPRISES.filter(x=>r>=x[1]&&(x[0]!==this.lastSurprise||(x[0]==='break'&&r>=8)));
     if(!pool.length||!humans.length){ this.calmUntil=now+5000; return; }
-    let q=Math.random()*pool.reduce((a,x)=>a+x[2],0), k=pool[0][0]; for(const x of pool){ q-=x[2]; if(q<=0){ k=x[0]; break; } }
+    let q=Math.random()*pool.reduce((a,x)=>a+wt(x),0), k=pool[0][0]; for(const x of pool){ q-=wt(x); if(q<=0){ k=x[0]; break; } }
     this.lastSurprise=k;
-    if(k==='break'||k==='flip'){ const p=pick(humans).id; this.pcmd={k:++this.pcmdK,p,c:k}; this.L('ev',{e:k,p}); this.evDone(now); return; }
+    if(k==='break'||k==='flip'){ const p=pick(humans).id; this.pcmd={k:++this.pcmdK,p,c:k}; this.L('ev',{e:k,p}); this.evDone(now);
+      // after a loose panel the calm pause also shrinks with the sector: 10–14 s at sector 5, down to about 4–6 s later
+      if(k==='break'&&r>5&&isFinite(this.calmUntil)) this.calmUntil=now+rnd(10000,14000)*Math.max(.4,1-.07*(r-5));
+      return; }
     this.calmUntil=Infinity;   // lasts until it is resolved
     ({dot:'nextDot',vac:'nextVac',lit:'nextLit',flea:'nextFlea',mic:'nextMic',leak:'nextLeak',shuf:'nextShuf',hair:'nextHair'})[k] && (this[({dot:'nextDot',vac:'nextVac',lit:'nextLit',flea:'nextFlea',mic:'nextMic',leak:'nextLeak',shuf:'nextShuf',hair:'nextHair'})[k]]=now);
   }
@@ -1866,16 +1889,19 @@ function buildPanel(){
       d.appendChild(nm);
       const b=document.createElement('button'); b.className='big hold'; const hs=String(c.hd).replace('.',','); b.setAttribute('aria-label','Удерживать '+c.n+' '+hs+' с');
       const lab=document.createElement('span'); lab.className='blab'; lab.textContent=hs+' с'; b.appendChild(lab);
-      const need=(c.hd||2)*1000; let t0=0, raf=0, pidr=null;
-      const stop=()=>{ cancelAnimationFrame(raf); t0=0; b.classList.remove('hit'); b.style.setProperty('--hp','0'); lab.textContent=hs+' с'; HOLDING.delete(stop); };
+      const need=(c.hd||2)*1000; let t0=0, raf=0, pidr=null, sent=false;
+      // the crew is told when the finger goes down, so an order that runs out of time during the hold is not failed
+      const begin=()=>{ if(!sent){ sent=true; V.act({type:'holdstart',cid:c.id}); } };
+      const stop=done=>{ cancelAnimationFrame(raf); t0=0; b.classList.remove('hit'); b.style.setProperty('--hp','0'); lab.textContent=hs+' с'; HOLDING.delete(stop);
+        if(sent){ sent=false; if(done!==true) V.act({type:'holdend',cid:c.id}); } };
       const tick=()=>{ if(!t0) return; const p=Math.min(1,(performance.now()-t0)/need); b.style.setProperty('--hp',String(p));
         lab.textContent=(Math.max(0,need-(performance.now()-t0))/1000).toFixed(1).replace('.',',');
-        if(p>=1){ stop(); SFX.ok(); buzz(40); V.act({type:'press',cid:c.id}); return; }
+        if(p>=1){ stop(true); SFX.ok(); buzz(40); V.act({type:'press',cid:c.id}); return; }
         raf=requestAnimationFrame(tick); };
-      b.addEventListener('pointerdown',e=>{ e.preventDefault(); if(t0) return; pidr=e.pointerId; try{b.setPointerCapture(pidr)}catch(_){} t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); buzz(10); tone(330,360,.12,'sine',.04); raf=requestAnimationFrame(tick); });
+      b.addEventListener('pointerdown',e=>{ e.preventDefault(); if(t0) return; pidr=e.pointerId; try{b.setPointerCapture(pidr)}catch(_){} t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); begin(); buzz(10); tone(330,360,.12,'sine',.04); raf=requestAnimationFrame(tick); });
       ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>{ if(t0) stop(); }));
       b.addEventListener('contextmenu',e=>e.preventDefault());
-      b.addEventListener('keydown',e=>{ if((e.key===' '||e.key==='Enter')&&!t0&&!e.repeat){ e.preventDefault(); t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); raf=requestAnimationFrame(tick); } });
+      b.addEventListener('keydown',e=>{ if((e.key===' '||e.key==='Enter')&&!t0&&!e.repeat){ e.preventDefault(); t0=performance.now(); b.classList.add('hit'); HOLDING.add(stop); begin(); raf=requestAnimationFrame(tick); } });
       b.addEventListener('keyup',e=>{ if(e.key===' '||e.key==='Enter') stop(); });
       d.appendChild(b);
     } else if(c.t==='x'){
@@ -3282,6 +3308,74 @@ function startSolo(dbg){
 $('btn-solo').onclick=()=>startSolo(false);
 $('btn-tester').onclick=()=>startSolo(true);
 
+/* --- QR code encoder (byte mode, error correction M, versions 1-40) --- */
+function qrMatrix(text){
+  const ECC=[0,10,16,26,18,24,16,18,22,22,26,30,22,22,24,24,28,28,26,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28];
+  const BLK=[0,1,1,1,2,2,4,4,4,5,5,5,8,9,9,10,10,11,13,14,16,17,17,18,20,21,23,25,26,28,29,31,33,35,37,38,40,43,45,47,49];
+  const raw=v=>{ let r=(16*v+128)*v+64; if(v>=2){ const a=Math.floor(v/7)+2; r-=(25*a-10)*a-55; if(v>=7) r-=36; } return r; };
+  const cap=v=>Math.floor(raw(v)/8)-ECC[v]*BLK[v];
+  const bytes=Array.from(new TextEncoder().encode(text));
+  let ver=1; while(ver<=40&&cap(ver)<bytes.length+(ver<=9?2:3)) ver++;
+  if(ver>40) return null;
+  // data bits
+  const bits=[]; const put=(val,n)=>{ for(let i=n-1;i>=0;i--) bits.push((val>>>i)&1); };
+  put(4,4); put(bytes.length,ver<=9?8:16); bytes.forEach(b=>put(b,8));
+  const total=cap(ver)*8; put(0,Math.min(4,total-bits.length)); while(bits.length%8) bits.push(0);
+  for(let pad=0xEC;bits.length<total;pad^=0xEC^0x11) put(pad,8);
+  const data=[]; for(let i=0;i<bits.length;i+=8){ let b=0; for(let j=0;j<8;j++) b=b<<1|bits[i+j]; data.push(b); }
+  // Reed-Solomon over GF(256)
+  const mul=(x,y)=>{ let z=0; for(let i=7;i>=0;i--){ z=(z<<1)^((z>>>7)*0x11D); z^=((y>>>i)&1)*x; } return z; };
+  const rsDiv=(d,deg)=>{ const g=new Array(deg).fill(0); g[deg-1]=1; let root=1;
+    for(let i=0;i<deg;i++){ for(let j=0;j<deg;j++){ g[j]=mul(g[j],root); if(j+1<deg) g[j]^=g[j+1]; } root=mul(root,2); }
+    const r=new Array(deg).fill(0); for(const b of d){ const f=b^r.shift(); r.push(0); for(let i=0;i<deg;i++) r[i]^=mul(g[i],f); } return r; };
+  const nb=BLK[ver], eb=ECC[ver], rawCw=Math.floor(raw(ver)/8), shortN=nb-rawCw%nb, shortLen=Math.floor(rawCw/nb);
+  const blocks=[]; for(let i=0,k=0;i<nb;i++){ const len=shortLen-eb+(i<shortN?0:1); const d=data.slice(k,k+len); k+=len; const e=rsDiv(d,eb); if(i<shortN) d.push(0); blocks.push({d,e}); }
+  const out=[]; for(let i=0;i<blocks[0].d.length;i++) blocks.forEach((b,j)=>{ if(i!==shortLen-eb||j>=shortN) out.push(b.d[i]); });
+  for(let i=0;i<eb;i++) blocks.forEach(b=>out.push(b.e[i]));
+  // function patterns
+  const n=ver*4+17, M=Array.from({length:n},()=>new Array(n).fill(false)), F=Array.from({length:n},()=>new Array(n).fill(false));
+  const setF=(x,y,v)=>{ M[y][x]=v; F[y][x]=true; };
+  for(let i=0;i<n;i++){ setF(6,i,i%2===0); setF(i,6,i%2===0); }
+  const finder=(x,y)=>{ for(let dy=-4;dy<=4;dy++) for(let dx=-4;dx<=4;dx++){ const d=Math.max(Math.abs(dx),Math.abs(dy)), xx=x+dx, yy=y+dy; if(xx>=0&&xx<n&&yy>=0&&yy<n) setF(xx,yy,d!==2&&d!==4); } };
+  finder(3,3); finder(n-4,3); finder(3,n-4);
+  const na=ver===1?0:Math.floor(ver/7)+2, step=ver===32?26:Math.ceil((ver*4+4)/(na*2-2))*2, pos=[6];
+  for(let p=n-7;pos.length<na;p-=step) pos.splice(1,0,p);
+  for(let i=0;i<na;i++) for(let j=0;j<na;j++){ if((i===0&&j===0)||(i===0&&j===na-1)||(i===na-1&&j===0)) continue;
+    for(let dy=-2;dy<=2;dy++) for(let dx=-2;dx<=2;dx++) setF(pos[i]+dx,pos[j]+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1); }
+  const fmt=mask=>{ const d=(0<<3)|mask; let r=d; for(let i=0;i<10;i++) r=(r<<1)^((r>>>9)*0x537); const b=((d<<10)|r)^0x5412, g=i=>((b>>>i)&1)!==0;
+    for(let i=0;i<=5;i++) setF(8,i,g(i)); setF(8,7,g(6)); setF(8,8,g(7)); setF(7,8,g(8)); for(let i=9;i<15;i++) setF(14-i,8,g(i));
+    for(let i=0;i<8;i++) setF(n-1-i,8,g(i)); for(let i=8;i<15;i++) setF(8,n-15+i,g(i)); setF(8,n-8,true); };
+  fmt(0);
+  if(ver>=7){ let r=ver; for(let i=0;i<12;i++) r=(r<<1)^((r>>>11)*0x1F25); const b=(ver<<12)|r;
+    for(let i=0;i<18;i++){ const c=((b>>>i)&1)!==0, a=n-11+i%3, k=Math.floor(i/3); setF(a,k,c); setF(k,a,c); } }
+  // data modules, zigzag
+  for(let i=0,right=n-1;right>=1;right-=2){ if(right===6) right=5;
+    for(let v=0;v<n;v++) for(let j=0;j<2;j++){ const x=right-j, y=((right+1)&2)===0?n-1-v:v;
+      if(!F[y][x]&&i<out.length*8){ M[y][x]=((out[i>>>3]>>>(7-(i&7)))&1)!==0; i++; } } }
+  // mask: pick the one with the lowest penalty
+  const cond=[(x,y)=>(x+y)%2===0,(x,y)=>y%2===0,(x,y)=>x%3===0,(x,y)=>(x+y)%3===0,(x,y)=>(Math.floor(x/3)+Math.floor(y/2))%2===0,
+    (x,y)=>x*y%2+x*y%3===0,(x,y)=>(x*y%2+x*y%3)%2===0,(x,y)=>((x+y)%2+x*y%3)%2===0];
+  const apply=m=>{ for(let y=0;y<n;y++) for(let x=0;x<n;x++) if(!F[y][x]&&cond[m](x,y)) M[y][x]=!M[y][x]; };
+  const penalty=()=>{ let p=0, dark=0;
+    const line=s=>{ const runs=s.match(/0+|1+/g)||[]; runs.forEach(r=>{ if(r.length>=5) p+=r.length-2; });
+      for(let i=0;i+11<=s.length;i++){ const t=s.substr(i,11); if(t==='00001011101'||t==='10111010000') p+=40; } };
+    for(let y=0;y<n;y++){ line(M[y].map(v=>v?1:0).join('')); line(M.map(r=>r[y]?1:0).join('')); }
+    for(let y=0;y<n;y++) for(let x=0;x<n;x++){ if(M[y][x]) dark++; if(x+1<n&&y+1<n&&M[y][x]===M[y][x+1]&&M[y][x]===M[y+1][x]&&M[y][x]===M[y+1][x+1]) p+=3; }
+    p+=(Math.ceil(Math.abs(dark*20-n*n*10)/(n*n))-1)*10; return p; };
+  let best=0, bp=Infinity;
+  for(let m=0;m<8;m++){ apply(m); fmt(m); const p=penalty(); if(p<bp){ bp=p; best=m; } apply(m); }
+  apply(best); fmt(best);
+  return M;
+}
+function drawQr(canvas,text,px){
+  const M=qrMatrix(text); if(!M) return false;
+  const q=4, n=M.length, s=Math.max(2,Math.floor((px||220)/(n+2*q)));
+  canvas.width=canvas.height=(n+2*q)*s; const g=canvas.getContext('2d');
+  g.fillStyle='#fff'; g.fillRect(0,0,canvas.width,canvas.height); g.fillStyle='#000';
+  for(let y=0;y<n;y++) for(let x=0;x<n;x++) if(M[y][x]) g.fillRect((x+q)*s,(y+q)*s,s,s);
+  return true;
+}
+
 /* --- Firebase Realtime Database network --- */
 let FB_CONFIG=window.FIREBASE_CONFIG||null, CFG_EMBEDDED=!!window.FIREBASE_CONFIG, DB=null;
 const b64e=t=>btoa(unescape(encodeURIComponent(t))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
@@ -3386,6 +3480,7 @@ function showWait(){ show('wait'); renderWait(); }
 function renderWait(){
   if(!G.net) return; const host=G.net.host;
   $('w-code').textContent=G.net.code; $('w-link').value=inviteLink(G.net.code);
+  { const link=$('w-link').value, cv=$('w-qr'); if(cv.dataset.link!==link){ cv.dataset.link=link; let ok=false; try{ ok=drawQr(cv,link,440); }catch(e){} $('w-qrbox').hidden=!ok; } }
   const list=$('w-list'); list.textContent='';
   const ps=Object.entries(G.net.players).filter(([,p])=>p&&p.n).sort((a,b)=>(b[1].h||0)-(a[1].h||0)||(a[1].t||0)-(b[1].t||0));
   const hostP=ps.find(([,p])=>p.h);
