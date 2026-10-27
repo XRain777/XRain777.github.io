@@ -428,6 +428,16 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
 .cfg textarea{width:100%;min-height:120px;background:var(--void);border:1px solid var(--edge);border-radius:12px;color:var(--cream);font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:10px}
 .cfg summary{font-weight:800;cursor:pointer;color:var(--dim)}
 .cfg[open] summary{margin-bottom:10px}
+.sum{flex-direction:row;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.sum:active{background:var(--plate)}
+.sum-av{flex:none;width:56px;height:56px;border-radius:16px;background:var(--void);border:2px solid var(--edge);display:grid;place-items:center;font-size:32px;line-height:1}
+.sum-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sum-t b{font-size:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sum-t .rank{font-size:15px}
+.sum-r{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.sum-r small{color:var(--dim);font-weight:700;font-size:13px}
+.primary.play{width:100%;padding:20px 18px;font-size:22px;border-radius:18px}
+.mpcard.invited{border-color:var(--tabby);box-shadow:0 0 0 2px color-mix(in srgb,var(--tabby) 35%,transparent)}
 .invite{display:flex;gap:8px;align-items:stretch}
 .invite input{flex:1;min-width:0;font-size:13px!important;font-weight:600!important}
 .qr{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px;text-align:center;font-size:13px}
@@ -713,6 +723,32 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
       <p class="tag">Кооперативная паника для экипажа из кошек. Приказы приходят тебе, а нужные рычаги чаще всего на пультах у других.</p>
     </header>
 
+    <button class="card sum" id="btn-prof" aria-label="Открыть профиль: позывной, кот, звание, лавка">
+      <span class="sum-av" id="sum-av" aria-hidden="true"></span>
+      <span class="sum-t"><b id="sum-name"></b><span class="rank" id="sum-rank"></span></span>
+      <span class="sum-r"><span class="fishc" id="sum-fish"></span><small>Профиль ›</small></span>
+    </button>
+    <button class="primary play" id="btn-play">Играть</button>
+
+    <details class="card rules" id="rules">
+      <summary>Как играть</summary>
+      <ol>
+        <li>На карточке сверху твой приказ. Он может касаться любого прибора на корабле.</li>
+        <li>Если прибор на твоём пульте, выполни сам. Если нет, крикни приказ экипажу вслух.</li>
+        <li>Перед каждым сектором осмотри свой пульт и нажми «Готов!». Сектор начнётся, когда готовы все.</li>
+        <li>Корабль спасается от взрыва звезды. Выполненный приказ уносит его вперёд, проваленный отбрасывает к взрыву, лишнее нажатие (которого никто не просил) тоже отбрасывает немного назад, а взрыв сам расползается следом. Долетели до портала: прыжок в следующий сектор. Взрыв догнал: конец полёта.</li>
+        <li>С каждым сектором добавляется по одной напасти: лазерная точка и кнопки с удержанием, комок шерсти, пылесос, срывающиеся панели, кот на пультах, лоток, протечка, блохи, невесомость, мяуканье в микрофон, иконки вместо названий.</li>
+        <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
+      </ol>
+    </details>
+    <p class="muted" id="ver" style="text-align:center;font-size:12px"></p>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="scr-prof" class="scr" hidden>
+    <header class="brand">
+      <div class="brand-top"><h1 class="set-h">Профиль</h1><button class="icon-btn" id="prof-back" aria-label="Назад в меню">✕</button></div>
+    </header>
     <div class="card">
       <label class="lbl" for="nick">Позывной</label>
       <input type="text" id="nick" maxlength="16" autocomplete="off">
@@ -730,12 +766,6 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
       <details class="ach"><summary id="ach-sum">Достижения</summary><ul id="ach-list"></ul></details>
     </div>
 
-    <div class="card">
-      <div class="lbl">Режим полёта</div>
-      <div class="modesel" id="modesel" role="radiogroup" aria-label="Режим полёта"></div>
-      <p class="muted" id="mode-hint"></p>
-    </div>
-
     <details class="card shop" id="shop">
       <summary><span>Кошачья лавка</span><b class="fishc" id="wallet">🐟 0</b></summary>
       <p class="muted">Рыбки тратятся на украшения, а звание остаётся. Нажми на вещь, потом ещё раз, чтобы купить.</p>
@@ -744,21 +774,15 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
       <div class="lbl">Панель приказов</div><div class="skins" id="shop-skins"></div>
     </details>
 
-    <div class="card tester" id="tester-card" hidden>
-      <h2>🛠 Режим тестера</h2>
-      <p class="muted">Без таймеров и взрыва: по очереди проверяются все приборы и напасти. Можно пропускать и возвращаться. Рыбки и рекорды не начисляются.</p>
-      <button class="primary" id="btn-tester">Начать проверку</button>
-    </div>
+  </section>
 
-    <div class="card">
-      <h2>Соло</h2>
-      <p class="muted">Тренировка в одиночку: все приказы относятся к твоему пульту.</p>
-      <div class="row"><span>Старт с сектора</span><div class="startsel" id="solo-start"></div></div>
-      <button class="primary" id="btn-solo">Взлететь</button>
-    </div>
-
-    <div class="card">
-      <h2>Мультиплеер</h2>
+  <!-- PLAY: multiplayer first, then solo -->
+  <section id="scr-play" class="scr" hidden>
+    <header class="brand">
+      <div class="brand-top"><h1 class="set-h">Игра</h1><button class="icon-btn" id="play-back" aria-label="Назад в меню">✕</button></div>
+    </header>
+    <div class="card mpcard" id="mp-card">
+      <h2>Играть с друзьями</h2>
       <p class="muted" id="mp-status">Подключаемся к бортовой связи…</p>
       <div class="row">
         <input type="text" id="code" inputmode="numeric" maxlength="4" placeholder="Код из 4 цифр" autocomplete="off">
@@ -774,20 +798,24 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     </div>
 
     <div class="card">
-      <button class="opt" id="expert-menu" role="switch" aria-checked="false"><span><b>Режим для опытных</b><small>Без объяснений новых напастей перед секторами</small></span><i class="mini-sw"></i></button>
+      <h2>Соло</h2>
+      <p class="muted">Тренировка в одиночку: все приказы относятся к твоему пульту.</p>
+      <div class="row"><span>Старт с сектора</span><div class="startsel" id="solo-start"></div></div>
+      <button class="primary" id="btn-solo">Взлететь</button>
     </div>
-    <details class="card rules" id="rules">
-      <summary>Как играть</summary>
-      <ol>
-        <li>На карточке сверху твой приказ. Он может касаться любого прибора на корабле.</li>
-        <li>Если прибор на твоём пульте, выполни сам. Если нет, крикни приказ экипажу вслух.</li>
-        <li>Перед каждым сектором осмотри свой пульт и нажми «Готов!». Сектор начнётся, когда готовы все.</li>
-        <li>Корабль спасается от взрыва звезды. Выполненный приказ уносит его вперёд, проваленный отбрасывает к взрыву, лишнее нажатие (которого никто не просил) тоже отбрасывает немного назад, а взрыв сам расползается следом. Долетели до портала: прыжок в следующий сектор. Взрыв догнал: конец полёта.</li>
-        <li>С каждым сектором добавляется по одной напасти: лазерная точка и кнопки с удержанием, комок шерсти, пылесос, срывающиеся панели, кот на пультах, лоток, протечка, блохи, невесомость, мяуканье в микрофон, иконки вместо названий.</li>
-        <li>На iPhone полноэкранного режима в браузере нет: нажми «Поделиться» → «На экран „Домой“» и запускай игру с иконки.</li>
-      </ol>
-    </details>
-    <p class="muted" id="ver" style="text-align:center;font-size:12px"></p>
+
+    <div class="card">
+      <div class="lbl">Режим полёта · для соло и капитана комнаты</div>
+      <div class="modesel" id="modesel" role="radiogroup" aria-label="Режим полёта"></div>
+      <p class="muted" id="mode-hint"></p>
+    </div>
+
+    <div class="card tester" id="tester-card" hidden>
+      <h2>🛠 Режим тестера</h2>
+      <p class="muted">Без таймеров и взрыва: по очереди проверяются все приборы и напасти. Можно пропускать и возвращаться. Рыбки и рекорды не начисляются.</p>
+      <button class="primary" id="btn-tester">Начать проверку</button>
+    </div>
+
   </section>
 
   <!-- SETTINGS -->
@@ -795,6 +823,9 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     <header class="brand">
       <div class="brand-top"><h1 class="set-h">Настройки</h1><button class="icon-btn" id="set-back" aria-label="Назад в меню">✕</button></div>
     </header>
+    <div class="card">
+      <button class="opt" id="expert-menu" role="switch" aria-checked="false"><span><b>Режим для опытных</b><small>Без объяснений новых напастей перед секторами</small></span><i class="mini-sw"></i></button>
+    </div>
     <div class="card">
       <button class="opt" id="vib-set" role="switch" aria-checked="true"><span><b>Вибрация</b><small>Отклик кнопок, ползунков и событий. На iPhone нужна iOS 18 или новее.</small></span><i class="mini-sw"></i></button>
     </div>
@@ -1010,7 +1041,7 @@ const CATS=['🐱','😼','😸','😻','🙀','😺','🐈','🐈‍⬛','🦁'
 const CAT_LVL=[0,0,0,0,2,3,4,5,7,9];
 const SHIPS=[['🚀',0],['🛸',2],['🛰️',4],['🐟',6],['🦄',8]];
 const r1=x=>Math.round((+x||0)*10)/10;
-const GAME_VER='19.9', GAME_BUILD='14:10';
+const GAME_VER='20.0', GAME_BUILD='14:25';
 const STARTS=[1,3,5,7,9];
 // cosmetics bought with fish: [emoji, price]
 const HATS=[['🎀',15],['🧢',25],['⛑️',35],['🎓',50],['🎩',70],['👑',120]];
@@ -1230,7 +1261,11 @@ function renderProg(){
     starts.forEach(n=>{ const b=document.createElement('button'); const open=n===1||tst||prog.best>=n; b.textContent=open?n:'🔒'+n; b.disabled=!open;
       b.title=open?'':'Долети до сектора '+n+', чтобы стартовать с него'; b.className=startSector===n?'on':''; b.setAttribute('aria-pressed',String(startSector===n));
       b.onclick=()=>{ startSector=n; renderProg(); SFX.click(); }; box.appendChild(b); }); });
-  renderCats(); renderShop(); renderModes(); applySkin();
+  renderCats(); renderShop(); renderModes(); applySkin(); renderSum();
+}
+function renderSum(){
+  const av=$('sum-av'); if(!av) return; av.textContent=''; av.appendChild(catNode(CATS.includes(me.cat)?me.cat:CATS[0],prog.hat));
+  $('sum-name').textContent=me.name; $('sum-rank').textContent=RANKS[levelOf(prog.fish)]; $('sum-fish').textContent='🐟 '+prog.fish;
 }
 const validHat=h=>HATS.some(x=>x[0]===h)?h:'';
 const validTrail=t=>TRAILS.some(x=>x[0]===t)?t:'';
@@ -1275,7 +1310,7 @@ renderProg();
 
 
 /* ---------- screens ---------- */
-function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); if(name!=='set') mtStop(); ['menu','set','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); stopFlea(); stopMic(); unflip(); $('leak-layer').hidden=true; if(typeof closeTask==='function') closeTask(); $('task-wait').hidden=true; $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
+function show(name){ document.body.classList.toggle('ingame',name==='game'); document.body.classList.toggle('mp',G.mode==='mp'); $('pop').hidden=true; if(name==='game') keepAwake(); if(name!=='set') mtStop(); ['menu','prof','play','set','wait','game','over'].forEach(n=>$('scr-'+n).hidden=(n!==name)); if(name!=='game'){ stopVac(); stopLit(); stopFlea(); stopMic(); unflip(); $('leak-layer').hidden=true; if(typeof closeTask==='function') closeTask(); $('task-wait').hidden=true; $('pause').hidden=true; $('between').hidden=true; $('laser').hidden=true; $('laser-banner').hidden=true; } window.scrollTo(0,0); V.screen=name; }
 let wakeLock=null;
 function keepAwake(){ try{ if(navigator.wakeLock&&!wakeLock) navigator.wakeLock.request('screen').then(l=>{ wakeLock=l; l.addEventListener('release',()=>wakeLock=null); }).catch(()=>{}); }catch(e){} }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&V.screen==='game') keepAwake(); });
@@ -2647,6 +2682,10 @@ $('vib-set').addEventListener('click',()=>{ vibOn=!vibOn; try{localStorage.setIt
 syncVib();
 $('log-all').addEventListener('click',()=>{ SFX.click(); downloadAllLogs(); });
 $('log-clear').addEventListener('click',()=>{ if(!confirm('Удалить все сохранённые логи полётов?')) return; try{ localStorage.removeItem(LOG_KEY); }catch(e){} renderLogs(); });
+$('btn-prof').addEventListener('click',()=>{ SFX.click(); show('prof'); });
+$('prof-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
+$('btn-play').addEventListener('click',()=>{ SFX.click(); show('play'); });
+$('play-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
 $('btn-settings').addEventListener('click',()=>{ renderLogs();  SFX.click(); show('set'); mtSync(); });
 $('set-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
 $('mt-toggle').addEventListener('click',()=>{ if(MT.stream) mtStop(); else mtStart(); });
@@ -3391,7 +3430,7 @@ if(!CFG_EMBEDDED){
   if(fb){ try{ const c=JSON.parse(b64d(fb)); if(c&&c.databaseURL){ FB_CONFIG=c; try{localStorage.setItem('koto-fb',JSON.stringify(c))}catch(e){} } }catch(e){} }
   if(!FB_CONFIG){ try{ const c=JSON.parse(localStorage.getItem('koto-fb')||'null'); if(c&&c.databaseURL) FB_CONFIG=c; }catch(e){} }
 }
-if(params.get('room')&&/^\d{4}$/.test(params.get('room'))){ $('code').value=params.get('room'); }
+if(params.get('room')&&/^\d{4}$/.test(params.get('room'))){ $('code').value=params.get('room'); $('mp-card').classList.add('invited'); show('play'); }
 
 let myPid=null;
 try{ myPid=sessionStorage.getItem('koto-pid'); }catch(e){}
