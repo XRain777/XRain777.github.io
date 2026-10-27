@@ -723,10 +723,10 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
       <p class="tag">Кооперативная паника для экипажа из кошек. Приказы приходят тебе, а нужные рычаги чаще всего на пультах у других.</p>
     </header>
 
-    <button class="card sum" id="btn-prof" aria-label="Открыть профиль: позывной, кот, звание, лавка">
-      <span class="sum-av" id="sum-av" aria-hidden="true"></span>
-      <span class="sum-t"><b id="sum-name"></b><span class="rank" id="sum-rank"></span></span>
-      <span class="sum-r"><span class="fishc" id="sum-fish"></span><small>Профиль ›</small></span>
+    <button class="card sum" aria-label="Открыть профиль: позывной, кот, звание, лавка">
+      <span class="sum-av" aria-hidden="true"></span>
+      <span class="sum-t"><b class="sum-name"></b><span class="rank sum-rank"></span></span>
+      <span class="sum-r"><span class="fishc sum-fish"></span><small>Профиль ›</small></span>
     </button>
     <button class="primary play" id="btn-play">Играть</button>
 
@@ -749,6 +749,12 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     <header class="brand">
       <div class="brand-top"><h1 class="set-h">Профиль</h1><button class="icon-btn" id="prof-back" aria-label="Назад в меню">✕</button></div>
     </header>
+    <div class="card">
+      <label class="lbl" for="nick">Позывной</label>
+      <input type="text" id="nick" maxlength="16" autocomplete="off">
+      <div class="lbl">Твой кот</div>
+      <div class="cats" id="cats"></div>
+    </div>
     <div class="card prog">
       <div class="prog-top"><div><div class="lbl">Звание</div><b id="rank" class="rank">Котёнок-юнга</b></div><div class="fishc" id="fish">🐟 0</div></div>
       <div class="xp"><i id="xp-bar"></i></div>
@@ -774,12 +780,11 @@ body.ingame .app{height:100%;min-height:0;padding-block:8px;gap:8px}
     <header class="brand">
       <div class="brand-top"><h1 class="set-h">Игра</h1><button class="icon-btn" id="play-back" aria-label="Назад в меню">✕</button></div>
     </header>
-    <div class="card">
-      <label class="lbl" for="nick">Позывной</label>
-      <input type="text" id="nick" maxlength="16" autocomplete="off">
-      <div class="lbl">Твой кот</div>
-      <div class="cats" id="cats"></div>
-    </div>
+    <button class="card sum" aria-label="Открыть профиль: позывной, кот, звание, лавка">
+      <span class="sum-av" aria-hidden="true"></span>
+      <span class="sum-t"><b class="sum-name"></b><span class="rank sum-rank"></span></span>
+      <span class="sum-r"><span class="fishc sum-fish"></span><small>Профиль ›</small></span>
+    </button>
 
     <div class="card mpcard" id="mp-card">
       <h2>Играть с друзьями</h2>
@@ -1239,7 +1244,7 @@ function renderCats(){
   CATS.forEach((c,i)=>{ const b=document.createElement('button'); const need=CAT_LVL[i]||0, open=lv>=need;
     b.textContent=open?c:'🔒'; b.disabled=!open; b.title=open?'':'Откроется на звании «'+RANKS[need]+'»';
     b.setAttribute('aria-pressed',String(c===me.cat)); b.setAttribute('aria-label',open?'Выбрать кота '+c:'Кот закрыт до звания '+RANKS[need]);
-    b.onclick=()=>{me.cat=c;saveMe();renderCats();SFX.click()}; box.appendChild(b); });
+    b.onclick=()=>{me.cat=c;saveMe();renderCats();renderSum();SFX.click()}; box.appendChild(b); });
 }
 function renderProg(){
   const lv=levelOf(prog.fish), cur=needFor(lv), nxt=needFor(lv+1), top=lv>=RANKS.length-1;
@@ -1264,8 +1269,11 @@ function renderProg(){
   renderCats(); renderShop(); renderModes(); applySkin(); renderSum();
 }
 function renderSum(){
-  const av=$('sum-av'); if(!av) return; av.textContent=''; av.appendChild(catNode(CATS.includes(me.cat)?me.cat:CATS[0],prog.hat));
-  $('sum-name').textContent=me.name; $('sum-rank').textContent=RANKS[levelOf(prog.fish)]; $('sum-fish').textContent='🐟 '+prog.fish;
+  const cat=CATS.includes(me.cat)?me.cat:CATS[0], rk=RANKS[levelOf(prog.fish)];
+  document.querySelectorAll('.sum-av').forEach(av=>{ av.textContent=''; av.appendChild(catNode(cat,prog.hat)); });
+  document.querySelectorAll('.sum-name').forEach(e=>e.textContent=me.name);
+  document.querySelectorAll('.sum-rank').forEach(e=>e.textContent=rk);
+  document.querySelectorAll('.sum-fish').forEach(e=>e.textContent='🐟 '+prog.fish);
 }
 const validHat=h=>HATS.some(x=>x[0]===h)?h:'';
 const validTrail=t=>TRAILS.some(x=>x[0]===t)?t:'';
@@ -1293,6 +1301,7 @@ function renderShop(){
   HATS.forEach(([e,p])=>shopItem(hb,'hat'+e,e,p,prog.hat===e,()=>{ prog.hat=prog.hat===e?'':e; }));
   TRAILS.forEach(([e,p])=>shopItem(tb,'tr'+e,e,p,prog.trail===e,()=>{ prog.trail=prog.trail===e?'':e; }));
   SKINS.forEach(([id,n,p])=>shopItem(sb,'sk'+id,n,p,(prog.skin||'gold')===id,()=>{ prog.skin=id; applySkin(); },'sw-'+id));
+  renderSum();
 }
 function renderModes(){
   const box=document.getElementById('modesel'); if(!box) return; box.textContent='';
@@ -2682,8 +2691,9 @@ $('vib-set').addEventListener('click',()=>{ vibOn=!vibOn; try{localStorage.setIt
 syncVib();
 $('log-all').addEventListener('click',()=>{ SFX.click(); downloadAllLogs(); });
 $('log-clear').addEventListener('click',()=>{ if(!confirm('Удалить все сохранённые логи полётов?')) return; try{ localStorage.removeItem(LOG_KEY); }catch(e){} renderLogs(); });
-$('btn-prof').addEventListener('click',()=>{ SFX.click(); show('prof'); });
-$('prof-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
+let profFrom='menu';
+document.querySelectorAll('.sum').forEach(b=>b.addEventListener('click',()=>{ profFrom=V.screen==='play'?'play':'menu'; SFX.click(); show('prof'); }));
+$('prof-back').addEventListener('click',()=>{ SFX.click(); show(profFrom); });
 $('btn-play').addEventListener('click',()=>{ SFX.click(); show('play'); });
 $('play-back').addEventListener('click',()=>{ SFX.click(); show('menu'); });
 $('btn-settings').addEventListener('click',()=>{ renderLogs();  SFX.click(); show('set'); mtSync(); });
@@ -3445,7 +3455,7 @@ if(!myPid){ myPid=Math.random().toString(36).slice(2,12); try{ sessionStorage.se
   if(!FB_CONFIG||!FB_CONFIG.databaseURL){ st.textContent='Для мультиплеера вставь конфиг Firebase ниже. Это нужно сделать один раз, друзьям он придёт в ссылке.'; return; }
   try{ const app=firebase.apps.length?firebase.app():firebase.initializeApp(FB_CONFIG); DB=app.database(); }
   catch(e){ st.textContent='Не получилось подключить Firebase: '+e.message; return; }
-  st.textContent=params.get('room')?'Тебя позвали в комнату '+params.get('room')+'. Выбери кота и жми «Войти».':'Создай комнату и отправь друзьям ссылку. Каждый играет со своего телефона за своим пультом.';
+  st.textContent=params.get('room')?'Тебя позвали в комнату '+params.get('room')+'. Кота и позывной можно сменить в профиле (карточка выше), потом жми «Войти».':'Создай комнату и отправь друзьям ссылку. Каждый играет со своего телефона за своим пультом.';
   $('btn-create').disabled=false; $('btn-join').disabled=false;
   let wasOnline=false;
   DB.ref('.info/connected').on('value',s=>{ if(s.val()) wasOnline=true; else if(wasOnline&&G.net) toast('Связь с сервером потеряна, переподключаемся…'); });
